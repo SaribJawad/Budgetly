@@ -1,7 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
-import { uploadOnCloudinary } from "../utils/fileHandler.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/fileHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 
@@ -37,21 +40,16 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with this email already exist.");
   }
 
-  let avatarLocalPath;
-  if (
-    req.files &&
-    Array.isArray(req.files.avatar) &&
-    req.files.avatar.length > 0
-  ) {
-    avatarLocalPath = req.files.avatar[0].path;
+  const avatarLocalPath = req.file?.path;
+  let avatar;
+  if (avatarLocalPath) {
+    avatar = await uploadOnCloudinary(avatarLocalPath);
   }
-
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
 
   const user = await User.create({
     firstName,
     lastName,
-    avatar: avatar?.url || "",
+    avatar: { url: avatar.url, publicId: avatar.public_id } || "",
     email,
     password,
   });
@@ -193,4 +191,103 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+const updateUserInformation = asyncHandler(async (req, res) => {
+  const { firstName, lastName } = req.body;
+  const userId = req.user._id;
+
+  console.log(userId);
+
+  if (!firstName || !lastName) {
+    throw new ApiError(
+      400,
+      "At least one of firstName or lastName is required"
+    );
+  }
+
+  const update = {};
+
+  if (firstName) {
+    update.firstName = firstName;
+  }
+
+  if (lastName) {
+    update.lastName = lastName;
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, update, {
+    new: true,
+  });
+
+  if (!updatedUser) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedUser, "User updated successfully"));
+});
+
+const updatePassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const userId = req.user._id;
+
+  if (!oldPassword && !newPassword) {
+    throw new ApiError(400, "Old password and new password are required");
+  }
+
+  const user = await User.findById(userId);
+
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, "Old password is incorrect");
+  }
+
+  user.password = newPassword;
+  user.save({
+    validateBeforeSave: false,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+
+const updateAvatar = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file?.path;
+  const userId = req.user?._id;
+
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar file is missing");
+  }
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+  const user = await User.findById(userId);
+
+  if (user.avatar) {
+    await deleteFromCloudinary(user.avatar.publicId);
+  }
+
+  user.avatar = { url: avatar.url, publicId: avatar.public_id };
+  user.save({
+    validateBeforeSave: true,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Avatar updated successfully"));
+});
+
+const getUserAccountDetail = asyncHandler(async (req, res) => {});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  updateUserInformation,
+  updatePassword,
+  updateAvatar,
+  getUserAccountDetail,
+};
