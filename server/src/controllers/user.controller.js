@@ -195,8 +195,6 @@ const updateUserInformation = asyncHandler(async (req, res) => {
   const { firstName, lastName } = req.body;
   const userId = req.user._id;
 
-  console.log(userId);
-
   if (!firstName || !lastName) {
     throw new ApiError(
       400,
@@ -204,22 +202,22 @@ const updateUserInformation = asyncHandler(async (req, res) => {
     );
   }
 
-  const update = {};
+  const updateFields = {};
 
   if (firstName) {
-    update.firstName = firstName;
+    updateFields.firstName = firstName;
   }
 
   if (lastName) {
-    update.lastName = lastName;
+    updateFields.lastName = lastName;
   }
 
-  const updatedUser = await User.findByIdAndUpdate(userId, update, {
+  const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
     new: true,
   });
 
   if (!updatedUser) {
-    throw new ApiError(404, "User not found");
+    throw new ApiError(500, "Something went wrong while updating the user");
   }
 
   return res

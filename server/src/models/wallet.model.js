@@ -1,14 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 
-// id
-// accountname
-// accountNumber
-// typeOf
-// amount
-// currency
-// color
-// wallet_owner
-
 const WalletTypes = {
   GENERAL: "General",
   CASH: "Cash",
@@ -33,23 +24,22 @@ const walletSchema = new Schema(
       type: String,
       required: true,
     },
-    typeOf: {
+    type: {
       type: String,
       enum: Object.values(WalletTypes),
-      required: true,
+      default: "General",
     },
-    amount: {
+    initialValue: {
       type: Number,
-      required: true,
       default: 0,
     },
     currency: {
       type: String,
-      required: true,
+      default: "USD",
     },
     color: {
       type: String,
-      required: true,
+      default: "#0000",
     },
     walletOwner: {
       type: Schema.Types.ObjectId,
