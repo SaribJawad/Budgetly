@@ -24,9 +24,13 @@ app.use(cookieParser());
 
 import userRouter from "./routes/user.routes.js";
 import walletRouter from "./routes/wallet.route.js";
+import budgetRouter from "./routes/budget.routes.js";
+import transactionRouter from "./routes/transaction.route.js";
 
 // routes declaration
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/wallet", walletRouter);
+app.use("/api/v1/budget", budgetRouter);
+app.use("/api/v1/transaction", transactionRouter);
 
 export { app };

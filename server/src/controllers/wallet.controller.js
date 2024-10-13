@@ -3,12 +3,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-// create wallet
-// get all wallets
-// get wallet by id
-// update wallet - accountName, account number,  type, currency
-// delete wallet
-
 const createWallet = asyncHandler(async (req, res) => {
   const { accountName, accountNumber, type, initialValue, currency, color } =
     req.body;
