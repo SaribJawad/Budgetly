@@ -22,14 +22,13 @@ const walletSchema = new Schema(
     },
     accountNumber: {
       type: String,
-      required: true,
     },
     type: {
       type: String,
       enum: Object.values(WalletTypes),
       default: WalletTypes.GENERAL,
     },
-    initialValue: {
+    balance: {
       type: Number,
       default: 0,
     },

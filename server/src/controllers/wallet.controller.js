@@ -4,13 +4,12 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createWallet = asyncHandler(async (req, res) => {
-  const { accountName, accountNumber, type, initialValue, currency, color } =
+  const { accountName, accountNumber, type, balance, currency, color } =
     req.body;
   const userId = req.user?._id;
 
   const requiredFields = {
     accountName,
-    accountNumber,
   };
 
   for (const [key, value] of Object.entries(requiredFields)) {
@@ -23,7 +22,7 @@ const createWallet = asyncHandler(async (req, res) => {
     accountName,
     accountNumber,
     type: type || undefined,
-    initialValue: initialValue || undefined,
+    balance: balance || undefined,
     currency: currency || undefined,
     color,
     walletOwner: userId,
