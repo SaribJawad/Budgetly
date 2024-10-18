@@ -4,6 +4,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createBudget = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
   const {
     name,
     period,
@@ -26,7 +28,30 @@ const createBudget = asyncHandler(async (req, res) => {
     }
   }
 
+  const existingBudget = await Budget.findOne({
+    user: userId,
+    category: category || "All",
+    wallet,
+  });
+
+  console.log(existingBudget);
+
+  if (existingBudget) {
+    return res
+      .status(400)
+      .json(
+        new ApiResponse(
+          400,
+          existingBudget,
+          `You already have a budget for category - ${
+            category ? category : "All"
+          }`
+        )
+      );
+  }
+
   const budget = await Budget.create({
+    user: userId,
     name,
     period: period || undefined,
     amount,

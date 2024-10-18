@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const BudgetPeriod = {
+export const BudgetPeriod = {
   NONE: "None",
   WEEK: "Week",
   MONTH: "Month",
@@ -9,6 +9,11 @@ const BudgetPeriod = {
 
 const budgetSchema = new Schema(
   {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      requried: true,
+    },
     name: {
       type: String,
       required: true,
@@ -21,6 +26,10 @@ const budgetSchema = new Schema(
     amount: {
       type: Number,
       required: true,
+    },
+    spentAmount: {
+      type: Number,
+      default: 0,
     },
     category: {
       type: String,

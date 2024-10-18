@@ -11,6 +11,7 @@ import {
 import { validateTransactionField } from "../utils/validateTransactionField.js";
 import { adjustWalletBalance } from "../utils/adjustWalletBalance.js";
 import { reverseTransactionEffects } from "../utils/reverseTransactionEffects.js";
+import { Budget } from "../models/budget.model.js";
 
 const createTransaction = asyncHandler(async (req, res) => {
   const userId = req.user._id;
@@ -36,8 +37,6 @@ const createTransaction = asyncHandler(async (req, res) => {
     payee,
     payer
   );
-
-  console.log(amount);
 
   const userWallet = mongoose.isValidObjectId(fromWallet)
     ? await Wallet.findById(fromWallet)
@@ -88,6 +87,35 @@ const createTransaction = asyncHandler(async (req, res) => {
   let attachmentFromCloudinary;
   if (attachmentLocalPath) {
     attachmentFromCloudinary = await uploadOnCloudinary(attachmentLocalPath);
+  }
+
+  if (transactionType === TransactionTypes.EXPENSE) {
+    try {
+      console.log(category, fromWallet);
+
+      const updateBudget = await Budget.findOne({
+        user: userId,
+        category,
+        wallet: fromWallet,
+      });
+
+      if (!updateBudget) {
+        return res
+          .status(400)
+          .json(
+            new ApiResponse(
+              400,
+              {},
+              `No budget exists for category ${category}`
+            )
+          );
+      }
+
+      updateBudget.spentAmount += amount;
+      await updateBudget.save({ validateBeforeSave: false });
+    } catch (error) {
+      throw new ApiError(500, "Something went wrong while updating wallet");
+    }
   }
 
   const transaction = await Transaction.create({

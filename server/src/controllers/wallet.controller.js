@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Wallet } from "../models/wallet.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -54,7 +55,7 @@ const getAllWallets = asyncHandler(async (req, res) => {
 const getWalletById = asyncHandler(async (req, res) => {
   const { walletId } = req.params;
 
-  if (!walletId) {
+  if (!mongoose.isValidObjectId(walletId)) {
     throw new ApiError(400, "Wallet ID is required");
   }
 
