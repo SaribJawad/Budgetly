@@ -41,17 +41,6 @@ const budgetSchema = new Schema(
       ref: "Wallet",
       required: true,
     },
-    notifyOnExceed: {
-      // Whether to notify on exceeding the budget
-      type: Boolean,
-      default: false,
-    },
-    notifyOnTrending: {
-      // Whether to notify on trending overspend
-
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,

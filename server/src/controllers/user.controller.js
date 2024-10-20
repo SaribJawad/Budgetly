@@ -192,13 +192,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const updateUserInformation = asyncHandler(async (req, res) => {
-  const { firstName, lastName } = req.body;
+  const { firstName, lastName, email } = req.body;
   const userId = req.user._id;
 
-  if (!firstName || !lastName) {
+  if (!firstName && !lastName && !email) {
     throw new ApiError(
       400,
-      "At least one of firstName or lastName is required"
+      "At least one of firstName/lastName/email is required"
     );
   }
 
@@ -210,6 +210,10 @@ const updateUserInformation = asyncHandler(async (req, res) => {
 
   if (lastName) {
     updateFields.lastName = lastName;
+  }
+
+  if (email) {
+    updateFields.email = email;
   }
 
   const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {

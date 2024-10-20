@@ -48,36 +48,17 @@ const createTransaction = asyncHandler(async (req, res) => {
 
   switch (transactionType) {
     case TransactionTypes.INCOME:
-      console.log("Before INCOME adjustment: ", userWallet.balance);
       await adjustWalletBalance(userWallet, amount, "add");
-      console.log("After INCOME adjustment: ", userWallet.balance);
       break;
     case TransactionTypes.EXPENSE:
-      console.log("Before EXPENSE adjustment: ", userWallet.balance);
       await adjustWalletBalance(userWallet, amount, "subtract");
-      console.log("After EXPENSE adjustment: ", userWallet.balance);
       break;
     case TransactionTypes.TRANSFER:
-      console.log(
-        "Before TRANSFER adjustment (fromWallet): ",
-        userWallet.balance
-      );
       await adjustWalletBalance(userWallet, amount, "subtract");
       if (toWalletEntity) {
-        console.log(
-          "Before TRANSFER adjustment (toWallet): ",
-          toWalletEntity.balance
-        );
         await adjustWalletBalance(toWalletEntity, amount, "add");
-        console.log(
-          "After TRANSFER adjustment (toWallet): ",
-          toWalletEntity.balance
-        );
       }
-      console.log(
-        "After TRANSFER adjustment (fromWallet): ",
-        userWallet.balance
-      );
+
       break;
   }
   userWallet.save({ validateBeforeSave: false });
@@ -91,8 +72,6 @@ const createTransaction = asyncHandler(async (req, res) => {
 
   if (transactionType === TransactionTypes.EXPENSE) {
     try {
-      console.log(category, fromWallet);
-
       const updateBudget = await Budget.findOne({
         user: userId,
         category,
@@ -111,7 +90,7 @@ const createTransaction = asyncHandler(async (req, res) => {
           );
       }
 
-      updateBudget.spentAmount += amount;
+      updateBudget.spentAmount += Number(amount);
       await updateBudget.save({ validateBeforeSave: false });
     } catch (error) {
       throw new ApiError(500, "Something went wrong while updating wallet");
