@@ -75,7 +75,7 @@ export function LoginForm() {
                 />
               </FormControl>
               <FormDescription className="text-xs">
-                Enter a secure password.
+                Your password.
               </FormDescription>
               <FormMessage className="text-xs" />
             </FormItem>
