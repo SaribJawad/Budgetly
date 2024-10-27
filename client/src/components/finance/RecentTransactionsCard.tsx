@@ -27,13 +27,31 @@ function RecentTransactionsCard() {
       <Table>
         <TableHeader>
           <TableRow className="text-xs ">
-            <TableHead className="w-[100px] ">Date</TableHead>
+            <TableHead className="min-w-[65px]  ">Date</TableHead>
             <TableHead className="w-[100px] text-right ">Amount</TableHead>
             <TableHead className="min-w-[110px] ">Payment type</TableHead>
             <TableHead className="  min-w-[130px]">Transaction type</TableHead>
             <TableHead className=" ">Category</TableHead>
           </TableRow>
         </TableHeader>
+        <TableBody className="text-xs w-full">
+          <TableRow>
+            <TableCell className="font-medium">25 jul </TableCell>
+            <TableCell className="text-right">-$10</TableCell>
+            <TableCell>-Other</TableCell>
+            <TableCell className="text-left">Expense</TableCell>
+            <TableCell className="text-left">Other</TableCell>
+          </TableRow>
+        </TableBody>
+        <TableBody className="text-xs w-full">
+          <TableRow>
+            <TableCell className="font-medium">25 jul </TableCell>
+            <TableCell className="text-right">-$10</TableCell>
+            <TableCell>-Other</TableCell>
+            <TableCell className="text-left">Expense</TableCell>
+            <TableCell className="text-left">Other</TableCell>
+          </TableRow>
+        </TableBody>
         <TableBody className="text-xs w-full">
           <TableRow>
             <TableCell className="font-medium">25 jul </TableCell>

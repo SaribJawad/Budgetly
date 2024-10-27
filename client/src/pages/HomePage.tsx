@@ -1,17 +1,20 @@
-import BudgetPieCard from "@/components/BudgetPieCard";
-import FinanceSummaryCard from "@/components/FinanceSummaryCard";
-import Header from "@/components/Header";
-import MoneyFlowCard from "@/components/MoneyFlowCard";
-import RecentTransactionsCard from "@/components/RecentTransactionsCard";
-import SavingGoalsCard from "@/components/SavingGoalsCard";
+import BudgetPieCard from "@/components/finance/BudgetPieCard";
+import FinanceSummaryCard from "@/components/finance/FinanceSummaryCard";
+import Header from "@/components/navigation/Header";
+import MoneyFlowCard from "@/components/finance/MoneyFlowCard";
+import RecentTransactionsCard from "@/components/finance/RecentTransactionsCard";
+import SavingGoalsCard from "@/components/finance/SavingGoalsCard";
 import { Chart, CategoryScale } from "chart.js/auto";
 
 function HomePage() {
   Chart.register(CategoryScale);
 
   return (
-    <div className="w-full p-2 flex flex-col space-y-3">
-      <Header />
+    <div className="w-full p-2 flex flex-col space-y-0 justify-around">
+      <Header
+        heading={"Welcome back, Username"}
+        note={"It is the best time to manage your finance"}
+      />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <FinanceSummaryCard />
         <FinanceSummaryCard />

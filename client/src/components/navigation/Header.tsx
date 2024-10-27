@@ -1,11 +1,14 @@
-function Header() {
+interface HeaderProps {
+  heading: String;
+  note: String;
+}
+
+function Header({ heading, note }: HeaderProps) {
   return (
     <header className="flex w-full items-start justify-between pl-8">
-      <div className="">
-        <h1 className="font-bold">Welcome back, Username</h1>
-        <p className="text-xs text-zinc-500">
-          It is the best time to manage your finance
-        </p>
+      <div>
+        <h1 className="font-bold text-lg">{heading}</h1>
+        <p className="text-xs text-zinc-500">{note}</p>
       </div>
       <div className="border border-zinc-700 rounded-3xl flex items-center gap-2 p-1 pr-3 ">
         <img
