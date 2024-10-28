@@ -6,11 +6,11 @@ import RecentTransactionsCard from "@/components/finance/RecentTransactionsCard"
 import SavingGoalsCard from "@/components/finance/SavingGoalsCard";
 import { Chart, CategoryScale } from "chart.js/auto";
 
-function HomePage() {
+function DashboardPage() {
   Chart.register(CategoryScale);
 
   return (
-    <div className="w-full p-2 flex flex-col space-y-0 justify-around">
+    <div className="w-full p-2 flex flex-col space-y-0 gap-3">
       <Header
         heading={"Welcome back, Username"}
         note={"It is the best time to manage your finance"}
@@ -48,4 +48,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default DashboardPage;

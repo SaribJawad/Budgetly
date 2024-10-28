@@ -1,17 +1,19 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import AuthLayout from "./components/layout/AuthLayout";
 import MainLayout from "./components/layout/MainLayout";
 import TransactionsPage from "./pages/TransactionsPage";
+import WalletPage from "./pages/WalletPage";
 
 export function App() {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route path="/dashboard" element={<HomePage />} />
+        <Route index element={<DashboardPage />} />
         <Route path="/transactions" element={<TransactionsPage />} />
+        <Route path="/wallet/:walletId" element={<WalletPage />} />
       </Route>
       <Route path="/auth" element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />

@@ -31,7 +31,7 @@ export function DatePickerWithRange({
             size="sm"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal bg-black border-zinc-800 hover:bg-[#27272A] hover:text-white",
+              "w-auto  justify-start text-left font-normal bg-black border-zinc-800 hover:bg-[#27272A] hover:text-white",
               !dateRange && "text-muted-foreground"
             )}
           >

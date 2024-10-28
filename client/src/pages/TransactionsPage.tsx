@@ -18,7 +18,7 @@ export type Payments = {
 };
 
 function TransactionsPage() {
-  // hard coded
+  // hard coded temp
   const payments: Payments[] = [
     {
       date: "2024-06-12",
@@ -114,10 +114,10 @@ function TransactionsPage() {
   };
 
   return (
-    <div className=" w-full p-2 flex flex-col gap-3 relative ">
+    <div className=" w-full p-2  flex flex-col gap-3  ">
       <Header heading={"Transactions"} note={"Overview of your activities"} />
-      <div className="flex items-center justify-between ">
-        <div className="flex items-center gap-2 relative">
+      <div className="flex items-center justify-between w-full ">
+        <div className=" ">
           <DatePickerWithRange
             dateRange={dateRange}
             setDateRange={setDateRange}

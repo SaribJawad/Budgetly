@@ -20,9 +20,9 @@ import { Link, useLocation } from "react-router-dom";
 
 // Menu items.
 const items = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Transactions", url: "/transactions", icon: ArrowRightLeft },
-  { title: "Wallet", url: "#", icon: WalletMinimal },
+  { title: "Wallet", url: "/wallet/:wallet", icon: WalletMinimal },
   { title: "Goals", url: "#", icon: Goal },
   { title: "Analytics", url: "#", icon: ChartLine },
   { title: "Settings", url: "#", icon: Settings },

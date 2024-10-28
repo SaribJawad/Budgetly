@@ -33,9 +33,9 @@ export function SignUpFrom() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof signUpSchema>) {
+  const onSubmit = (values: z.infer<typeof signUpSchema>) => {
     console.log(values);
-  }
+  };
 
   return (
     <Form {...form}>

@@ -53,15 +53,17 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
       setPageSize(newPagination.pageSize);
     },
   });
-  console.log(limit);
 
   return (
-    <div className="h-full">
+    <div className="h-full w-full ">
       <div className="rounded-md border border-zinc-800">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-zinc-800 ">
+              <TableRow
+                key={headerGroup.id}
+                className="border-zinc-800 text-xs "
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
