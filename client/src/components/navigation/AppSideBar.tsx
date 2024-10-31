@@ -34,16 +34,16 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-zinc-800 ">
       <SidebarContent className="bg-black ">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-white text-1xl mb-2">
+          <SidebarGroupLabel className="text-white text-2xl mb-2">
             Budgetly
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem className="" key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={`  ${
+                    className={` text-lg ${
                       location.pathname === item.url
                         ? "bg-white"
                         : "hover:bg-zinc-800"
@@ -58,11 +58,11 @@ export function AppSidebar() {
                       }`}
                     >
                       <item.icon
-                        className={`${
+                        className={` ${
                           location.pathname === item.url
                             ? "text-black"
                             : "text-white"
-                        }`}
+                        }    `}
                       />
                       <span
                         className={`${

@@ -8,7 +8,7 @@ function MainLayout() {
       <AppSidebar />
       <div className="w-full h-auto bg-black flex   text-white ">
         <div className="relative ">
-          <SidebarTrigger className="absolute top-4 left-[40%] w-7 h-7 z-50 ml-1 " />
+          <SidebarTrigger className="absolute top-5 left-[40%] w-7 h-7 z-50 ml-1 " />
         </div>
         <Outlet />
       </div>

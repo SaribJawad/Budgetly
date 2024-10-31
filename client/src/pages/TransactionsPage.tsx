@@ -2,7 +2,6 @@ import { columns } from "@/components/data-display/columns";
 import DataTable from "@/components/data-display/DataTable";
 import Header from "@/components/navigation/Header";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
@@ -114,7 +113,7 @@ function TransactionsPage() {
   };
 
   return (
-    <div className=" w-full p-2  flex flex-col gap-3  ">
+    <div className=" w-full min-h-screen p-2  flex flex-col gap-3  ">
       <Header heading={"Transactions"} note={"Overview of your activities"} />
       <div className="flex items-center justify-between w-full ">
         <div className=" ">
@@ -126,11 +125,10 @@ function TransactionsPage() {
 
         <Button
           onClick={() => setTogglePopup((prev) => !prev)}
-          size="sm"
-          className="bg-[#8470FF] hover:bg-[#6C5FBC] hover:text-white border-zinc-800 text-xs"
+          size="lg"
+          className="bg-[#8470FF] hover:bg-[#6C5FBC] hover:text-white border-zinc-800 w-auto text-md"
           variant="outline"
         >
-          <Plus size={1} />
           Add new
         </Button>
         {togglePopup && <CreateTransactionPopup onClose={closePopup} />}

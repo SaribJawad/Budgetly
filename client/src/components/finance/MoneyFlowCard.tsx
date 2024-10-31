@@ -2,8 +2,8 @@ import { Bar } from "react-chartjs-2";
 
 function MoneyFlowCard() {
   return (
-    <div className="border p-2 pb-9 rounded-2xl  border-zinc-800 h-60   lg:col-span-2 ">
-      <h1 className="font-bold">Money flow</h1>
+    <div className="border p-2 pb-9 rounded-2xl  border-zinc-800 h-72   lg:col-span-2 ">
+      <h1 className="font-normal text-xl">Money flow</h1>
       <Bar
         data={{
           labels: [

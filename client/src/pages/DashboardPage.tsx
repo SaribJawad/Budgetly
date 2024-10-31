@@ -10,37 +10,37 @@ function DashboardPage() {
   Chart.register(CategoryScale);
 
   return (
-    <div className="w-full p-2 flex flex-col space-y-0 gap-3">
+    <div className="w-full min-h-screen p-2 flex flex-col  space-y-0 gap-3">
       <Header
         heading={"Welcome back, Username"}
         note={"It is the best time to manage your finance"}
       />
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className=" h-64 grid grid-cols-2 lg:grid-cols-4 gap-3">
         <FinanceSummaryCard />
         <FinanceSummaryCard />
         <FinanceSummaryCard />
         <FinanceSummaryCard />
       </div>
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        <div className="lg:col-span-2 md:col-span-2">
+      <div className="h-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 ">
+        <div className="lg:col-span-2 md:col-span-2  ">
           <MoneyFlowCard />
         </div>
-        <div className="lg:col-span-1 md:col-span-1">
+        <div className="lg:col-span-1 md:col-span-1 ">
           <BudgetPieCard />
         </div>
 
-        <div className="lg:hidden md:col-span-1">
+        <div className="lg:hidden md:col-span-1 ">
           <SavingGoalsCard />
         </div>
 
-        <div className="lg:col-span-2 md:col-span-2 lg:hidden">
+        <div className="lg:col-span-2 md:col-span-2 lg:hidden ">
           <RecentTransactionsCard />
         </div>
 
-        <div className="lg:col-span-2 lg:row-span-1 lg:block hidden ">
+        <div className="lg:col-span-2 lg:row-span-1 lg:block hidden  ">
           <RecentTransactionsCard />
         </div>
-        <div className="lg:col-span-1 lg:row-span-1 lg:block hidden ">
+        <div className="lg:col-span-1 lg:row-span-1 lg:block hidden  ">
           <SavingGoalsCard />
         </div>
       </div>

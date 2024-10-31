@@ -2,7 +2,6 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -31,14 +30,14 @@ interface DataTableProps<TData> {
 export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = useState({});
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(8); // page size
+  const [pageSize, setPageSize] = useState(10);
   const [limit, setLimit] = useState(10);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
     onRowSelectionChange: setRowSelection,
     state: {
       rowSelection,
@@ -51,8 +50,12 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
           : updater;
       setPageIndex(newPagination.pageIndex);
       setPageSize(newPagination.pageSize);
+
+      //  call fetch function for serverside pagination
     },
   });
+
+  console.log(limit);
 
   return (
     <div className="h-full w-full ">
@@ -62,7 +65,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="border-zinc-800 text-xs "
+                className="border-zinc-800 text-lg "
               >
                 {headerGroup.headers.map((header) => {
                   return (
@@ -83,7 +86,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  className="border-zinc-800 text-sm"
+                  className="border-zinc-800 text-lg"
                   style={
                     row.getIsSelected() ? { backgroundColor: "#27272A" } : {}
                   }
