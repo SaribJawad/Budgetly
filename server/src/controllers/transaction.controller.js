@@ -136,23 +136,33 @@ const getAllTransactions = asyncHandler(async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  const totalTransactions = await Transaction.find({
-    user: userId,
-  })
-    .skip(skip)
-    .limit(limit)
-    .sort({ createdAt: -1 });
+  const results = await Transaction.aggregate([
+    { $match: { user: userId } },
+    {
+      $facet: {
+        paginatedResults: [
+          { $sort: { createdAt: -1 } },
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        totalCount: [{ $count: "count" }],
+      },
+    },
+  ]);
 
-  if (!totalTransactions) {
+  if (!results) {
     throw new ApiError(500, "Something went wrong while fetching transactions");
   }
+
+  const transaction = results[0].paginatedResults;
+  const totalCount = results[0].totalCount[0]?.count || 0;
 
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        totalTransactions,
+        { transaction, totalCount },
         "Transactions fetched successfully"
       )
     );
