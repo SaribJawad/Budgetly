@@ -12,11 +12,11 @@ function WalletPage() {
         note={"Overview of your balance and accounts"}
       />
 
-      <div className="h-[40%]    grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3  md:gap-4">
+      <div className="h-[40%]   grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3  md:gap-4">
         <WalletSummaryCard />
         <WalletDisplaySection />
       </div>
-      <div className="grid lg:grid-cols-3 grid-cols-1 gap-3  h-full ">
+      <div className="grid lg:grid-cols-3 grid-cols-1 gap-3  h-full   ">
         <div className="lg:col-span-3 col-span-1  flex flex-col gap-3 ">
           <TransactionOverviewCard />
           <RecentTransactionsCard />

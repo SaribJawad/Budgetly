@@ -28,7 +28,7 @@ export function DatePickerWithRange({
         <PopoverTrigger asChild>
           <Button
             id="date"
-            size="lg"
+            size="sm"
             variant={"outline"}
             className={cn(
               "w-auto  justify-start text-left font-normal bg-black border-zinc-800 hover:bg-[#27272A] hover:text-white",
@@ -46,7 +46,7 @@ export function DatePickerWithRange({
                 format(dateRange.from, "LLL dd, y")
               )
             ) : (
-              <span className="text-lg">Pick a date</span>
+              <span className="sm:text-lg text-md">Pick a date</span>
             )}
           </Button>
         </PopoverTrigger>

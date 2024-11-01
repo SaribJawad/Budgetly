@@ -55,17 +55,15 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
     },
   });
 
-  console.log(limit);
-
   return (
-    <div className="h-full w-full ">
+    <div className=" w-full  rounded-2xl grid grid-cols-1">
       <div className="rounded-md border border-zinc-800">
-        <Table>
+        <Table className="w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="border-zinc-800 text-lg "
+                className="border-zinc-800 sm:text-md text-sm w-fit"
               >
                 {headerGroup.headers.map((header) => {
                   return (
@@ -86,7 +84,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  className="border-zinc-800 text-lg"
+                  className="border-zinc-800 sm:text-lg text-sm"
                   style={
                     row.getIsSelected() ? { backgroundColor: "#27272A" } : {}
                   }
@@ -117,28 +115,28 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
         </Table>
       </div>
       <div className="flex items-center justify-between py-2">
-        <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="flex items-center space-x-2">
           <Button
-            className="text-xs h-6 bg-black border border-zinc-800 hover:bg-[#917FFF] hover:text-white"
+            className="text-sm h-6 bg-black border border-zinc-800 hover:bg-[#917FFF] hover:text-white"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            {"<"}
           </Button>
-          <span className="text-xs">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+          <span className="text-sm">
+            {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </span>
           <Button
-            className="text-xs h-6 bg-black border border-zinc-800 hover:bg-[#917FFF] hover:text-white"
+            className="text-sm h-6 bg-black border border-zinc-800 hover:bg-[#917FFF] hover:text-white"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            {">"}
           </Button>
           <Select
             defaultValue={"10"}

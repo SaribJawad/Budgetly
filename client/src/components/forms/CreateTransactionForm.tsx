@@ -134,15 +134,15 @@ function CreateTransactionForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} action="" className="">
-        <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
+        <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-3">
           <FormField
             name="amount"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel className="text-xs">Amount</FormLabel>
+                <FormLabel className="text-md">Amount</FormLabel>
                 <FormControl>
                   <Input
-                    className="border text-xs border-zinc-800 bg-black h-8"
+                    className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
                       outline: "none",
@@ -153,10 +153,10 @@ function CreateTransactionForm() {
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
-                <FormDescription className="text-[10px]">
+                <FormDescription className="text-sm">
                   Transaction amount.
                 </FormDescription>
-                <FormMessage className=" text-[10px]" />
+                <FormMessage className=" text-sm" />
               </FormItem>
             )}
           />
@@ -164,7 +164,7 @@ function CreateTransactionForm() {
             name="transactionType"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel className="text-xs">Transaction type</FormLabel>
+                <FormLabel className="text-md">Transaction type</FormLabel>
                 <FormControl>
                   <Select
                     defaultValue={field.value}
@@ -175,7 +175,7 @@ function CreateTransactionForm() {
                   >
                     <SelectTrigger
                       {...field}
-                      className="flex h-8 items-center gap-2"
+                      className="flex h-10 items-center gap-2"
                       style={{
                         boxShadow: "none",
                         outline: "none",
@@ -196,10 +196,10 @@ function CreateTransactionForm() {
                     </SelectContent>
                   </Select>
                 </FormControl>
-                <FormDescription className="text-[10px]">
+                <FormDescription className="text-sm">
                   Transaction type.
                 </FormDescription>
-                <FormMessage className="text-[10px] " />
+                <FormMessage className="text-sm " />
               </FormItem>
             )}
           />
@@ -208,12 +208,12 @@ function CreateTransactionForm() {
               name="category"
               render={({ field }) => (
                 <FormItem className="col-span-1">
-                  <FormLabel className="text-xs">Category</FormLabel>
+                  <FormLabel className="text-md">Category</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
                         {...field}
-                        className="flex h-8 items-center gap-2"
+                        className="flex h-10 items-center gap-2"
                         style={{
                           boxShadow: "none",
                           outline: "none",
@@ -234,10 +234,10 @@ function CreateTransactionForm() {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormDescription className="text-[10px]">
+                  <FormDescription className="text-sm">
                     Choose category.
                   </FormDescription>
-                  <FormMessage className=" text-[10px]" />
+                  <FormMessage className=" text-sm" />
                 </FormItem>
               )}
             />
@@ -246,7 +246,7 @@ function CreateTransactionForm() {
             name="paymentType"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel className="text-xs">Payment type</FormLabel>
+                <FormLabel className="text-md">Payment type</FormLabel>
                 <FormControl>
                   <Select
                     value={field.value || "Cash"}
@@ -254,7 +254,7 @@ function CreateTransactionForm() {
                   >
                     <SelectTrigger
                       {...field}
-                      className="flex h-8 items-center gap-2"
+                      className="flex h-10 items-center gap-2"
                       style={{
                         boxShadow: "none",
                         outline: "none",
@@ -275,10 +275,10 @@ function CreateTransactionForm() {
                     </SelectContent>
                   </Select>
                 </FormControl>
-                <FormDescription className="text-[10px]">
+                <FormDescription className="text-sm">
                   Choose category.
                 </FormDescription>
-                <FormMessage className=" text-[10px]" />
+                <FormMessage className=" text-sm" />
               </FormItem>
             )}
           />
@@ -287,10 +287,10 @@ function CreateTransactionForm() {
               name="payer"
               render={({ field }) => (
                 <FormItem className="col-span-1">
-                  <FormLabel className="text-xs">Payer</FormLabel>
+                  <FormLabel className="text-md">Payer</FormLabel>
                   <FormControl>
                     <Input
-                      className="border text-xs border-zinc-800 bg-black h-8"
+                      className="border text-md border-zinc-800 bg-black h-10"
                       style={{
                         boxShadow: "none",
                         outline: "none",
@@ -300,10 +300,10 @@ function CreateTransactionForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-[10px]">
+                  <FormDescription className="text-sm">
                     Name of the person or entity.
                   </FormDescription>
-                  <FormMessage className=" text-[10px]" />
+                  <FormMessage className=" text-sm" />
                 </FormItem>
               )}
             />
@@ -318,10 +318,10 @@ function CreateTransactionForm() {
                       : "col-span-1"
                   }`}
                 >
-                  <FormLabel className="text-xs">Payee</FormLabel>
+                  <FormLabel className="text-md">Payee</FormLabel>
                   <FormControl>
                     <Input
-                      className="border text-xs border-zinc-800 bg-black h-8"
+                      className="border text-md border-zinc-800 bg-black h-10"
                       style={{
                         boxShadow: "none",
                         outline: "none",
@@ -331,10 +331,10 @@ function CreateTransactionForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-[10px]">
+                  <FormDescription className="text-sm">
                     Name of the person or entity.
                   </FormDescription>
-                  <FormMessage className=" text-[10px]" />
+                  <FormMessage className=" text-sm" />
                 </FormItem>
               )}
             />
@@ -344,12 +344,12 @@ function CreateTransactionForm() {
             name="fromWallet"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel className="text-xs">From wallet</FormLabel>
+                <FormLabel className="text-md">From wallet</FormLabel>
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger
                       {...field}
-                      className="flex h-8 items-center gap-2"
+                      className="flex h-10 items-center gap-2"
                       style={{
                         boxShadow: "none",
                         outline: "none",
@@ -370,10 +370,10 @@ function CreateTransactionForm() {
                     </SelectContent>
                   </Select>
                 </FormControl>
-                <FormDescription className="text-[10px]">
+                <FormDescription className="text-sm">
                   Choose wallet.
                 </FormDescription>
-                <FormMessage className=" text-[10px]" />
+                <FormMessage className=" text-sm" />
               </FormItem>
             )}
           />
@@ -382,12 +382,12 @@ function CreateTransactionForm() {
               name="toWallet"
               render={({ field }) => (
                 <FormItem className="col-span-1">
-                  <FormLabel className="text-xs">To wallet</FormLabel>
+                  <FormLabel className="text-md">To wallet</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
                         {...field}
-                        className="flex h-8 items-center gap-2"
+                        className="flex h-10 items-center gap-2"
                         style={{
                           boxShadow: "none",
                           outline: "none",
@@ -408,10 +408,10 @@ function CreateTransactionForm() {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormDescription className="text-[10px]">
+                  <FormDescription className="text-sm">
                     Choose wallet.
                   </FormDescription>
-                  <FormMessage className=" text-[10px]" />
+                  <FormMessage className=" text-sm" />
                 </FormItem>
               )}
             />
@@ -420,13 +420,13 @@ function CreateTransactionForm() {
             name="date"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs">Date</FormLabel>
+                <FormLabel className="text-md">Date</FormLabel>
                 <FormControl>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
-                        className="h-8 w-full col-span-1 text-xs font-normal  bg-black border-zinc-800"
+                        className="h-10 w-full col-span-1 text-sm font-normal  bg-black border-zinc-800"
                       >
                         <CalendarRange />
                         {field.value
@@ -445,10 +445,10 @@ function CreateTransactionForm() {
                     </PopoverContent>
                   </Popover>
                 </FormControl>
-                <FormDescription className="text-[10px]">
+                <FormDescription className="text-sm">
                   Select a date.
                 </FormDescription>
-                <FormMessage className=" text-[10px]" />
+                <FormMessage className=" text-sm" />
               </FormItem>
             )}
           />
@@ -462,10 +462,10 @@ function CreateTransactionForm() {
                     : "col-span-2"
                 }`}
               >
-                <FormLabel className="text-xs">Note</FormLabel>
+                <FormLabel className="text-md">Note</FormLabel>
                 <FormControl>
                   <Input
-                    className="border text-xs border-zinc-800 bg-black h-8"
+                    className="border text-md border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
                       outline: "none",
@@ -475,19 +475,19 @@ function CreateTransactionForm() {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription className="text-[10px]">
+                <FormDescription className="text-sm">
                   Add a note.
                 </FormDescription>
-                <FormMessage className=" text-[10px]" />
+                <FormMessage className=" text-sm" />
               </FormItem>
             )}
           ></FormField>
         </div>
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center mt-8">
           <Button
             variant="default"
             size="sm"
-            className="h-8 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-xs"
+            className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
             Create
           </Button>

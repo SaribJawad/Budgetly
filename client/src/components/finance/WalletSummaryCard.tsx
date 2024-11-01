@@ -13,7 +13,7 @@ function WalletSummaryCard() {
   return (
     <div className="border border-zinc-800 h-full py-2 px-3 flex flex-col justify-between rounded-2xl md:col-span-1 col-span-2   ">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-3xl">Total balance</h3>
+        <h3 className="font-semibold sm:text-3xl text-xl">Total balance</h3>
         <Select
           defaultValue={selectedWallet}
           onValueChange={(value) => setSelectedWallet(value)}
@@ -39,8 +39,8 @@ function WalletSummaryCard() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <h1 className="text-5xl font-semibold">$15,800</h1>
-        <p className="text-sm text-zinc-500">
+        <h1 className=" text-5xl font-semibold">$15,800</h1>
+        <p className="sm:text-sm text-xs text-zinc-500">
           Your capital consists of 3 sources
         </p>
       </div>

@@ -22,7 +22,7 @@ function BudgetPieCard() {
     <div className="border p-2 rounded-2xl    h-full  border-zinc-800  ">
       <div className="flex flex-col justify-between items-start w-full">
         <h1 className="font-normal text-xl">Budget</h1>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-zinc-500 overflow-hidden whitespace-nowrap text-ellipsis max-w-xs">
           Total budget for this month - $12321
         </p>
       </div>
@@ -45,7 +45,7 @@ function BudgetPieCard() {
               padding: {
                 left: 0,
                 right: -500,
-                top: 20,
+                top: 30,
                 bottom: 20,
               },
             },

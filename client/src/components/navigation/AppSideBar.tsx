@@ -5,6 +5,7 @@ import {
   ChartLine,
   LayoutDashboard,
   Settings,
+  PiggyBank,
 } from "lucide-react";
 import {
   Sidebar,
@@ -23,7 +24,8 @@ const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Transactions", url: "/transactions", icon: ArrowRightLeft },
   { title: "Wallet", url: "/wallet/:wallet", icon: WalletMinimal },
-  { title: "Goals", url: "#", icon: Goal },
+  { title: "Goals", url: "/goals", icon: Goal },
+  { title: "Budget", url: "#", icon: PiggyBank },
   { title: "Analytics", url: "#", icon: ChartLine },
   { title: "Settings", url: "#", icon: Settings },
 ];
