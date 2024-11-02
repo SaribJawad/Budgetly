@@ -1,8 +1,8 @@
-import { Line } from "react-chartjs-2";
 import ChartJS from "@/ChartConfig";
 import { months } from "@/constants/constants";
+import { Line } from "react-chartjs-2";
 
-function TransactionOverviewCard() {
+function SavingsOverviewCard() {
   const data = {
     labels: months,
     datasets: [
@@ -12,15 +12,15 @@ function TransactionOverviewCard() {
         fill: false,
         backgroundColor: "#90EE90",
         borderColor: "#90EE90",
-        // tension: 0.1,
       },
+
       {
-        label: "Expense",
-        data: [55, 29, 24, 81, 96, 55],
+        label: "Saving",
+        data: [552, 221, 14, 51, 76, 25],
         fill: false,
-        backgroundColor: "#FF474D",
-        borderColor: "#FF474D",
-        // tension: 0.1,
+        backgroundColor: "#917FFF",
+        borderColor: "#917FFF",
+        borderDash: [5, 5],
       },
     ],
   };
@@ -43,13 +43,12 @@ function TransactionOverviewCard() {
       },
     },
   };
-
   return (
-    <div className="border w-full h-[50%] border-zinc-800 rounded-2xl p-2 pb-8">
-      <h1 className="font-semibold text-xl ">Transaction overview</h1>
+    <div className="border w-full h-[290px] pb-8 lg:col-span-3  border-zinc-800 rounded-2xl p-2">
+      <h1 className="font-semibold text-xl">Savings overview</h1>
       <Line options={options} data={data} width={"100%"} />
     </div>
   );
 }
 
-export default TransactionOverviewCard;
+export default SavingsOverviewCard;

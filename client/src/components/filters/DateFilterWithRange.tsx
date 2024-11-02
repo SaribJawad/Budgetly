@@ -9,19 +9,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarRange } from "lucide-react";
 
-interface DatePickerWithRangeProps {
+interface DateFilterWithRangeProps {
   dateRange: DateRange | undefined;
   setDateRange: (range: DateRange | undefined) => void;
   className?: string;
 }
 
-export function DatePickerWithRange({
+export function DateFilterWithRange({
   className,
   dateRange,
   setDateRange,
-}: DatePickerWithRangeProps) {
+}: DateFilterWithRangeProps) {
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -35,7 +34,6 @@ export function DatePickerWithRange({
               !dateRange && "text-muted-foreground"
             )}
           >
-            <CalendarRange />
             {dateRange?.from ? (
               dateRange.to ? (
                 <>

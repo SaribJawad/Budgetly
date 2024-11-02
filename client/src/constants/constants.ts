@@ -33,3 +33,18 @@ export const paymentTypes: string[] = [
   "Mobile payment",
   "Web payment",
 ];
+
+export const months: string[] = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];

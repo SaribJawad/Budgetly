@@ -4,9 +4,9 @@ import Header from "@/components/navigation/Header";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 
 import CreateTransactionPopup from "@/components/popups/CreateTransactionPopup";
+import { DateFilterWithRange } from "@/components/filters/DateFilterWithRange";
 
 export type Payments = {
   date: string;
@@ -128,7 +128,7 @@ function TransactionsPage() {
 
       <div className="flex items-center justify-between w-full ">
         <div className=" ">
-          <DatePickerWithRange
+          <DateFilterWithRange
             dateRange={dateRange}
             setDateRange={setDateRange}
           />

@@ -6,7 +6,7 @@ import AuthLayout from "./components/layout/AuthLayout";
 import MainLayout from "./components/layout/MainLayout";
 import TransactionsPage from "./pages/TransactionsPage";
 import WalletPage from "./pages/WalletPage";
-import GaolsPages from "./pages/GaolsPages";
+import GoalsPages from "./pages/GoalsPages";
 
 export function App() {
   return (
@@ -15,7 +15,7 @@ export function App() {
         <Route index element={<DashboardPage />} />
         <Route path="/transactions" element={<TransactionsPage />} />
         <Route path="/wallet/:walletId" element={<WalletPage />} />
-        <Route path="/goals" element={<GaolsPages />} />
+        <Route path="/goals" element={<GoalsPages />} />
       </Route>
       <Route path="/auth" element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />

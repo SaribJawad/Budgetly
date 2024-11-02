@@ -86,13 +86,20 @@ const createTransactionSchema = z
         });
       }
     } else if (data.transactionType === transactionsType.TRANSFER) {
-      if (!data.fromWallet || !data.toWallet) {
+      if (!data.fromWallet) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          path: ["fromWallet", "toWallet"],
-          message:
-            "From wallet and to wallet are required for transfer transaction",
+          path: ["fromWallet"],
+          message: "From wallet is required ",
         });
+
+        if (!data.toWallet) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["toWallet"],
+            message: "To Wallet is required",
+          });
+        }
       }
       if (data.category) {
         ctx.addIssue({
@@ -125,6 +132,11 @@ function CreateTransactionForm() {
 
   const handleTransactionTypeChange = (value: string) => {
     setSelectedTransactionType(value);
+    form.setValue("fromWallet", "");
+    form.setValue("toWallet", "");
+    form.setValue("category", "");
+    form.setValue("payee", "");
+    form.setValue("payer", "");
   };
 
   const onSubmit = (values: z.infer<typeof createTransactionSchema>) => {
@@ -147,7 +159,7 @@ function CreateTransactionForm() {
                       boxShadow: "none",
                       outline: "none",
                     }}
-                    type="text"
+                    type="number"
                     min={1}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
@@ -485,6 +497,7 @@ function CreateTransactionForm() {
         </div>
         <div className="flex justify-center mt-8">
           <Button
+            type="submit"
             variant="default"
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
