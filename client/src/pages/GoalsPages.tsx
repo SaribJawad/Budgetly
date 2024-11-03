@@ -7,16 +7,24 @@ import GoalsDisplaySection from "@/components/data-display/GoalsDisplaySection";
 import TotalGoals from "@/components/data-display/TotalGoals";
 import SavingsOverviewCard from "@/components/finance/SavingsOverviewCard";
 import CreateGoalPopup from "@/components/popups/CreateGoalPopup";
+import EditGoalPopup from "@/components/popups/EditGoalPopup";
 
 function GoalsPages() {
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
+  const [toggleEditPopup, setToggleEditPopup] = useState<boolean>(false);
+
   const [filter, setFilter] = useState<"All" | "In progress" | "Completed">(
     "All"
   );
 
   const handleOnClose = (): void => {
     setTogglePopup(false);
+    setToggleEditPopup(false);
+  };
+
+  const handleEditPopup = (): void => {
+    setToggleEditPopup((prev) => !prev);
   };
 
   useEffect(() => {
@@ -49,12 +57,13 @@ function GoalsPages() {
       </div>
 
       <GoalFilterButtons filter={filter} setFilter={setFilter} />
-      <GoalsDisplaySection />
+      <GoalsDisplaySection handleToggleEditPopup={handleEditPopup} />
       <div className="grid lg:grid-cols-4 grid-cols-1 gap-3">
         <TotalGoals />
         <SavingsOverviewCard />
       </div>
       {togglePopup && <CreateGoalPopup onClose={handleOnClose} />}
+      {toggleEditPopup && <EditGoalPopup onClose={handleOnClose} />}
     </div>
   );
 }

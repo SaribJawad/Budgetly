@@ -2,15 +2,30 @@ import { Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 
-function GoalCard() {
+interface GoalCardProps {
+  handleToggleEditPopup: () => void;
+  handleToggleGoalPopup: () => void;
+}
+
+function GoalCard({
+  handleToggleEditPopup,
+  handleToggleGoalPopup,
+}: GoalCardProps) {
   return (
-    <div className="border w-[300px] border-zinc-800 shrink-0 p-2 rounded-lg flex flex-col gap-8">
+    <div
+      onClick={handleToggleGoalPopup}
+      className="cursor-pointer border w-[300px] border-zinc-800 shrink-0 p-2 rounded-lg flex flex-col gap-8"
+    >
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-lg font-semibold">MacBook Pro</h2>
           <p className="text-xs text-zinc-500">Due date - 7 Oct 2024</p>
         </div>
         <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggleEditPopup();
+          }}
           size="sm"
           className="rounded-full  h-10 bg-black w-10 border border-zinc-800 hover:border-white"
         >
