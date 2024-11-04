@@ -1,20 +1,40 @@
-import { WalletMinimal } from "lucide-react";
+import { Pencil } from "lucide-react";
+import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
+import EditWalletPopup from "../popups/EditWalletPopup";
 
 function WalletCard() {
-  const number = 12345679;
+  const [togglePopup, setTogglePopup] = useState<boolean>(false);
 
-  const asd = number.toString().replace(/^(\d{5})/, "*****");
+  const handleClosePopup = (): void => {
+    setTogglePopup(false);
+  };
+
+  useEffect(() => {
+    if (togglePopup) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    return () => document.body.classList.remove("overflow-hidden");
+  }, [togglePopup]);
 
   return (
-    <div className="cursor-pointer bg-gradient-to-r from-[#8e7dfc] via-[#a395fb] to-[#7a60e2] rounded-xl h-full min-w-[220px] w-[280px] p-3 flex flex-col justify-between">
+    <div className="cursor-pointer border border-zinc-800  rounded-xl h-full min-w-[220px] w-[280px] p-3 flex flex-col justify-between">
       <div className="  w-full flex justify-between">
         <h4 className="font-semibold text-xl">$8,000</h4>
-        <WalletMinimal size={20} />
+        <Button
+          onClick={() => setTogglePopup((prev) => !prev)}
+          size="sm"
+          className="bg-transparent hover:bg-[#8470FF]"
+        >
+          <Pencil size={25} />
+        </Button>
       </div>
-      <div className="flex flex-col">
-        <h4 className="font-semibold text-xl">Account name</h4>
-        <span className="text-xs">{asd}</span>
-      </div>
+
+      <h4 className="font-semibold text-2xl">Account name</h4>
+      {togglePopup && <EditWalletPopup onClose={handleClosePopup} />}
     </div>
   );
 }

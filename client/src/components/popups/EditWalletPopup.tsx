@@ -1,12 +1,11 @@
 import { motion } from "framer-motion";
-import React from "react";
-import CreateGoalForm from "../forms/CreateGoalForm";
+import EditWalletForm from "../forms/EditWalletForm";
 
-interface CreateGoalPopupProps {
+interface EditWalletPopupProps {
   onClose: () => void;
 }
 
-function CreateGoalPopup({ onClose }: CreateGoalPopupProps) {
+function EditWalletPopup({ onClose }: EditWalletPopupProps) {
   const fadeInVariants = {
     hidden: { opacity: 0, y: -15 },
     visible: { opacity: 1, y: -20 },
@@ -28,18 +27,17 @@ function CreateGoalPopup({ onClose }: CreateGoalPopupProps) {
       className="fixed  top-5    left-0 transform -translate-x-1/2 -translate-y-1/2  bg-black bg-opacity-80 z-30 h-full  w-full  "
     >
       <div
-        className="w-auto py-5 px-5 flex flex-col gap-8 h-auto bg-black border border-zinc-800 rounded-lg absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2"
         onClick={handlePopupClick}
+        className="w-auto py-5 px-5 flex flex-col gap-8 h-auto bg-black border border-zinc-800 rounded-lg absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2"
       >
         <div className="flex items-center flex-col ">
-          <h3 className="font-semibold text-2xl">Adding a new Goal</h3>
+          <h3 className="font-semibold text-2xl">Editing Wallet</h3>
           <p className="text-sm text-zinc-500">Please fill in the form below</p>
         </div>
-
-        <CreateGoalForm />
+        <EditWalletForm />
       </div>
     </motion.div>
   );
 }
 
-export default CreateGoalPopup;
+export default EditWalletPopup;

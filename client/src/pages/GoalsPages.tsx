@@ -49,7 +49,7 @@ function GoalsPages() {
         <Button
           onClick={() => setTogglePopup((prev) => !prev)}
           size="lg"
-          className="bg-[#8470FF] hover:bg-[#6C5FBC] hover:text-white rounded-full  border-zinc-800 w-fit text-md font-medium"
+          className="bg-[#8470FF] hover:bg-[#6C5FBC] hover:text-white rounded-xl  border-zinc-800 w-fit text-md font-medium"
           variant="outline"
         >
           Add new Goal

@@ -78,19 +78,20 @@ function GoalCardPopup({ handleCloseGoalPopup }: GoalCardPopupProps) {
 
         <div className="flex flex-col gap-3">
           {addSaveAmount ? (
-            <div className="flex items-center justify-around">
-              <form onSubmit={handleSubmit}>
-                <input
-                  value={savedAmount}
-                  onChange={(e) => setSavedAmount(Number(e.target.value))}
-                  className="border border-zinc-800 bg-black rounded-lg h-10 outline-none p-2"
-                  type="number"
-                />
-                <Button size="sm" className="bg-[#917FFF]">
-                  Add
-                </Button>
-              </form>
-            </div>
+            <form
+              onSubmit={handleSubmit}
+              className="flex items-center justify-center gap-3"
+            >
+              <input
+                value={savedAmount}
+                onChange={(e) => setSavedAmount(Number(e.target.value))}
+                className="border border-zinc-800 bg-black rounded-lg h-10 outline-none p-2"
+                type="number"
+              />
+              <Button size="sm" className="bg-[#917FFF]">
+                Add
+              </Button>
+            </form>
           ) : (
             <Button
               onClick={() => setAddSaveAmount((prev) => !prev)}

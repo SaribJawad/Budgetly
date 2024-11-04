@@ -48,3 +48,30 @@ export const months: string[] = [
   "Nov",
   "Dec",
 ];
+
+export const walletTypes: string[] = [
+  "General",
+  "Cash",
+  "Current account",
+  "Credit card",
+  "Saving account",
+  "Bonus",
+  "Insurance",
+  "Investment",
+  "Loan",
+  "Mortgage",
+  "Account with overdraft",
+];
+
+type currencies = { code: string; name: string };
+
+export const currencies: currencies[] = [
+  { code: "USD", name: "United States Dollar" },
+  { code: "EUR", name: "Euro" },
+  { code: "JPY", name: "Japanese Yen" },
+  { code: "CAD", name: "Canadian Dollar" },
+  { code: "INR", name: "Indian Rupee" },
+  { code: "AUD", name: "Australian Dollar" },
+  { code: "NZD", name: "New Zealand Dollar" },
+  { code: "PKR", name: "Pakistani Rupee" },
+];
