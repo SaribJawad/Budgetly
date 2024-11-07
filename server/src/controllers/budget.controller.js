@@ -6,15 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 const createBudget = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
 
-  const {
-    name,
-    period,
-    amount,
-    category,
-    wallet,
-    notifyOnExceed,
-    notifyOnTrending,
-  } = req.body;
+  const { name, period, amount, category, wallet } = req.body;
 
   const requiredFields = {
     name,
@@ -57,8 +49,6 @@ const createBudget = asyncHandler(async (req, res) => {
     amount,
     category: category || undefined,
     wallet,
-    notifyOnExceed: notifyOnExceed || undefined,
-    notifyOnTrending: notifyOnTrending || undefined,
   });
 
   if (!budget) {
