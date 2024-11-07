@@ -17,8 +17,6 @@ import { Button } from "../ui/button";
 import { CalendarRange } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 
-//  name , targetAmount, goalDeadLine, savedAlready, note
-
 const createGoalSchema = z.object({
   name: z.string().min(4, "Name must be at least 4 letters."),
   targetAmount: z

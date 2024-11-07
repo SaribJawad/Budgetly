@@ -193,7 +193,7 @@ function EditWalletForm() {
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Create
+            Edit
           </Button>
         </div>
       </form>

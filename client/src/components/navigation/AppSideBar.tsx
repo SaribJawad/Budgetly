@@ -25,7 +25,7 @@ const items = [
   { title: "Transactions", url: "/transactions", icon: ArrowRightLeft },
   { title: "Wallet", url: "/wallet/:wallet", icon: WalletMinimal },
   { title: "Goals", url: "/goals", icon: Goal },
-  { title: "Budget", url: "#", icon: PiggyBank },
+  { title: "Budget", url: "/budgets", icon: PiggyBank },
   { title: "Analytics", url: "#", icon: ChartLine },
   { title: "Settings", url: "#", icon: Settings },
 ];

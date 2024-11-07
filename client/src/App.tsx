@@ -7,6 +7,7 @@ import MainLayout from "./components/layout/MainLayout";
 import TransactionsPage from "./pages/TransactionsPage";
 import WalletPage from "./pages/WalletPage";
 import GoalsPages from "./pages/GoalsPages";
+import BudgetPage from "./pages/BudgetPage";
 
 export function App() {
   return (
@@ -16,6 +17,7 @@ export function App() {
         <Route path="/transactions" element={<TransactionsPage />} />
         <Route path="/wallet/:walletId" element={<WalletPage />} />
         <Route path="/goals" element={<GoalsPages />} />
+        <Route path="/budgets" element={<BudgetPage />} />
       </Route>
       <Route path="/auth" element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />

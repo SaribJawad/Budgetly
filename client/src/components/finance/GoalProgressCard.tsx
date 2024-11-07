@@ -1,6 +1,6 @@
 import { Progress } from "../ui/progress";
 
-function GoalCard() {
+function GoalProgressCard() {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -12,4 +12,4 @@ function GoalCard() {
   );
 }
 
-export default GoalCard;
+export default GoalProgressCard;

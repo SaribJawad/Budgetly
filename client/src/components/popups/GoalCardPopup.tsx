@@ -68,7 +68,7 @@ function GoalCardPopup({ handleCloseGoalPopup }: GoalCardPopupProps) {
             }
             role="progressbar"
           >
-            <span className="text-white text-xl font-bold">$124</span>
+            <span className="text-white text-xl font-semibold">$124</span>
           </div>
           <div className="flex flex-col items-center">
             <h3 className="text-md text-zinc-500">Last added amount</h3>

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import GoalCard from "./GoalCard";
+
 import GoalCardPopup from "../popups/GoalCardPopup";
+import GoalCard from "./GoalCard";
 
 interface GoalsDisplaySection {
   handleToggleEditPopup: () => void;
