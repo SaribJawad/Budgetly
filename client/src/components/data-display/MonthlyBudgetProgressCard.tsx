@@ -2,7 +2,7 @@ import BudgetStatusCard from "../status/BudgetStatusCard";
 
 function MonthlyBudgetProgressCard() {
   return (
-    <div className="border border-zinc-800 rounded-2xl p-2 flex flex-col gap-3 pb-4">
+    <div className="border h-1/2 border-zinc-800 rounded-2xl p-2 flex flex-col gap-3 pb-4">
       <h2 className="text-lg font-semibold">Monthly budget</h2>
 
       <div>

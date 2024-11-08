@@ -45,7 +45,7 @@ function BudgetPage() {
           <BudgetsDisplaySection />
         </div>
 
-        <div className="col-span-1  flex flex-col gap-3 ">
+        <div className="col-span-1  h-full  flex flex-col gap-3 ">
           <MonthlyBudgetProgressCard />
           <MostExpensesCard />
         </div>

@@ -8,6 +8,7 @@ import TransactionsPage from "./pages/TransactionsPage";
 import WalletPage from "./pages/WalletPage";
 import GoalsPages from "./pages/GoalsPages";
 import BudgetPage from "./pages/BudgetPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
 
 export function App() {
   return (
@@ -18,6 +19,7 @@ export function App() {
         <Route path="/wallet/:walletId" element={<WalletPage />} />
         <Route path="/goals" element={<GoalsPages />} />
         <Route path="/budgets" element={<BudgetPage />} />
+        <Route path="/analytics" element={<AnalyticsPage />} />
       </Route>
       <Route path="/auth" element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />
