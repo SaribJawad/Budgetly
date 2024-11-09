@@ -14,7 +14,7 @@ function TotalBalanceOverviewCard() {
       },
 
       {
-        label: "Some period last month",
+        label: "Same period last month",
         data: [552, 221, 14, 51, 76, 25],
         fill: false,
         backgroundColor: "#ffffff",

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {
+  getBalanceOverview,
   getMonthlyFlow,
   getTopSpendingCategories,
   getYearlyTrends,
@@ -13,5 +14,6 @@ router.route("/get-yearly-trends").get(verifyJWT, getYearlyTrends);
 router
   .route("/get-top-spending-categories")
   .get(verifyJWT, getTopSpendingCategories);
+router.route("/get-balance-overview").get(verifyJWT, getBalanceOverview);
 
 export default router;
