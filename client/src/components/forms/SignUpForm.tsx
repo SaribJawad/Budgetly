@@ -57,10 +57,10 @@ export function SignUpFrom() {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription className="text-xs">
+                <FormDescription className="text-sm">
                   Your first name.
                 </FormDescription>
-                <FormMessage className="text-xs" />
+                <FormMessage className="text-sm" />
               </FormItem>
             )}
           />
@@ -77,10 +77,10 @@ export function SignUpFrom() {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription className="text-xs">
+                <FormDescription className="text-sm">
                   Your last name.
                 </FormDescription>
-                <FormMessage className="text-xs" />
+                <FormMessage className="text-sm" />
               </FormItem>
             )}
           />
@@ -98,8 +98,8 @@ export function SignUpFrom() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-xs">Your email.</FormDescription>
-              <FormMessage className="text-xs" />
+              <FormDescription className="text-sm">Your email.</FormDescription>
+              <FormMessage className="text-sm" />
             </FormItem>
           )}
         />
@@ -116,14 +116,14 @@ export function SignUpFrom() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-xs">
+              <FormDescription className="text-sm">
                 Enter a secure password.
               </FormDescription>
-              <FormMessage className="text-xs" />
+              <FormMessage className="text-sm" />
             </FormItem>
           )}
         />
-        <Button size="sm" className="text-xs" type="submit">
+        <Button size="sm" className="text-sm" type="submit">
           Signup
         </Button>
       </form>

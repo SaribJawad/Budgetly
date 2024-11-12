@@ -44,19 +44,19 @@ export function LoginForm() {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="flex flex-col w-full mb-[-10px]">
+            <FormItem className="flex flex-col w-full mb-[-10px] ">
               <FormLabel className="text-white">Email</FormLabel>
               <FormControl>
                 <Input
-                  className="bg-black border-2 border-zinc-800 px-1  py-1 text-sm"
+                  className="bg-black border-2 border-zinc-800 px-1  py-1 text-sm no-outline"
                   type="email"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-xs">
+              <FormDescription className="text-sm">
                 Your email address.
               </FormDescription>
-              <FormMessage className="text-xs" />
+              <FormMessage className="text-sm" />
             </FormItem>
           )}
         />
@@ -69,20 +69,20 @@ export function LoginForm() {
               <FormLabel className="text-white">Password</FormLabel>
               <FormControl>
                 <Input
-                  className="bg-black border-2 border-zinc-800 px-1  py-1  text-sm"
+                  className="bg-black border-2 border-zinc-800 px-1  py-1  text-sm no-outline"
                   type="password"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-xs">
+              <FormDescription className="text-sm">
                 Your password.
               </FormDescription>
-              <FormMessage className="text-xs" />
+              <FormMessage className="text-sm" />
             </FormItem>
           )}
         />
 
-        <Button size="sm" className="text-xs" type="submit">
+        <Button size="sm" className="text-sm" type="submit">
           Login
         </Button>
       </form>

@@ -27,7 +27,7 @@ const items = [
   { title: "Goals", url: "/goals", icon: Goal },
   { title: "Budget", url: "/budgets", icon: PiggyBank },
   { title: "Analytics", url: "/analytics", icon: ChartLine },
-  { title: "Settings", url: "#", icon: Settings },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {

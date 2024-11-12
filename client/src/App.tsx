@@ -9,10 +9,13 @@ import WalletPage from "./pages/WalletPage";
 import GoalsPages from "./pages/GoalsPages";
 import BudgetPage from "./pages/BudgetPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import SettingPage from "./pages/SettingPage";
+import CreateWalletPage from "./pages/CreateWalletPage";
 
 export function App() {
   return (
     <Routes>
+      <Route path="create-wallet" element={<CreateWalletPage />} />
       <Route path="/" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="/transactions" element={<TransactionsPage />} />
@@ -20,6 +23,7 @@ export function App() {
         <Route path="/goals" element={<GoalsPages />} />
         <Route path="/budgets" element={<BudgetPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
+        <Route path="/settings" element={<SettingPage />} />
       </Route>
       <Route path="/auth" element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />

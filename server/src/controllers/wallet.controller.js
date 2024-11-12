@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { Wallet } from "../models/wallet.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createWallet = asyncHandler(async (req, res) => {
@@ -9,14 +10,18 @@ const createWallet = asyncHandler(async (req, res) => {
     req.body;
   const userId = req.user?._id;
 
-  const requiredFields = {
-    accountName,
-  };
+  // const requiredFields = {
+  //   accountName,
+  // };
 
-  for (const [key, value] of Object.entries(requiredFields)) {
-    if (!value) {
-      throw new ApiError(400, `${key} is required`);
-    }
+  // for (const [key, value] of Object.entries(requiredFields)) {
+  //   if (!value) {
+  //     throw new ApiError(400, `${key} is required`);
+  //   }
+  // }
+
+  if (!accountName) {
+    throw new ApiError(400, "Account name is required");
   }
 
   const wallet = await Wallet.create({
@@ -31,6 +36,13 @@ const createWallet = asyncHandler(async (req, res) => {
 
   if (!wallet) {
     throw new ApiError(500, "Something went wrong while creating a wallet");
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user.walletCreatedOnce) {
+    user.walletCreatedOnce = true;
+    await user.save();
   }
 
   return res

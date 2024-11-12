@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { createWalletSchema } from "./CreateWalletForm";
 import {
   Form,
   FormControl,
@@ -18,30 +19,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Button } from "../ui/button";
 import { currencies, walletTypes } from "@/constants/constants";
+import { Button } from "../ui/button";
 
-export const createWalletSchema = z.object({
-  walletName: z.string().min(4, "Name must be at least 4 letters"),
-  type: z.string().optional(),
-  balance: z.number().optional(),
-  currency: z
-    .string()
-    .min(1, { message: "Currency is required" })
-    .refine((value) => value && /^[A-Z]{3}$/.test(value), {
-      message: "Invalid currency",
-    }),
-});
-
-function CreateWalletForm() {
+function CreateWalletPageForm() {
   const form = useForm<z.infer<typeof createWalletSchema>>({
     resolver: zodResolver(createWalletSchema),
-    defaultValues: {
-      walletName: "",
-      type: "General",
-      balance: 0,
-      currency: "",
-    },
   });
 
   const onSubmit = (values: z.infer<typeof createWalletSchema>) => {
@@ -50,8 +33,12 @@ function CreateWalletForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid  md:grid-cols-2 grid-cols-1 gap-3 sm:w-[320px] w-[300px] ">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className=" p-3 rounded-xl"
+        action=""
+      >
+        <div className="grid  md:grid-cols-2 grid-cols-1 gap-5 md:w-[720px] sm:w-[400px] w-[300px]">
           <FormField
             name="walletName"
             render={({ field }) => (
@@ -191,7 +178,7 @@ function CreateWalletForm() {
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Create
+            Set wallet
           </Button>
         </div>
       </form>
@@ -199,4 +186,4 @@ function CreateWalletForm() {
   );
 }
 
-export default CreateWalletForm;
+export default CreateWalletPageForm;
