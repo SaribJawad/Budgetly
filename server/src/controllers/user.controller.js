@@ -67,7 +67,7 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
-const loginUser = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email) {
@@ -99,6 +99,10 @@ const loginUser = asyncHandler(async (req, res) => {
   delete userWithoutSenstiveFields.password;
   delete userWithoutSenstiveFields.refreshToken;
 
+  if (userWithoutSenstiveFields.avatar) {
+    userWithoutSenstiveFields.avatar = userWithoutSenstiveFields.avatar.url;
+  }
+
   const options = {
     httpOnly: true,
     secure: true,
@@ -111,7 +115,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { user: userWithoutSenstiveFields, accessToken, refreshToken },
+        { user: userWithoutSenstiveFields, accessToken },
         "User logged in successfully"
       )
     );
@@ -140,6 +144,22 @@ const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User logged out successfully"));
+});
+
+const verifyAuth = asyncHandler(async (req, res) => {
+  const userId = req.user;
+
+  try {
+    const user = await User.findOne(userId).select("-password -refreshToken");
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, user, "Authenticated"));
+  } catch (error) {
+    throw new ApiError(401, "Not Authenticated");
+  }
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
@@ -289,4 +309,5 @@ export {
   updateUserInformation,
   updatePassword,
   updateAvatar,
+  verifyAuth,
 };

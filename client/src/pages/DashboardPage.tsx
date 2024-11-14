@@ -5,6 +5,7 @@ import MoneyFlowCard from "@/components/finance/MoneyFlowCard";
 import RecentTransactionsCard from "@/components/finance/RecentTransactionsCard";
 import SavingGoalsCard from "@/components/finance/SavingGoalsCard";
 import { Chart, CategoryScale } from "chart.js/auto";
+import { useAuth } from "@/context/authContext";
 
 function DashboardPage() {
   Chart.register(CategoryScale);
@@ -12,7 +13,7 @@ function DashboardPage() {
   return (
     <div className="w-full min-h-screen p-2 flex flex-col  space-y-0 gap-3 sm:gap-9 lg:gap-3">
       <Header
-        heading={"Welcome back, Username"}
+        heading={"Welcome, Username"}
         note={"It is the best time to manage your finance"}
       />
       <div className=" h-[240px] grid grid-cols-2 lg:grid-cols-4 gap-3  ">

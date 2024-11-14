@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
+import useLogin from "@/custom-hooks/useLogin";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -22,6 +23,7 @@ const loginSchema = z.object({
 });
 
 export function LoginForm() {
+  const { mutateAsync: login } = useLogin();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -30,8 +32,15 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    await login(values, {
+      onError: () => {
+        form.reset({
+          email: "",
+          password: "",
+        });
+      },
+    });
   }
 
   return (
@@ -82,7 +91,11 @@ export function LoginForm() {
           )}
         />
 
-        <Button size="sm" className="text-sm" type="submit">
+        <Button
+          size="sm"
+          className="text-sm bg-[#917FFF] hover:bg-[#8471ff]"
+          type="submit"
+        >
           Login
         </Button>
       </form>

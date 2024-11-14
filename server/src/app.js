@@ -28,6 +28,7 @@ import budgetRouter from "./routes/budget.routes.js";
 import transactionRouter from "./routes/transaction.routes.js";
 import goalRouter from "./routes/goal.routes.js";
 import analyticsRouter from "./routes/analytics.routes.js";
+import errorHandler from "./middlewares/errorHandler.middleware.js";
 
 // routes declaration
 app.use("/api/v1/users", userRouter);
@@ -37,4 +38,5 @@ app.use("/api/v1/transaction", transactionRouter);
 app.use("/api/v1/goal", goalRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 
+app.use(errorHandler);
 export { app };

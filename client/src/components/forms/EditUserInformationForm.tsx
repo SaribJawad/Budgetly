@@ -52,7 +52,7 @@ function EditUserInformationForm() {
     } else {
       toast({
         variant: "destructive",
-        className: "  border border-red-800 rounded-lg p-5 shadow-xl",
+        className: "  border border-red-800 rounded-lg p-5 shadow-xl ",
         description:
           "No changes were made. Please update at least one field to update.",
       });

@@ -25,6 +25,7 @@ function SettingPage() {
         toast({
           variant: "destructive",
           className: "  border border-red-800 rounded-lg p-5 shadow-xl",
+          duration: 2000,
           description: "Invalid file type. Please upload a JPEG or PNG image.",
         });
       }

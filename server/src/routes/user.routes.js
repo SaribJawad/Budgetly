@@ -7,6 +7,7 @@ import {
   updateAvatar,
   updatePassword,
   updateUserInformation,
+  verifyAuth,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -22,6 +23,7 @@ router.route("/logout").get(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
 router.route("/update-information").patch(verifyJWT, updateUserInformation);
 router.route("/change-password").post(verifyJWT, updatePassword);
+router.route("/auth-verify").get(verifyJWT, verifyAuth);
 router
   .route("/change-avatar")
   .patch(verifyJWT, upload.single("avatar"), updateAvatar);
