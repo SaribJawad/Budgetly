@@ -1,5 +1,6 @@
 import { ErrorResponse } from "@/@types/Error";
 import { User } from "@/@types/User";
+import { api } from "@/api/axios";
 import { useAppDispatch } from "@/app/hook";
 import { loginStart, loginSuccess } from "@/features/auth/authSlice";
 import { useToast } from "@/hooks/use-toast";
@@ -32,8 +33,8 @@ const useLogin = () => {
       try {
         dispatch(loginStart());
 
-        const response = await axios.post(
-          "/api/v1/users/login",
+        const response = await api.post(
+          "/users/login",
           {
             email,
             password,

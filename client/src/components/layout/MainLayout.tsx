@@ -1,9 +1,13 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../navigation/AppSideBar";
+import { useAppSelector } from "@/app/hook";
+import { selectAuthenticationState } from "@/features/auth/authSlice";
 
 function MainLayout() {
-  return (
+  const isAuthenticated = useAppSelector(selectAuthenticationState);
+
+  return isAuthenticated ? (
     <SidebarProvider>
       <AppSidebar />
       <div className="w-full h-auto bg-black flex   text-white ">
@@ -13,6 +17,8 @@ function MainLayout() {
         <Outlet />
       </div>
     </SidebarProvider>
+  ) : (
+    <Navigate to="/auth/login" />
   );
 }
 
