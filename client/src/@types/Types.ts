@@ -8,3 +8,14 @@ export interface User {
   updatedAt: string;
   walletCreatedOnce: boolean;
 }
+
+export interface Wallet {
+  walletName: string;
+  type: string;
+  balance: number;
+  currency: string;
+  walletOwner: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}

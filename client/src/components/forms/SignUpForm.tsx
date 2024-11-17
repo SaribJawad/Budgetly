@@ -12,6 +12,8 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import useSignUp from "@/custom-hooks/useSignUp";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const signUpSchema = z.object({
   firstName: z.string().min(3, { message: "Must be at least 3 characters" }),
@@ -23,6 +25,8 @@ const signUpSchema = z.object({
 });
 
 export function SignUpFrom() {
+  const { mutateAsync: signUp } = useSignUp();
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -33,8 +37,9 @@ export function SignUpFrom() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof signUpSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
+    await signUp(values);
+    navigate("/auth/login");
   };
 
   return (
@@ -112,7 +117,7 @@ export function SignUpFrom() {
               <FormControl>
                 <Input
                   className="bg-black border-2 border-zinc-800 px-1  py-1 text-sm"
-                  type="email"
+                  type="password"
                   {...field}
                 />
               </FormControl>

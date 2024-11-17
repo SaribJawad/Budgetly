@@ -49,22 +49,22 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     firstName,
     lastName,
-    avatar: { url: avatar.url, publicId: avatar.public_id } || "",
+    avatar: { url: avatar?.url, publicId: avatar?.public_id } || "",
     email,
     password,
   });
 
-  const createdUser = await User.findById(user?._id).select(
-    "-password -refreshToken"
-  );
+  // const createdUser = await User.findById(user?._id).select(
+  //   "-password -refreshToken"
+  // );
 
-  if (!createdUser) {
+  if (!user) {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
 
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered successfully"));
+    .json(new ApiResponse(200, {}, "User registered successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res, next) => {

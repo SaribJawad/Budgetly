@@ -2,10 +2,18 @@ import { Navigate, Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../navigation/AppSideBar";
 import { useAppSelector } from "@/app/hook";
-import { selectAuthenticationState } from "@/features/auth/authSlice";
+import {
+  selectAuthenticationState,
+  selectWalletCreatedOnce,
+} from "@/features/auth/authSlice";
 
 function MainLayout() {
   const isAuthenticated = useAppSelector(selectAuthenticationState);
+  const createdWalletOnce = useAppSelector(selectWalletCreatedOnce);
+
+  if (!createdWalletOnce && isAuthenticated) {
+    return <Navigate to="create-wallet" />;
+  }
 
   return isAuthenticated ? (
     <SidebarProvider>

@@ -6,31 +6,18 @@ import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createWallet = asyncHandler(async (req, res) => {
-  const { accountName, accountNumber, type, balance, currency, color } =
-    req.body;
+  const { walletName, type, balance, currency } = req.body;
   const userId = req.user?._id;
 
-  // const requiredFields = {
-  //   accountName,
-  // };
-
-  // for (const [key, value] of Object.entries(requiredFields)) {
-  //   if (!value) {
-  //     throw new ApiError(400, `${key} is required`);
-  //   }
-  // }
-
-  if (!accountName) {
-    throw new ApiError(400, "Account name is required");
+  if (!walletName) {
+    throw new ApiError(400, "Wallet name is required");
   }
 
   const wallet = await Wallet.create({
-    accountName,
-    accountNumber,
+    walletName,
     type: type || undefined,
     balance: balance || undefined,
     currency: currency || undefined,
-    color,
     walletOwner: userId,
   });
 

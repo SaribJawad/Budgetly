@@ -16,12 +16,9 @@ const WalletTypes = {
 
 const walletSchema = new Schema(
   {
-    accountName: {
+    walletName: {
       type: String,
       required: true,
-    },
-    accountNumber: {
-      type: String,
     },
     type: {
       type: String,
@@ -36,10 +33,7 @@ const walletSchema = new Schema(
       type: String,
       default: "USD",
     },
-    color: {
-      type: String,
-      default: "#0000",
-    },
+
     walletOwner: {
       type: Schema.Types.ObjectId,
       ref: "User",

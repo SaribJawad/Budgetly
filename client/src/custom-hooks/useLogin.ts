@@ -1,12 +1,12 @@
 import { ErrorResponse } from "@/@types/Error";
-import { User } from "@/@types/User";
+import { User } from "@/@types/Types";
 import { api } from "@/api/axios";
 import { useAppDispatch } from "@/app/hook";
 import { loginStart, loginSuccess } from "@/features/auth/authSlice";
-import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useShowToast from "./useShowToast";
 
 interface LoginResponse {
   statusCode: number;
@@ -25,8 +25,8 @@ interface LoginData {
 
 const useLogin = () => {
   const dispatch = useAppDispatch();
-  const { toast } = useToast();
   const navigate = useNavigate();
+  const showToast = useShowToast();
 
   return useMutation<LoginResponse, ErrorResponse, LoginData>({
     mutationFn: async ({ email, password }) => {
@@ -53,10 +53,8 @@ const useLogin = () => {
         if (axios.isAxiosError(error) && error.response) {
           const errorMessage =
             error.response.data?.message || "An unexpected error occurred.";
-          toast({
+          showToast({
             variant: "destructive",
-            className: " text-white rounded-lg p-5 shadow-xl",
-            duration: 3000,
             description: errorMessage,
           });
         }
@@ -66,6 +64,9 @@ const useLogin = () => {
     onSuccess: (data) => {
       navigate("/", { replace: true });
       dispatch(loginSuccess(data.data.user));
+      showToast({
+        description: "Logged in.",
+      });
     },
   });
 };

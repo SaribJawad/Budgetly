@@ -26,6 +26,7 @@ const userSchema = new Schema(
         url: String,
         publicId: String,
       },
+      default: null,
     },
     walletCreatedOnce: {
       type: Boolean,

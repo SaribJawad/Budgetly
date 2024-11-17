@@ -1,4 +1,4 @@
-import { User } from "@/@types/User";
+import { User } from "@/@types/Types";
 import { RootState } from "@/app/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -44,11 +44,14 @@ export default authSlice.reducer;
 
 // selectors
 export const selectUser = (state: RootState) => {
-  state.auth.user;
+  return state.auth.user;
 };
 export const selectAuthLoading = (state: RootState) => {
-  state.auth.loading;
+  return state.auth.loading;
 };
 export const selectAuthenticationState = (state: RootState) => {
   return state.auth.isAuthenticated;
+};
+export const selectWalletCreatedOnce = (state: RootState) => {
+  return state.auth.user?.walletCreatedOnce;
 };

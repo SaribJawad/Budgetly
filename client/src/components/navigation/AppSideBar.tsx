@@ -6,10 +6,13 @@ import {
   LayoutDashboard,
   Settings,
   PiggyBank,
+  User2,
+  ChevronUp,
 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -18,6 +21,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { useLogout } from "@/custom-hooks/useLogout";
 
 // Menu items.
 const items = [
@@ -31,6 +41,12 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const { mutateAsync: logout } = useLogout();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   const location = useLocation();
   return (
     <Sidebar collapsible="icon" className="border-zinc-800 ">
@@ -45,7 +61,7 @@ export function AppSidebar() {
                 <SidebarMenuItem className="" key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={` text-lg ${
+                    className={` text-md ${
                       location.pathname === item.url
                         ? "bg-white"
                         : "hover:bg-zinc-800"
@@ -83,6 +99,31 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="bg-black ">
+        <SidebarMenu className="bg-black text-white  ">
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton className="hover:bg-[#27272A] hover:text-white text-sm">
+                  <User2 /> Username
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="bg-black text-white border-zinc-800 w-[--radix-popper-anchor-width]"
+              >
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="cursor-pointer "
+                >
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }

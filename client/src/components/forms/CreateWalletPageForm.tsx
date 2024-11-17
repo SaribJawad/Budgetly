@@ -21,14 +21,24 @@ import {
 } from "../ui/select";
 import { currencies, walletTypes } from "@/constants/constants";
 import { Button } from "../ui/button";
+import { CreateWalletResponse } from "@/custom-hooks/useCreateWallet";
+import { useNavigate } from "react-router-dom";
 
-function CreateWalletPageForm() {
+interface CreateWalletPageFormProps {
+  createWallet: (
+    values: z.infer<typeof createWalletSchema>
+  ) => Promise<CreateWalletResponse>;
+}
+
+function CreateWalletPageForm({ createWallet }: CreateWalletPageFormProps) {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof createWalletSchema>>({
     resolver: zodResolver(createWalletSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof createWalletSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof createWalletSchema>) => {
+    await createWallet(values);
+    navigate("/");
   };
 
   return (

@@ -330,9 +330,156 @@ const getBalanceOverview = asyncHandler(async (req, res) => {
     );
 });
 
+const getFinanceSummary = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    if (!mongoose.isValidObjectId(userId)) {
+      throw new ApiError(400, "Invalid user ID");
+    }
+
+    const date = new Date();
+    const currentMonth = date.getMonth() + 1;
+    const currentYear = date.getFullYear();
+
+    // current month
+
+    const totalIncomeCurrentMonth = await Transaction.aggregate([
+      {
+        $match: {
+          user: userId,
+          transactionType: "Income",
+          createdAt: {
+            $gte: new Date(currentYear, currentMonth - 1, 1),
+            $lte: new Date(currentYear, currentMonth, 1),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalIncome: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const totalExpenseCurrentMonth = await Transaction.aggregate([
+      {
+        $match: {
+          user: userId,
+          transactionType: "Expense",
+          createdAt: {
+            $gte: new Date(currentYear, currentMonth - 1, 1),
+            $lte: new Date(currentYear, currentMonth, 1),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalExpense: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const currentIncome = totalIncomeCurrentMonth[0]?.totalIncome || 0;
+    const currentExpense = totalExpenseCurrentMonth[0]?.totalExpense || 0;
+    const currentSavings = currentIncome - currentExpense;
+
+    // previous month
+
+    const totalIncomePreviousMonth = await Transaction.aggregate([
+      {
+        $match: {
+          user: userId,
+          transactionType: "Income",
+          createdAt: {
+            $gte: new Date(currentYear, currentMonth - 2, 1),
+            $lte: new Date(currentYear, currentMonth - 1, 1),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalIncome: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const totalExpensePreviousMonth = await Transaction.aggregate([
+      {
+        $match: {
+          user: userId,
+          transactionType: "Expense",
+          createdAt: {
+            $gte: new Date(currentYear, currentMonth - 2, 1),
+            $lte: new Date(currentYear, currentMonth - 1, 1),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalExpense: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const previousIncome = totalIncomePreviousMonth[0]?.totalIncome || 0;
+    const previousExpense = totalExpensePreviousMonth[0]?.totalExpense || 0;
+    const previousSavings = previousIncome - previousExpense;
+
+    // percentage comparison
+    const incomeChange = previousIncome
+      ? ((currentIncome - previousIncome) / previousIncome) * 100
+      : 0;
+    const expenseChange = previousExpense
+      ? ((currentExpense - previousExpense) / previousExpense) * 100
+      : 0;
+    const savingsChange = previousSavings
+      ? ((currentSavings - previousSavings) / previousSavings) * 100
+      : 0;
+
+    const financialSummary = [
+      {
+        currentMonth: {
+          income: currentIncome,
+          expense: currentExpense,
+          savings: currentSavings,
+        },
+        previousMonth: {
+          income: previousIncome,
+          expense: previousExpense,
+          savings: previousSavings,
+        },
+        percentageChange: {
+          income: incomeChange,
+          expense: expenseChange,
+          savings: savingsChange,
+        },
+      },
+    ];
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          financialSummary,
+          "Financial summary fetched successfully"
+        )
+      );
+  } catch (error) {
+    console.log("Error fetching financial summary", error);
+    throw new ApiError(400, "Error fetching financial summary");
+  }
+});
+
 export {
   getMonthlyFlow,
   getYearlyTrends,
   getTopSpendingCategories,
   getBalanceOverview,
+  getFinanceSummary,
 };
