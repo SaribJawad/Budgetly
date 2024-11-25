@@ -19,3 +19,9 @@ export interface Wallet {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface FinanceSummary {
+  title: string;
+  amount: number;
+  percentageChange?: number;
+}

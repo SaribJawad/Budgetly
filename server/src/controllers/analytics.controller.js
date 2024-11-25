@@ -1,5 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Transaction } from "../models/transaction.model.js";
+import { Wallet } from "../models/wallet.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import mongoose from "mongoose";
@@ -342,6 +343,22 @@ const getFinanceSummary = asyncHandler(async (req, res) => {
     const currentMonth = date.getMonth() + 1;
     const currentYear = date.getFullYear();
 
+    const totalWalletBalance = await Wallet.aggregate([
+      {
+        $match: {
+          walletOwner: userId,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalBalance: { $sum: "$balance" },
+        },
+      },
+    ]);
+
+    const totalBalance = totalWalletBalance[0]?.totalBalance || 0;
+
     // current month
 
     const totalIncomeCurrentMonth = await Transaction.aggregate([
@@ -359,6 +376,7 @@ const getFinanceSummary = asyncHandler(async (req, res) => {
         $group: {
           _id: null,
           totalIncome: { $sum: "$amount" },
+          totalTransactions: { $sum: 1 },
         },
       },
     ]);
@@ -378,6 +396,7 @@ const getFinanceSummary = asyncHandler(async (req, res) => {
         $group: {
           _id: null,
           totalExpense: { $sum: "$amount" },
+          totalTransactions: { $sum: 1 },
         },
       },
     ]);
@@ -443,21 +462,23 @@ const getFinanceSummary = asyncHandler(async (req, res) => {
 
     const financialSummary = [
       {
-        currentMonth: {
-          income: currentIncome,
-          expense: currentExpense,
-          savings: currentSavings,
-        },
-        previousMonth: {
-          income: previousIncome,
-          expense: previousExpense,
-          savings: previousSavings,
-        },
-        percentageChange: {
-          income: incomeChange,
-          expense: expenseChange,
-          savings: savingsChange,
-        },
+        title: "Total balance",
+        amount: totalBalance,
+      },
+      {
+        title: "Total income",
+        amount: currentIncome,
+        percentageChange: incomeChange,
+      },
+      {
+        title: "Total expense",
+        amount: currentExpense,
+        percentageChange: expenseChange,
+      },
+      {
+        title: "Total Savings",
+        amount: currentSavings,
+        percentageChange: savingsChange,
       },
     ];
 

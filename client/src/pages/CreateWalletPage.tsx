@@ -1,14 +1,22 @@
 import CreateWalletPageForm from "@/components/forms/CreateWalletPageForm";
 import walletPng from "@/assets/images/wallet.png";
 import { useAppSelector } from "@/app/hook";
-import { selectUser } from "@/features/auth/authSlice";
+import {
+  selectAuthenticationState,
+  selectUser,
+} from "@/features/auth/authSlice";
 import useCreateWallet from "@/custom-hooks/useCreateWallet";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Navigate } from "react-router-dom";
 
 function CreateWalletPage() {
   const user = useAppSelector(selectUser);
+  const isAuthenticated = useAppSelector(selectAuthenticationState);
   const { mutateAsync: createWallet, isPending } = useCreateWallet();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth/login" />;
+  }
 
   if (user?.walletCreatedOnce) {
     return <Navigate to="/" />;

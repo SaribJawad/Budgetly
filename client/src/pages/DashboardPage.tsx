@@ -7,9 +7,15 @@ import SavingGoalsCard from "@/components/finance/SavingGoalsCard";
 import { Chart, CategoryScale } from "chart.js/auto";
 import { useAppSelector } from "@/app/hook";
 import { selectUser } from "@/features/auth/authSlice";
+import { selectFinanceSummary } from "@/features/analytics/analyticSlice";
+import useGetFinanceSummary from "@/custom-hooks/useGetFinanceSummary";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 function DashboardPage() {
+  const { isLoading } = useGetFinanceSummary();
   const user = useAppSelector(selectUser);
+  const financeSummary = useAppSelector(selectFinanceSummary);
+
   Chart.register(CategoryScale);
 
   return (
@@ -18,12 +24,17 @@ function DashboardPage() {
         heading={`Welcome, ${user?.firstName}`}
         note={"It is the best time to manage your finance"}
       />
-      <div className=" h-[240px] grid grid-cols-2 lg:grid-cols-4 gap-3  ">
-        <FinanceSummaryCard />
-        <FinanceSummaryCard />
-        <FinanceSummaryCard />
-        <FinanceSummaryCard />
-      </div>
+      {isLoading ? (
+        <div className="h-[240px] w-full flex items-center justify-center">
+          <LoadingSpinner className="text-white" size={50} />
+        </div>
+      ) : (
+        <div className=" h-[240px] grid grid-cols-2 lg:grid-cols-4 gap-3  ">
+          {financeSummary?.map((summary, index) => (
+            <FinanceSummaryCard key={index} summary={summary} />
+          ))}
+        </div>
+      )}
       <div className="h-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 ">
         <div className="lg:col-span-2 md:col-span-2  ">
           <MoneyFlowCard />
