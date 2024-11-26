@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, MoveUp } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 interface FinanceSummaryCardProps {
   summary: {
@@ -12,8 +12,6 @@ function FinanceSummaryCard({ summary }: FinanceSummaryCardProps) {
   const { title, amount, percentageChange } = summary;
 
   const isExpense = title.toLowerCase().includes("expense");
-
-  console.log(isExpense, "is Expense");
 
   const isPositiveChange = percentageChange
     ? (percentageChange || 0) > 0
@@ -41,7 +39,7 @@ function FinanceSummaryCard({ summary }: FinanceSummaryCardProps) {
 
       <div className="flex flex-col gap-2">
         {/* {TODO formate currecncy} */}
-        <h1 className="lg:text-6xl md:text-4xl text-3xl  font-semibold">
+        <h1 className="lg:text-6xl md:text-4xl text-3xl  font-normal">
           {amount}
         </h1>{" "}
         {}

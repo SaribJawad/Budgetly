@@ -43,15 +43,81 @@ const getMonthlyFlow = asyncHandler(async (req, res) => {
           },
         },
       },
-      { $sort: { "_id.year": 1, "_id.month": 1 } },
+      { $sort: { "_id.year": -1, "_id.month": 1 } },
+      {
+        $group: {
+          _id: null,
+          monthlyFlow: {
+            $push: {
+              month: "$_id.month",
+              income: "$totalIncome",
+              expense: "$totalExpense",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          monthlyFlow: {
+            $map: {
+              input: Array.from({ length: 12 }, (_, i) => i + 1),
+              as: "flow",
+              in: {
+                month: "$$flow",
+                income: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: "$monthlyFlow",
+                              cond: { $eq: ["$$this.month", "$$flow"] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: { $ifNull: ["$$match.income", 0] },
+                  },
+                },
+                expense: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: "$monthlyFlow",
+                              cond: {
+                                $eq: ["$$this.month", "$$flow"],
+                              },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: { $ifNull: ["$$match.expense", 0] },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     ]);
 
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(200, monthlyFlow, "Monthly flow fetched successfully")
-      );
+    console.log(monthlyFlow);
+
+    return res.status(200).json(
+      // monthlyFlow[0].monthlyFlow,
+      new ApiResponse(200, monthlyFlow, "Monthly flow fetched successfully")
+    );
   } catch (error) {
+    console.log(error);
     throw new ApiError(
       500,
       "Something went wrong while fetching monthly flow."
