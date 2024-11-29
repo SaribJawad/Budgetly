@@ -154,7 +154,7 @@ const getAllTransactions = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while fetching transactions");
   }
 
-  const transaction = results[0].paginatedResults;
+  const transactions = results[0].paginatedResults;
   const totalCount = results[0].totalCount[0]?.count || 0;
 
   return res
@@ -162,7 +162,7 @@ const getAllTransactions = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { transaction, totalCount },
+        { transactions, totalCount },
         "Transactions fetched successfully"
       )
     );

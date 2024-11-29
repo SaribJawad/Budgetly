@@ -7,14 +7,20 @@ import SavingGoalsCard from "@/components/finance/SavingGoalsCard";
 import { Chart, CategoryScale } from "chart.js/auto";
 import { useAppSelector } from "@/app/hook";
 import { selectUser } from "@/features/auth/authSlice";
-import { selectFinanceSummary } from "@/features/analytics/analyticSlice";
+import {
+  selectFinanceSummary,
+  selectMonthlyFlow,
+} from "@/features/analytics/analyticSlice";
 import useGetFinanceSummary from "@/custom-hooks/useGetFinanceSummary";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import useGetMonthlyFlow from "@/custom-hooks/useGetMonthlyFlow";
 
 function DashboardPage() {
   const { isLoading } = useGetFinanceSummary();
+  useGetMonthlyFlow();
   const user = useAppSelector(selectUser);
   const financeSummary = useAppSelector(selectFinanceSummary);
+  const { data, status } = useAppSelector(selectMonthlyFlow);
 
   Chart.register(CategoryScale);
 
@@ -37,7 +43,7 @@ function DashboardPage() {
       )}
       <div className="h-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 ">
         <div className="lg:col-span-2 md:col-span-2  ">
-          <MoneyFlowCard />
+          <MoneyFlowCard monthlyFlow={data} />
         </div>
         <div className="lg:col-span-1 md:col-span-1 ">
           <BudgetPieCard />

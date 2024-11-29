@@ -18,7 +18,10 @@ export function App() {
       <Route path="create-wallet" element={<CreateWalletPage />} />
       <Route path="/" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />
-        <Route path="/transactions" element={<TransactionsPage />} />
+        <Route
+          path="/transactions/:pageNum?/:limit?"
+          element={<TransactionsPage />}
+        />
         <Route path="/wallet/:walletId" element={<WalletPage />} />
         <Route path="/goals" element={<GoalsPages />} />
         <Route path="/budgets" element={<BudgetPage />} />

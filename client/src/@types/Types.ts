@@ -25,3 +25,21 @@ export interface FinanceSummary {
   amount: number;
   percentageChange?: number;
 }
+
+export interface MonthlyFlow {
+  month: number;
+  income: number;
+  expense: number;
+}
+
+export interface Transaction {
+  _id: string;
+  user: string;
+  amount: number;
+  category: string;
+  transactionType: string;
+  fromWallet: string;
+  paymentType: string;
+  createdAt?: string;
+  updatedAt: string;
+}

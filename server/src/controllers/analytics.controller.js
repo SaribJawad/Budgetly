@@ -110,14 +110,16 @@ const getMonthlyFlow = asyncHandler(async (req, res) => {
       },
     ]);
 
-    console.log(monthlyFlow);
-
-    return res.status(200).json(
-      // monthlyFlow[0].monthlyFlow,
-      new ApiResponse(200, monthlyFlow, "Monthly flow fetched successfully")
-    );
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          monthlyFlow[0].monthlyFlow,
+          "Monthly flow fetched successfully"
+        )
+      );
   } catch (error) {
-    console.log(error);
     throw new ApiError(
       500,
       "Something went wrong while fetching monthly flow."
@@ -558,7 +560,6 @@ const getFinanceSummary = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    console.log("Error fetching financial summary", error);
     throw new ApiError(400, "Error fetching financial summary");
   }
 });

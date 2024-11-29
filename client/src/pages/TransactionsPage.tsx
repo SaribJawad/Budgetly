@@ -7,104 +7,23 @@ import { DateRange } from "react-day-picker";
 
 import CreateTransactionPopup from "@/components/popups/CreateTransactionPopup";
 import { DateFilterWithRange } from "@/components/filters/DateFilterWithRange";
-
-export type Payments = {
-  date: string;
-  amount: number;
-  paymentType: string;
-  transactionType: "Income" | "Expense" | "Transfer";
-  category: string;
-};
+import useGetAllTranscations from "@/custom-hooks/useGetAllTransactions";
+import { useAppSelector } from "@/app/hook";
+import { selectAllTransactions } from "@/features/transactions/transactionsSlice";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 function TransactionsPage() {
-  // hard coded temp
-  const payments: Payments[] = [
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-    {
-      date: "2024-06-12",
-      amount: 200,
-      paymentType: "Other",
-      transactionType: "Income",
-      category: "Other",
-    },
-  ];
+  useGetAllTranscations();
+  const {
+    data,
+    status,
+    totalTransactions,
+    error,
+    pagination: { currentPage, pageSize, totalPages },
+    loadedPages,
+  } = useAppSelector(selectAllTransactions);
 
+  // console.log("data", data[currentPage]);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
 
@@ -145,7 +64,18 @@ function TransactionsPage() {
         {togglePopup && <CreateTransactionPopup onClose={closePopup} />}
       </div>
 
-      <DataTable columns={columns} data={payments} />
+      {status === "loading" && (
+        <div className="h-full w-full flex items-center justify-center">
+          <LoadingSpinner size={50} />
+        </div>
+      )}
+      {status === "success" && (
+        <DataTable
+          columns={columns}
+          data={data[currentPage]}
+          totalCount={data[currentPage].length || 0}
+        />
+      )}
     </div>
   );
 }

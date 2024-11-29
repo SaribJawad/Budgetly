@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -21,24 +21,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
+  totalCount: number;
 }
 
-export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
+export function DataTable<TData>({
+  columns,
+  data,
+  totalCount,
+}: DataTableProps<TData>) {
+  const queryClient = useQueryClient();
+  const { pageNum = "1", limit = "10" } = useParams();
+  const navigate = useNavigate();
+
+  const [pageIndex, setPageIndex] = useState(Number(pageNum) - 1);
+
+  const [pageSize, setPageSize] = useState(Number(limit));
+
   const [rowSelection, setRowSelection] = useState({});
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [limit, setLimit] = useState(10);
+
+  // invalidate data whenever page or limit changes
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ["allTransactions", pageNum, pageSize],
+    });
+    navigate(`/transactions/${pageIndex + 1}/${pageSize}`, {
+      replace: true,
+    });
+  }, [pageIndex, pageSize]);
 
   const table = useReactTable({
-    data,
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
-    onRowSelectionChange: setRowSelection,
+    pageCount: Math.ceil(totalCount / pageSize),
     state: {
       rowSelection,
       pagination: { pageIndex, pageSize },
@@ -50,9 +72,8 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
           : updater;
       setPageIndex(newPagination.pageIndex);
       setPageSize(newPagination.pageSize);
-
-      //  call fetch function for serverside pagination
     },
+    onRowSelectionChange: setRowSelection,
   });
 
   return (
@@ -139,9 +160,9 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
             {">"}
           </Button>
           <Select
-            defaultValue={"10"}
+            defaultValue={pageSize.toString()}
             onValueChange={(value) => {
-              setLimit(Number(value));
+              setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="w-fit flex items-center gap-2">

@@ -1,6 +1,14 @@
+import { MonthlyFlow } from "@/@types/Types";
 import { Bar } from "react-chartjs-2";
 
-function MoneyFlowCard() {
+interface MoneyFlowCardProps {
+  monthlyFlow: MonthlyFlow[] | null;
+}
+
+function MoneyFlowCard({ monthlyFlow }: MoneyFlowCardProps) {
+  const income = monthlyFlow?.map((flow) => flow.income);
+  const expense = monthlyFlow?.map((flow) => flow.expense);
+
   return (
     <div className="border p-2 pb-9 rounded-2xl  border-zinc-800 h-72   lg:col-span-2 ">
       <h1 className="font-normal text-xl">Money flow</h1>
@@ -23,14 +31,14 @@ function MoneyFlowCard() {
           datasets: [
             {
               label: "Income",
-              data: [100, 300, 400],
+              data: income,
               backgroundColor: "#917FFF",
               hoverBackgroundColor: "#6c5fbc",
             },
 
             {
               label: "Expense",
-              data: [40, 90, 500],
+              data: expense,
               backgroundColor: "#C6BEFF",
               hoverBackgroundColor: "#cfcbeb",
             },
