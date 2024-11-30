@@ -1,11 +1,10 @@
 import { Transaction } from "@/@types/Types";
 import { api } from "@/api/axios";
-import { useAppDispatch, useAppSelector } from "@/app/hook";
+import { useAppDispatch } from "@/app/hook";
 import {
-  selectAllTransactions,
   setGetAllTransactionsStart,
   setGetAllTransactionsSuccess,
-  setGetAllTransasctionError,
+  setGetAllTransasctionsError,
 } from "@/features/transactions/transactionsSlice";
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
@@ -24,16 +23,15 @@ interface useGetAllTransactionResponse {
 }
 
 const useGetAllTranscations = () => {
-  const { pageNum, limit } = useParams();
+  const pageNum = useParams<{ pageNum: string }>().pageNum || "1";
+  const limit = useParams<{ limit: string }>().limit || "10";
   const dispatch = useAppDispatch();
-  // const { loadedPages } = useAppSelector(selectAllTransactions);
 
   return useQuery<useGetAllTransactionResponse, ErrorResponse>({
     queryKey: ["allTransactions", pageNum, limit],
     queryFn: async () => {
-      // if (!loadedPages.includes(Number(pageNum))) {
-      dispatch(setGetAllTransactionsStart());
       try {
+        dispatch(setGetAllTransactionsStart());
         const response = await api.get(
           `/transaction/get-all-transactions?page=${pageNum}&limit=${limit}`
         );
@@ -53,7 +51,7 @@ const useGetAllTranscations = () => {
             error.response.data.message ||
             "An unexpected error occured while fetching all transactions";
           console.log(errorMessage);
-          dispatch(setGetAllTransasctionError(errorMessage));
+          dispatch(setGetAllTransasctionsError(errorMessage));
         }
         throw error;
         // }
@@ -62,6 +60,7 @@ const useGetAllTranscations = () => {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: Boolean(pageNum && limit),
   });
 };
 

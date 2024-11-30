@@ -16,6 +16,16 @@ interface InitialState {
     };
     loadedPages: number[];
   };
+  filteredTransactions: {
+    data: Transaction[];
+    status: "idle" | "loading" | "error" | "success";
+    error: string | null;
+    filterCriteria: {
+      transactionType?: string;
+      fromDate?: string;
+      toDate?: string;
+    };
+  };
 }
 
 const initialState: InitialState = {
@@ -30,6 +40,12 @@ const initialState: InitialState = {
       totalPages: 0,
     },
     loadedPages: [],
+  },
+  filteredTransactions: {
+    data: [],
+    status: "idle",
+    error: null,
+    filterCriteria: {},
   },
 };
 
@@ -79,9 +95,33 @@ const transactionSlice = createSlice({
         state.allTransactions.loadedPages.push(page);
       }
     },
-    setGetAllTransasctionError: (state, action: PayloadAction<string>) => {
+    setGetAllTransasctionsError: (state, action: PayloadAction<string>) => {
       state.allTransactions.status = "error";
       state.allTransactions.error = action.payload;
+    },
+    setGetFilteredTransactionsStart: (state) => {
+      state.filteredTransactions.error = null;
+      state.filteredTransactions.status = "loading";
+    },
+    setGetFilteredTransactionsSuccess: (
+      state,
+      action: PayloadAction<{
+        filteredTransactions: Transaction[];
+        filterCriteria: {
+          transactionType?: string;
+          fromDate?: string;
+          toDate?: string;
+        };
+      }>
+    ) => {
+      state.filteredTransactions.data = action.payload.filteredTransactions;
+      state.filteredTransactions.filterCriteria = action.payload.filterCriteria;
+      state.filteredTransactions.error = null;
+      state.filteredTransactions.status = "success";
+    },
+    setGetFilteredTransactionsError: (state, action: PayloadAction<string>) => {
+      state.filteredTransactions.status = "error";
+      state.filteredTransactions.error = action.payload;
     },
   },
 });
@@ -89,7 +129,10 @@ const transactionSlice = createSlice({
 export const {
   setGetAllTransactionsStart,
   setGetAllTransactionsSuccess,
-  setGetAllTransasctionError,
+  setGetAllTransasctionsError,
+  setGetFilteredTransactionsStart,
+  setGetFilteredTransactionsSuccess,
+  setGetFilteredTransactionsError,
 } = transactionSlice.actions;
 
 export default transactionSlice.reducer;
@@ -97,4 +140,8 @@ export default transactionSlice.reducer;
 // selectors
 export const selectAllTransactions = (state: RootState) => {
   return state.transactions.allTransactions;
+};
+
+export const selectFilteredTransactions = (state: RootState) => {
+  return state.transactions.filteredTransactions;
 };

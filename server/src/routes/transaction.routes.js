@@ -18,7 +18,7 @@ router
 
 router.route("/get-all-transactions").get(verifyJWT, getAllTransactions);
 
-router.route("/filtered-transactions").get(verifyJWT, getFilteredTransactions);
+router.route("/filtered-transactions").post(verifyJWT, getFilteredTransactions);
 
 router
   .route("/:transactionId")

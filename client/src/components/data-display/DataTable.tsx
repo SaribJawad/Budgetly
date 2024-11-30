@@ -165,7 +165,10 @@ export function DataTable<TData>({
               setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className="w-fit flex items-center gap-2">
+            <SelectTrigger
+              className="w-fit flex items-center gap-2"
+              style={{ outline: "none", boxShadow: "none" }}
+            >
               <SelectValue placeholder="Limit" />
             </SelectTrigger>
             <SelectContent>

@@ -355,7 +355,7 @@ const deleteTransaction = asyncHandler(async (req, res) => {
 
 const getFilteredTransactions = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
-  const { transactionType, fromDate, toDate, category } = req.query;
+  const { transactionType, fromDate, toDate } = req.body;
 
   const filterCriteria = { user: userId };
 
@@ -370,10 +370,6 @@ const getFilteredTransactions = asyncHandler(async (req, res) => {
     };
   }
 
-  if (category) {
-    filterCriteria.category = category;
-  }
-
   const filteredTransactions = await Transaction.find(filterCriteria);
 
   if (!filteredTransactions || filteredTransactions.length === 0) {
@@ -382,15 +378,16 @@ const getFilteredTransactions = asyncHandler(async (req, res) => {
       .json(new ApiResponse(404, [], "No transactions found"));
   }
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
         filteredTransactions,
-        "Transactions retrieved successfully"
-      )
-    );
+        totalCount: filteredTransactions.length,
+      },
+      "Transactions retrieved successfully"
+    )
+  );
 });
 
 export {
