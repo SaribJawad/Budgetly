@@ -21,6 +21,10 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    currency: {
+      type: String,
+      required: true,
+    },
     avatar: {
       type: {
         url: String,

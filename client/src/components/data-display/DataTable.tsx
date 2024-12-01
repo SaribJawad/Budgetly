@@ -28,12 +28,14 @@ interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
   totalCount: number;
+  sortBy: "All" | "Income" | "Expense";
 }
 
 export function DataTable<TData>({
   columns,
   data,
   totalCount,
+  sortBy,
 }: DataTableProps<TData>) {
   const queryClient = useQueryClient();
   const { pageNum = "1", limit = "10" } = useParams();
@@ -159,24 +161,26 @@ export function DataTable<TData>({
           >
             {">"}
           </Button>
-          <Select
-            defaultValue={pageSize.toString()}
-            onValueChange={(value) => {
-              setPageSize(Number(value));
-            }}
-          >
-            <SelectTrigger
-              className="w-fit flex items-center gap-2"
-              style={{ outline: "none", boxShadow: "none" }}
+          {sortBy.includes("All") && (
+            <Select
+              defaultValue={pageSize.toString()}
+              onValueChange={(value) => {
+                setPageSize(Number(value));
+              }}
             >
-              <SelectValue placeholder="Limit" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5">5</SelectItem>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="15">15</SelectItem>
-            </SelectContent>
-          </Select>
+              <SelectTrigger
+                className="w-fit flex items-center gap-2"
+                style={{ outline: "none", boxShadow: "none" }}
+              >
+                <SelectValue placeholder="Limit" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="15">15</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
         </div>
       </div>
     </div>

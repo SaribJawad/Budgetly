@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useGetFilteredTransactions from "@/custom-hooks/useGetFilteredTransactions";
+import EmptySection from "@/components/ui/EmptySection";
 
 function TransactionsPage() {
   useGetAllTranscations();
@@ -52,17 +53,24 @@ function TransactionsPage() {
 
   // filter transaction fetch
   const filterTransactions = async () => {
-    if (sortBy.includes("All")) {
-      return;
+    const filterParams: any = {};
+
+    if (dateRange?.from && dateRange?.to) {
+      filterParams.fromDate = dateRange.from.toString();
+      filterParams.toDate = dateRange.to.toString();
     }
 
-    await mutateAsync({
-      transactionType: sortBy,
-      ...(dateRange && {
-        fromDate: dateRange.from?.toISOString(),
-        toDate: dateRange.to?.toISOString(),
-      }),
-    });
+    if (sortBy !== "All") {
+      filterParams.transactionType = sortBy;
+    }
+
+    if (Object.keys(filterParams).length > 0) {
+      await mutateAsync(filterParams);
+    }
+  };
+
+  const createTransaction = async () => {
+    console.log("asd");
   };
 
   useEffect(() => {
@@ -79,7 +87,7 @@ function TransactionsPage() {
     return () => {
       isMounted = false;
     };
-  }, [sortBy]);
+  }, [sortBy, dateRange]);
 
   useEffect(() => {
     if (togglePopup) {
@@ -92,7 +100,7 @@ function TransactionsPage() {
   }, [togglePopup]);
 
   const displayData =
-    sortBy === "All"
+    sortBy === "All" && !dateRange
       ? data && data[currentPage]
         ? data[currentPage]
         : []
@@ -110,14 +118,16 @@ function TransactionsPage() {
       <Header heading={"Transactions"} note={"Overview of your activities"} />
 
       <div className="flex items-center justify-between w-full ">
-        <div className=" ">
-          <DateFilterWithRange
-            dateRange={dateRange}
-            setDateRange={setDateRange}
-          />
-        </div>
+        {sortBy.includes("All") && (
+          <div className=" ">
+            <DateFilterWithRange
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+            />
+          </div>
+        )}
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3  ">
           <Select
             value={sortBy}
             onValueChange={(value: "All" | "Income" | "Expense") =>
@@ -159,30 +169,13 @@ function TransactionsPage() {
           columns={columns}
           data={displayData}
           totalCount={totalCount}
+          sortBy={sortBy}
         />
       ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center bg-black text-gray-500">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-16 w-16 mb-4 text-[#8470FF]"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 17v5m6-5v5m-9-5h12a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2v5a2 2 0 002 2zm0-10h12m-6-6v6"
-            />
-          </svg>
-          <p className="text-lg font-semibold text-white">
-            No Transactions Found
-          </p>
-          <p className="text-sm text-zinc-500">
-            Start adding transactions to see them here.
-          </p>
-        </div>
+        <EmptySection
+          title="No Transactions Found"
+          description="Start adding transactions to see them here."
+        />
       )}
     </div>
   );

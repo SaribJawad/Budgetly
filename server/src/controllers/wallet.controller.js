@@ -6,7 +6,7 @@ import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createWallet = asyncHandler(async (req, res) => {
-  const { walletName, type, balance, currency } = req.body;
+  const { walletName, type, balance } = req.body;
   const userId = req.user?._id;
 
   if (!walletName) {
@@ -17,7 +17,6 @@ const createWallet = asyncHandler(async (req, res) => {
     walletName,
     type: type || undefined,
     balance: balance || undefined,
-    currency: currency || undefined,
     walletOwner: userId,
   });
 
@@ -80,8 +79,7 @@ const updateWalletInformation = asyncHandler(async (req, res) => {
     {},
     req.body.accountName && { accountName: req.body.accountName },
     req.body.accountNumber && { accountNumber: req.body.accountNumber },
-    req.body.type && { type: req.body.type },
-    req.body.currency && { currency: req.body.currency }
+    req.body.type && { type: req.body.type }
   );
 
   if (Object.keys(updateFields).length === 0) {

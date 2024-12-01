@@ -25,12 +25,6 @@ export const createWalletSchema = z.object({
   walletName: z.string().min(4, "Name must be at least 4 letters"),
   type: z.string().optional(),
   balance: z.number().optional(),
-  currency: z
-    .string()
-    .min(1, { message: "Currency is required" })
-    .refine((value) => value && /^[A-Z]{3}$/.test(value), {
-      message: "Invalid currency",
-    }),
 });
 
 function CreateWalletForm() {
@@ -40,7 +34,6 @@ function CreateWalletForm() {
       walletName: "",
       type: "General",
       balance: 0,
-      currency: "",
     },
   });
 
@@ -51,7 +44,7 @@ function CreateWalletForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid  md:grid-cols-2 grid-cols-1 gap-3 sm:w-[320px] w-[300px] ">
+        <div className="grid  md:grid-cols-1 grid-cols-1 gap-3 sm:w-[320px] w-[300px] ">
           <FormField
             name="walletName"
             render={({ field }) => (
@@ -143,48 +136,8 @@ function CreateWalletForm() {
               </FormItem>
             )}
           />
-          <FormField
-            name="currency"
-            render={({ field }) => (
-              <FormItem className="col-span-1">
-                <FormLabel className="text-md">Currency</FormLabel>
-                <FormControl>
-                  <Select
-                    value={field.value || ""}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      {...field}
-                      className="flex h-10 items-center gap-2"
-                      style={{
-                        boxShadow: "none",
-                        outline: "none",
-                      }}
-                    >
-                      <SelectValue placeholder="Currency type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {currencies.map((currency) => (
-                        <SelectItem
-                          className=" text-start block  "
-                          key={currency.code}
-                          value={currency.code}
-                        >
-                          {currency.name} ({currency.code})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription className="text-sm">
-                  Type of currency.
-                </FormDescription>
-                <FormMessage className=" text-sm" />
-              </FormItem>
-            )}
-          />
         </div>
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-8 ">
           <Button
             type="submit"
             variant="default"

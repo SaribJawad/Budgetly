@@ -41,8 +41,7 @@ const useGetFilteredTransactions = () => {
         bodyData.transactionType = filterData.transactionType;
 
       const cacheKey = ["filteredTransactions", bodyData];
-      console.log(bodyData);
-      console.log(cacheKey);
+
       const cachedData = queryClient.getQueryData(cacheKey);
 
       if (cachedData) {

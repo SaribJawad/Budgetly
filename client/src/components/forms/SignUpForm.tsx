@@ -46,9 +46,9 @@ export function SignUpFrom() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col items-center text-white w-auto"
+        className="space-y-8 flex flex-col items-center   text-white w-fit"
       >
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-2">
           <FormField
             control={form.control}
             name="firstName"
@@ -90,24 +90,48 @@ export function SignUpFrom() {
             )}
           />
         </div>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem className="flex flex-col w-full mb-[-10px]">
-              <FormLabel className="text-white">Email</FormLabel>
-              <FormControl>
-                <Input
-                  className="bg-black border-2 border-zinc-800 px-1  py-1 text-sm"
-                  type="email"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription className="text-sm">Your email.</FormDescription>
-              <FormMessage className="text-sm" />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 w-full gap-2">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full mb-[-10px]">
+                <FormLabel className="text-white">Email</FormLabel>
+                <FormControl>
+                  <Input
+                    className="bg-black border-2 border-zinc-800 px-1  py-1 text-sm"
+                    type="email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription className="text-sm">
+                  Your email.
+                </FormDescription>
+                <FormMessage className="text-sm" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full mb-[-10px]">
+                <FormLabel className="text-white">Currency</FormLabel>
+                <FormControl>
+                  <Input
+                    className="bg-black border-2 border-zinc-800 px-1  py-1 text-sm"
+                    type="email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription className="text-sm">
+                  Choose currency.
+                </FormDescription>
+                <FormMessage className="text-sm" />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="password"
