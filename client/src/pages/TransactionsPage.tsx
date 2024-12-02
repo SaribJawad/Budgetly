@@ -7,7 +7,7 @@ import { DateRange } from "react-day-picker";
 
 import CreateTransactionPopup from "@/components/popups/CreateTransactionPopup";
 import { DateFilterWithRange } from "@/components/filters/DateFilterWithRange";
-import useGetAllTranscations from "@/custom-hooks/useGetAllTransactions";
+
 import { useAppSelector } from "@/app/hook";
 import {
   selectAllTransactions,
@@ -25,7 +25,6 @@ import useGetFilteredTransactions from "@/custom-hooks/useGetFilteredTransaction
 import EmptySection from "@/components/ui/EmptySection";
 
 function TransactionsPage() {
-  useGetAllTranscations();
   const { mutateAsync } = useGetFilteredTransactions();
   const {
     data,

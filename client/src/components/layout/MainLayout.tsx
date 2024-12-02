@@ -6,8 +6,10 @@ import {
   selectAuthenticationState,
   selectWalletCreatedOnce,
 } from "@/features/auth/authSlice";
+import useGetAllTranscations from "@/custom-hooks/useGetAllTransactions";
 
 function MainLayout() {
+  useGetAllTranscations();
   const isAuthenticated = useAppSelector(selectAuthenticationState);
   const createdWalletOnce = useAppSelector(selectWalletCreatedOnce);
 

@@ -13,7 +13,6 @@ export interface Wallet {
   walletName: string;
   type: string;
   balance: number;
-  currency: string;
   walletOwner: string;
   _id: string;
   createdAt: string;
@@ -42,4 +41,5 @@ export interface Transaction {
   paymentType: string;
   createdAt?: string;
   updatedAt: string;
+  date: string;
 }

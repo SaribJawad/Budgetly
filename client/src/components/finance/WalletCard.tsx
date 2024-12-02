@@ -2,8 +2,13 @@ import { Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import EditWalletPopup from "../popups/EditWalletPopup";
+import { Wallet } from "@/@types/Types";
 
-function WalletCard() {
+interface WalletCardProps {
+  wallet: Wallet;
+}
+
+function WalletCard({ wallet }: WalletCardProps) {
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
 
   const handleClosePopup = (): void => {
@@ -23,7 +28,7 @@ function WalletCard() {
   return (
     <div className="cursor-pointer border border-zinc-800  rounded-xl h-full min-w-[220px] w-[280px] p-3 flex flex-col justify-between">
       <div className="  w-full flex justify-between">
-        <h4 className="font-semibold text-xl">$8,000</h4>
+        <h4 className="font-semibold text-xl">{wallet.balance}</h4>
         <Button
           onClick={() => setTogglePopup((prev) => !prev)}
           size="sm"
@@ -33,7 +38,7 @@ function WalletCard() {
         </Button>
       </div>
 
-      <h4 className="font-semibold text-2xl">Account name</h4>
+      <h4 className="font-semibold text-2xl">{wallet.walletName}</h4>
       {togglePopup && <EditWalletPopup onClose={handleClosePopup} />}
     </div>
   );

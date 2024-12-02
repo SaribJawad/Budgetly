@@ -26,6 +26,10 @@ interface InitialState {
       toDate?: string;
     };
   };
+  recentTransactions: {
+    data: Transaction[];
+    status: "idle" | "loading" | "error" | "success";
+  };
 }
 
 const initialState: InitialState = {
@@ -47,6 +51,10 @@ const initialState: InitialState = {
     error: null,
     filterCriteria: {},
   },
+  recentTransactions: {
+    data: [],
+    status: "idle",
+  },
 };
 
 const transactionSlice = createSlice({
@@ -56,6 +64,7 @@ const transactionSlice = createSlice({
     setGetAllTransactionsStart: (state) => {
       state.allTransactions.status = "loading";
       state.allTransactions.error = null;
+      state.recentTransactions.status = "loading";
     },
     setGetAllTransactionsSuccess: (
       state,
@@ -79,8 +88,11 @@ const transactionSlice = createSlice({
         (transaction) => delete transaction.createdAt
       );
 
+      state.recentTransactions.data = formatedTransactions.slice(0, 3);
+
       state.allTransactions.data[page] = formatedTransactions;
       state.allTransactions.status = "success";
+      state.recentTransactions.status = "success";
       state.allTransactions.error = null;
       state.allTransactions.totalTransactions = totalTransactions;
 
@@ -98,6 +110,7 @@ const transactionSlice = createSlice({
     setGetAllTransasctionsError: (state, action: PayloadAction<string>) => {
       state.allTransactions.status = "error";
       state.allTransactions.error = action.payload;
+      state.recentTransactions.status = "error";
     },
     setGetFilteredTransactionsStart: (state) => {
       state.filteredTransactions.error = null;
@@ -144,4 +157,8 @@ export const selectAllTransactions = (state: RootState) => {
 
 export const selectFilteredTransactions = (state: RootState) => {
   return state.transactions.filteredTransactions;
+};
+
+export const selectRecentTransaction = (state: RootState) => {
+  return state.transactions.recentTransactions;
 };

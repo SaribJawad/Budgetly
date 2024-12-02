@@ -4,7 +4,7 @@ import GoalProgressCard from "./GoalProgressCard";
 
 function SavingGoalsCard() {
   return (
-    <div className="border p-2 rounded-2xl  border-zinc-800 h-full  lg:col-span-2 flex flex-col  gap-3">
+    <div className="border h-full p-2 rounded-2xl  border-zinc-800 h-full  lg:col-span-2 flex flex-col  gap-3">
       <div className="w-full flex items-start justify-between">
         <h1 className="font-normal text-xl">Saving goals</h1>
         <Link to="">

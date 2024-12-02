@@ -11,7 +11,7 @@ function BudgetCard() {
   };
 
   return (
-    <div className="border border-zinc-800 p-2 pb-4 rounded-2xl flex flex-col gap-3">
+    <div className="border  border-zinc-800 p-2 pb-4 rounded-2xl flex flex-col gap-3">
       <div className="flex items-start justify-between">
         <h2 className="text-lg font-semibold">Food & Groceries</h2>
         <button

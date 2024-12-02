@@ -1,14 +1,21 @@
 import { Line } from "react-chartjs-2";
 import ChartJS from "@/ChartConfig";
 import { months } from "@/constants/constants";
+import { useAppSelector } from "@/app/hook";
+import { selectMonthlyFlow } from "@/features/analytics/analyticSlice";
 
 function TransactionOverviewCard() {
+  const { data: monthlyFlow } = useAppSelector(selectMonthlyFlow);
+
+  const income = monthlyFlow?.map((flow) => flow.income);
+  const expense = monthlyFlow?.map((flow) => flow.expense);
+
   const data = {
     labels: months,
     datasets: [
       {
         label: "Income",
-        data: [65, 59, 80, 81, 56, 55, 0, 213],
+        data: income,
         fill: false,
         backgroundColor: "#90EE90",
         borderColor: "#90EE90",
@@ -16,7 +23,7 @@ function TransactionOverviewCard() {
       },
       {
         label: "Expense",
-        data: [55, 29, 24, 81, 96, 55],
+        data: expense,
         fill: false,
         backgroundColor: "#FF474D",
         borderColor: "#FF474D",
