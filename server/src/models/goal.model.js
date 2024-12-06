@@ -19,6 +19,10 @@ const modelSchema = new Schema(
       type: Number,
       default: 0,
     },
+    lastAddedAmount: {
+      type: Number,
+      default: 0,
+    },
     goalDeadline: {
       type: String,
       validate: {
@@ -26,15 +30,6 @@ const modelSchema = new Schema(
           return new Date(date) > new Date();
         },
         message: "Goal deadline date cannot be in the past.",
-      },
-    },
-    goalColor: {
-      type: String,
-      validate: {
-        validator: function (color) {
-          return /^#([0-9A-F]{3}){1,2}$/i.test(color);
-        },
-        message: (props) => `${props.value} is not a valid color`,
       },
     },
     note: {

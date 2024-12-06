@@ -92,7 +92,10 @@ const updateGoal = asyncHandler(async (req, res) => {
   const updateFields = Object.assign(
     {},
     req.body.targetAmount && { targetAmount: req.body.targetAmount },
-    req.body.savedAlready && { savedAlready: req.body.targetAmount },
+    req.body.savedAlready && {
+      savedAlready: req.body.targetAmount,
+      lastAddedAmount: req.body.targetAmount,
+    },
     req.body.note && { note: req.body.note },
     req.body.name && { name: req.body.name },
     req.body.goalDeadline && { goalDeadline: req.body.goalDeadline }

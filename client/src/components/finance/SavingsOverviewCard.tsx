@@ -1,15 +1,30 @@
+import { useAppSelector } from "@/app/hook";
 import ChartJS from "@/ChartConfig";
 import { months } from "@/constants/constants";
+import { selectSavingOverview } from "@/features/analytics/analyticSlice";
 
 import { Line } from "react-chartjs-2";
 
 function SavingsOverviewCard() {
+  const {
+    data: savingsOverview,
+    status,
+    error,
+  } = useAppSelector(selectSavingOverview);
+
+  const totalIncome = savingsOverview?.map(
+    (savingOverview) => savingOverview.totalIncome
+  );
+  const totalSavings = savingsOverview?.map(
+    (savingOverview) => savingOverview.totalSavings
+  );
+
   const data = {
     labels: months,
     datasets: [
       {
         label: "Income",
-        data: [65, 59, 80, 81, 56, 55, 0, 213],
+        data: totalIncome,
         fill: false,
         backgroundColor: "#90EE90",
         borderColor: "#90EE90",
@@ -17,7 +32,7 @@ function SavingsOverviewCard() {
 
       {
         label: "Saving",
-        data: [552, 221, 14, 51, 76, 25],
+        data: totalSavings,
         fill: false,
         backgroundColor: "#917FFF",
         borderColor: "#917FFF",

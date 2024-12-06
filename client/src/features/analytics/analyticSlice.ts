@@ -1,4 +1,9 @@
-import { FinanceSummary, MonthlyFlow } from "@/@types/Types";
+import {
+  FinanceSummary,
+  MonthlyFlow,
+  SavingOverview,
+  YearlyTrend,
+} from "@/@types/Types";
 import { RootState } from "@/app/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -9,11 +14,31 @@ interface InitialState {
     status: "idle" | "loading" | "success" | "error";
     error: string | null;
   };
+  yearlyTrends: {
+    data: YearlyTrend[] | null;
+    status: "idle" | "loading" | "success" | "error";
+    error: string | null;
+  };
+  savingOverview: {
+    data: SavingOverview[] | null;
+    status: "idle" | "loading" | "success" | "error";
+    error: string | null;
+  };
 }
 
 const initialState: InitialState = {
   financeSummary: null,
   monthlyFlow: {
+    data: null,
+    status: "idle",
+    error: null,
+  },
+  yearlyTrends: {
+    data: null,
+    status: "idle",
+    error: null,
+  },
+  savingOverview: {
     data: null,
     status: "idle",
     error: null,
@@ -43,6 +68,35 @@ const analyticSlice = createSlice({
       state.monthlyFlow.status = "error";
       state.monthlyFlow.error = action.payload;
     },
+    setYearlyTrendsStart: (state) => {
+      state.yearlyTrends.status = "loading";
+      state.yearlyTrends.error = null;
+    },
+    setYearlyTrendsSuccess: (state, action: PayloadAction<YearlyTrend[]>) => {
+      state.yearlyTrends.status = "success";
+      state.yearlyTrends.error = null;
+      state.yearlyTrends.data = action.payload;
+    },
+    setYearlyTrendsError: (state, action: PayloadAction<string>) => {
+      state.yearlyTrends.status = "loading";
+      state.yearlyTrends.error = action.payload;
+    },
+    setSavingOverviewStart: (state) => {
+      state.savingOverview.error = null;
+      state.savingOverview.status = "loading";
+    },
+    setSavingOverviewSuccess: (
+      state,
+      action: PayloadAction<SavingOverview[]>
+    ) => {
+      state.savingOverview.error = null;
+      state.savingOverview.status = "success";
+      state.savingOverview.data = action.payload;
+    },
+    setSavingOverviewError: (state, action: PayloadAction<string>) => {
+      state.savingOverview.error = action.payload;
+      state.savingOverview.status = "error";
+    },
   },
 });
 
@@ -52,6 +106,12 @@ export const {
   setMonthlyFlowStart,
   setMonthlyFlowSuccess,
   setMonthlyFlowError,
+  setYearlyTrendsStart,
+  setYearlyTrendsSuccess,
+  setYearlyTrendsError,
+  setSavingOverviewStart,
+  setSavingOverviewSuccess,
+  setSavingOverviewError,
 } = analyticSlice.actions;
 
 export default analyticSlice.reducer;
@@ -64,4 +124,12 @@ export const selectFinanceSummary = (state: RootState) => {
 
 export const selectMonthlyFlow = (state: RootState) => {
   return state.analytic.monthlyFlow;
+};
+
+export const selectYearlyTrends = (state: RootState) => {
+  return state.analytic.yearlyTrends;
+};
+
+export const selectSavingOverview = (state: RootState) => {
+  return state.analytic.savingOverview;
 };

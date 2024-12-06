@@ -1,16 +1,22 @@
 import { Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
+import { Goal } from "@/@types/Types";
 
 interface GoalCardProps {
-  handleToggleEditPopup: () => void;
+  handleToggleEditPopup: (goalId: string) => void;
   handleToggleGoalPopup: () => void;
+  goal: Goal;
 }
 
 function GoalCard({
   handleToggleEditPopup,
   handleToggleGoalPopup,
+  goal,
 }: GoalCardProps) {
+  const leftAmount = goal.targetAmount - goal.savedAlready;
+  const progress = (goal.savedAlready / goal.targetAmount) * 100;
+
   return (
     <div
       onClick={handleToggleGoalPopup}
@@ -18,13 +24,15 @@ function GoalCard({
     >
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-lg font-semibold">MacBook Pro</h2>
-          <p className="text-xs text-zinc-500">Due date - 7 Oct 2024</p>
+          <h2 className="text-lg font-semibold">{goal.name}</h2>
+          <p className="text-xs text-zinc-500">
+            Due date - {goal.goalDeadline}
+          </p>
         </div>
         <Button
           onClick={(e) => {
             e.stopPropagation();
-            handleToggleEditPopup();
+            handleToggleEditPopup(goal._id);
           }}
           size="sm"
           className="rounded-full  h-10 bg-black w-10 border border-zinc-800 hover:border-white"
@@ -34,15 +42,17 @@ function GoalCard({
       </div>
 
       <div className="flex items-end gap-1">
-        <h2 className="text-4xl font-semibold">$512.0</h2>/
-        <span className="text-sm font-normal text-[#917FFF]">$10241</span>
+        <h2 className="text-4xl font-semibold">{goal.savedAlready}</h2>/
+        <span className="text-sm font-normal text-[#917FFF]">
+          {goal.targetAmount}
+        </span>
       </div>
 
       <div className="flex flex-col gap-1">
-        <Progress value={50} className="h-3" />
+        <Progress value={progress} className="h-3" />
         <div className="flex justify-between items-center">
           <h4 className="text-sm text-zinc-500">Left to complete the goal</h4>
-          <span className="text-sm font-semibold">$123.00</span>
+          <span className="text-sm font-semibold">{leftAmount}</span>
         </div>
       </div>
     </div>

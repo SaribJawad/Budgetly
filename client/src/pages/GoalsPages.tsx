@@ -8,11 +8,22 @@ import TotalGoals from "@/components/data-display/TotalGoals";
 import SavingsOverviewCard from "@/components/finance/SavingsOverviewCard";
 import CreateGoalPopup from "@/components/popups/CreateGoalPopup";
 import EditGoalPopup from "@/components/popups/EditGoalPopup";
+import useGetAllGoals from "@/custom-hooks/useGetAllGoals";
+import { useAppSelector } from "@/app/hook";
+import { selectUserGoals } from "@/features/goal/GoalSlice";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import useGetSavingOverview from "@/custom-hooks/useGetSavingOverview";
 
 function GoalsPages() {
+  useGetAllGoals();
+  useGetSavingOverview();
+
+  const { data: goals, status, error } = useAppSelector(selectUserGoals);
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
   const [toggleEditPopup, setToggleEditPopup] = useState<boolean>(false);
+
+  const [editGoal, setEditGoal] = useState<string>("");
 
   const [filter, setFilter] = useState<"All" | "In progress" | "Completed">(
     "All"
@@ -23,8 +34,9 @@ function GoalsPages() {
     setToggleEditPopup(false);
   };
 
-  const handleEditPopup = (): void => {
+  const handleEditPopup = (goalId: string): void => {
     setToggleEditPopup((prev) => !prev);
+    setEditGoal(goalId);
   };
 
   useEffect(() => {
@@ -36,6 +48,14 @@ function GoalsPages() {
 
     return () => document.body.classList.remove("overflow-hidden");
   }, [togglePopup]);
+
+  if (status === "loading") {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <LoadingSpinner size={40} />
+      </div>
+    );
+  }
 
   return (
     <div className="h-full w-full p-2 flex flex-col gap-3">
@@ -57,9 +77,12 @@ function GoalsPages() {
       </div>
 
       <GoalFilterButtons filter={filter} setFilter={setFilter} />
-      <GoalsDisplaySection handleToggleEditPopup={handleEditPopup} />
+      <GoalsDisplaySection
+        handleToggleEditPopup={handleEditPopup}
+        goals={goals}
+      />
       <div className="grid lg:grid-cols-4 grid-cols-1 gap-3">
-        <TotalGoals />
+        <TotalGoals goals={goals} />
         <SavingsOverviewCard />
       </div>
       {togglePopup && <CreateGoalPopup onClose={handleOnClose} />}

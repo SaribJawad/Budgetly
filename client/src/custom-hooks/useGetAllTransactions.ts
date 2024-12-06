@@ -50,11 +50,9 @@ const useGetAllTranscations = () => {
           const errorMessage =
             error.response.data.message ||
             "An unexpected error occured while fetching all transactions";
-          console.log(errorMessage);
           dispatch(setGetAllTransasctionsError(errorMessage));
         }
         throw error;
-        // }
       }
     },
     staleTime: Infinity,

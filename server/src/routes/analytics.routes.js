@@ -4,6 +4,7 @@ import {
   getBalanceOverview,
   getFinanceSummary,
   getMonthlyFlow,
+  getSavingOverview,
   getTopSpendingCategories,
   getYearlyTrends,
 } from "../controllers/analytics.controller.js";
@@ -17,5 +18,6 @@ router
   .get(verifyJWT, getTopSpendingCategories);
 router.route("/get-balance-overview").get(verifyJWT, getBalanceOverview);
 router.route("/get-finance-summary").get(verifyJWT, getFinanceSummary);
+router.route("/get-saving-overview").get(verifyJWT, getSavingOverview);
 
 export default router;

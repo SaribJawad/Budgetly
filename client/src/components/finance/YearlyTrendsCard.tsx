@@ -1,23 +1,39 @@
+import { useAppSelector } from "@/app/hook";
+import { selectYearlyTrends } from "@/features/analytics/analyticSlice";
 import { Bar } from "react-chartjs-2";
 
 function YearlyTrendsCard() {
+  const {
+    data: yearlyTrends,
+    status,
+    error,
+  } = useAppSelector(selectYearlyTrends);
+
+  const totalIncome = yearlyTrends?.map(
+    (yearlyTrend) => yearlyTrend.totalIncome
+  );
+  const totalExpense = yearlyTrends?.map(
+    (yearlyTrend) => yearlyTrend.totalExpense
+  );
+  const totalSavings = yearlyTrends?.map((yearlyTrend) => yearlyTrend.savings);
+
   const datasets = [
     {
       label: "Saving",
-      data: [30, 20, 100],
+      data: totalIncome,
       backgroundColor: "#ffffff",
       hoverBackgroundColor: "#ffffff",
     },
     {
       label: "Income",
-      data: [100, 300, 400],
+      data: totalExpense,
       backgroundColor: "#6df285",
 
       hoverBackgroundColor: "#57bc6a",
     },
     {
       label: "Expense",
-      data: [40, 90, 500],
+      data: totalSavings,
       backgroundColor: "#dd6868",
 
       hoverBackgroundColor: "#c34d4d",

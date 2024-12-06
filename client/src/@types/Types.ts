@@ -43,3 +43,28 @@ export interface Transaction {
   updatedAt: string;
   date: string;
 }
+
+export interface Goal {
+  _id: string;
+  user: string;
+  name: string;
+  targetAmount: number;
+  savedAlready: number;
+  goalDeadline: string;
+  goalReached: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface YearlyTrend {
+  month: number;
+  totalIncome: number;
+  totalExpense: number;
+  savings: number;
+}
+
+export interface SavingOverview {
+  month: number;
+  totalIncome: number;
+  totalSavings: number;
+}

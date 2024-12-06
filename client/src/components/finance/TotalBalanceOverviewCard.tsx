@@ -6,7 +6,7 @@ function TotalBalanceOverviewCard() {
     labels: months,
     datasets: [
       {
-        label: "This Month",
+        label: "This Year",
         data: [65, 59, 80, 81, 56, 55, 0, 213],
         fill: false,
         backgroundColor: "#917FFF",
@@ -14,7 +14,7 @@ function TotalBalanceOverviewCard() {
       },
 
       {
-        label: "Same period last month",
+        label: "Same period last year",
         data: [552, 221, 14, 51, 76, 25],
         fill: false,
         backgroundColor: "#ffffff",

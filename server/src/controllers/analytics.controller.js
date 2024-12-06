@@ -164,10 +164,75 @@ const getYearlyTrends = asyncHandler(async (req, res) => {
     {
       $sort: { _id: 1 },
     },
+    {
+      $group: {
+        _id: null,
+        yearlyTrends: {
+          $push: {
+            month: "$_id",
+            totalIncome: "$totalIncome",
+            totalExpense: "$totalExpense",
+          },
+        },
+      },
+    },
+
+    {
+      $project: {
+        _id: 0,
+        yearlyTrends: {
+          $map: {
+            input: Array.from({ length: 12 }, (_, i) => i + 1),
+            as: "month",
+            in: {
+              month: "$$month",
+              totalIncome: {
+                $let: {
+                  vars: {
+                    match: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$yearlyTrends",
+                            as: "trend",
+                            cond: { $eq: ["$$trend.month", "$$month"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                  in: { $ifNull: ["$$match.totalIncome", 0] },
+                },
+              },
+              totalExpense: {
+                $let: {
+                  vars: {
+                    match: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$yearlyTrends",
+                            as: "trend",
+                            cond: { $eq: ["$$trend.month", "$$month"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                  in: { $ifNull: ["$$match.totalExpense", 0] },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   ]);
 
-  const trendsWithSaving = yearlyTrends.map((month) => ({
-    month: month._id,
+  const trendsWithSaving = yearlyTrends[0].yearlyTrends.map((month) => ({
+    month: month.month,
     totalIncome: month.totalIncome,
     totalExpense: month.totalExpense,
     savings: month.totalIncome - month.totalExpense,
@@ -180,6 +245,139 @@ const getYearlyTrends = asyncHandler(async (req, res) => {
         200,
         trendsWithSaving,
         "Yearly trends fetched successfully"
+      )
+    );
+});
+
+const getSavingOverview = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const currentYear = new Date().getFullYear();
+
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new ApiError(400, "Invalid user ID.");
+  }
+
+  const savingOverview = await Transaction.aggregate([
+    {
+      $match: {
+        user: userId,
+        createdAt: {
+          $gte: new Date(`${currentYear}-01-01`),
+          $lte: new Date(`${currentYear + 1}-01-01`),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        totalIncome: {
+          $sum: {
+            $cond: [
+              {
+                $eq: ["$transactionType", "Income"],
+              },
+              "$amount",
+              0,
+            ],
+          },
+        },
+        totalExpense: {
+          $sum: {
+            $cond: [
+              {
+                $eq: ["$transactionType", "Expense"],
+              },
+              "$amount",
+              0,
+            ],
+          },
+        },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+    {
+      $group: {
+        _id: null,
+        savingOverview: {
+          $push: {
+            month: "$_id",
+            totalIncome: "$totalIncome",
+            totalExpense: "$totalExpense",
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        savingOverview: {
+          $map: {
+            input: Array.from({ length: 12 }, (_, i) => i + 1),
+            as: "month",
+            in: {
+              month: "$$month",
+              totalIncome: {
+                $let: {
+                  vars: {
+                    match: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$savingOverview",
+                            as: "overview",
+                            cond: { $eq: ["$$overview.month", "$$month"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                  in: { $ifNull: ["$$match.totalIncome", 0] },
+                },
+              },
+              totalExpense: {
+                $let: {
+                  vars: {
+                    match: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$savingOverview",
+                            as: "overview",
+                            cond: { $eq: ["$$overview.month", "$$month"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                  in: { $ifNull: ["$$match.totalExpense", 0] },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  ]);
+
+  const overviewWithSavings = savingOverview[0].savingOverview.map(
+    (overview) => ({
+      month: overview.month,
+      totalIncome: overview.totalIncome,
+      totalSavings: overview.totalIncome - overview.totalExpense,
+    })
+  );
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        overviewWithSavings,
+        "Saving overview fetched successfully"
       )
     );
 });
@@ -570,4 +768,5 @@ export {
   getTopSpendingCategories,
   getBalanceOverview,
   getFinanceSummary,
+  getSavingOverview,
 };

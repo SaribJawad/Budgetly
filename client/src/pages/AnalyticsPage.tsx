@@ -3,8 +3,11 @@ import TopSpendingCategoriesCard from "@/components/data-display/TopSpendingCate
 import TotalBalanceOverviewCard from "@/components/finance/TotalBalanceOverviewCard";
 import YearlyTrendsCard from "@/components/finance/YearlyTrendsCard";
 import Header from "@/components/navigation/Header";
+import useGetYearlyTrends from "@/custom-hooks/useGetYearlyTrends";
 
 function AnalyticsPage() {
+  useGetYearlyTrends();
+
   return (
     <div className="h-full w-full p-2 flex flex-col gap-3">
       <Header
@@ -17,14 +20,11 @@ function AnalyticsPage() {
         <FinanceSummaryAnalyticsCard />
       </div>
 
-      <div className="w-full grid grid-cols-4 gap-3  ">
-        {/* left */}
+      <div className="w-full grid xl:grid-cols-4 grid-cols-1 gap-3  ">
         <div className="col-span-3    flex flex-col gap-3 ">
           <TotalBalanceOverviewCard />
           <YearlyTrendsCard />
         </div>
-        {/* right */}
-
         <TopSpendingCategoriesCard />
       </div>
     </div>
@@ -32,15 +32,3 @@ function AnalyticsPage() {
 }
 
 export default AnalyticsPage;
-{
-  /* <div className="h-1/2 border relative"> */
-}
-{
-  /* </div> */
-}
-{
-  /* <div className="h-1/2 border relative"> */
-}
-{
-  /* </div> */
-}
