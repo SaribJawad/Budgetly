@@ -1,14 +1,12 @@
-import { useAppSelector } from "@/app/hook";
-import { selectYearlyTrends } from "@/features/analytics/analyticSlice";
+import { YearlyTrend } from "@/@types/Types";
+
 import { Bar } from "react-chartjs-2";
 
-function YearlyTrendsCard() {
-  const {
-    data: yearlyTrends,
-    status,
-    error,
-  } = useAppSelector(selectYearlyTrends);
+interface YearlyTrendsCardProps {
+  yearlyTrends: YearlyTrend[] | null;
+}
 
+function YearlyTrendsCard({ yearlyTrends }: YearlyTrendsCardProps) {
   const totalIncome = yearlyTrends?.map(
     (yearlyTrend) => yearlyTrend.totalIncome
   );

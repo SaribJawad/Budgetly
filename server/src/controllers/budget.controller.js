@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import { Budget } from "../models/budget.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -25,8 +26,6 @@ const createBudget = asyncHandler(async (req, res) => {
     category: category || "All",
     wallet,
   });
-
-  console.log(existingBudget);
 
   if (existingBudget) {
     return res
@@ -61,15 +60,43 @@ const createBudget = asyncHandler(async (req, res) => {
 });
 
 const getAllBudgets = asyncHandler(async (req, res) => {
-  const { walletId } = req.params;
+  const userId = req.user._id;
 
-  if (!walletId) {
-    throw new ApiError(400, "Wallet ID is required");
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(401, "Invalid User ID");
   }
 
-  const budgets = await Budget.find({
-    wallet: walletId,
-  });
+  const budgets = await Budget.aggregate([
+    {
+      $match: {
+        user: userId,
+      },
+    },
+    {
+      $lookup: {
+        from: "wallets",
+        localField: "user",
+        foreignField: "walletOwner",
+        as: "wallet",
+      },
+    },
+    {
+      $addFields: {
+        walletName: { $arrayElemAt: ["$wallet.walletName", 0] },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        period: 1,
+        amount: 1,
+        spentAmount: 1,
+        category: 1,
+        walletName: 1,
+      },
+    },
+  ]);
 
   if (!budgets) {
     throw new ApiError(500, "Something went wrong while fetching budgets");

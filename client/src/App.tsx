@@ -22,7 +22,7 @@ export function App() {
           path="/transactions/:pageNum?/:limit?"
           element={<TransactionsPage />}
         />
-        <Route path="/wallet/:walletId" element={<WalletPage />} />
+        <Route path="/wallet/" element={<WalletPage />} />
         <Route path="/goals" element={<GoalsPages />} />
         <Route path="/budgets" element={<BudgetPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />

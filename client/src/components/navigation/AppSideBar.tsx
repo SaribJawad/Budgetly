@@ -33,7 +33,7 @@ import { useLogout } from "@/custom-hooks/useLogout";
 const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Transactions", url: "/transactions", icon: ArrowRightLeft },
-  { title: "Wallet", url: "/wallet/:wallet", icon: WalletMinimal },
+  { title: "Wallet", url: "/wallet", icon: WalletMinimal },
   { title: "Goals", url: "/goals", icon: Goal },
   { title: "Budget", url: "/budgets", icon: PiggyBank },
   { title: "Analytics", url: "/analytics", icon: ChartLine },

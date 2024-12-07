@@ -5,10 +5,10 @@ import { useAppSelector } from "@/app/hook";
 import { selectMonthlyFlow } from "@/features/analytics/analyticSlice";
 
 function TransactionOverviewCard() {
-  const { data: monthlyFlow } = useAppSelector(selectMonthlyFlow);
+  const { data: transactionOverview } = useAppSelector(selectMonthlyFlow);
 
-  const income = monthlyFlow?.map((flow) => flow.income);
-  const expense = monthlyFlow?.map((flow) => flow.expense);
+  const income = transactionOverview?.map((flow) => flow.income);
+  const expense = transactionOverview?.map((flow) => flow.expense);
 
   const data = {
     labels: months,

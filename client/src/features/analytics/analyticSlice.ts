@@ -1,4 +1,5 @@
 import {
+  BalanceOverview,
   FinanceSummary,
   MonthlyFlow,
   SavingOverview,
@@ -24,6 +25,11 @@ interface InitialState {
     status: "idle" | "loading" | "success" | "error";
     error: string | null;
   };
+  balanceOverview: {
+    data: BalanceOverview[] | null;
+    status: "idle" | "loading" | "success" | "error";
+    error: string | null;
+  };
 }
 
 const initialState: InitialState = {
@@ -39,6 +45,11 @@ const initialState: InitialState = {
     error: null,
   },
   savingOverview: {
+    data: null,
+    status: "idle",
+    error: null,
+  },
+  balanceOverview: {
     data: null,
     status: "idle",
     error: null,
@@ -97,6 +108,22 @@ const analyticSlice = createSlice({
       state.savingOverview.error = action.payload;
       state.savingOverview.status = "error";
     },
+    setBalanceOverviewStart: (state) => {
+      state.balanceOverview.error = null;
+      state.balanceOverview.status = "loading";
+    },
+    setBalanceOverviewSuccess: (
+      state,
+      action: PayloadAction<BalanceOverview[]>
+    ) => {
+      state.balanceOverview.error = null;
+      state.balanceOverview.status = "success";
+      state.balanceOverview.data = action.payload;
+    },
+    setBalanceOverviewError: (state, action: PayloadAction<string>) => {
+      state.balanceOverview.error = action.payload;
+      state.balanceOverview.status = "error";
+    },
   },
 });
 
@@ -112,6 +139,9 @@ export const {
   setSavingOverviewStart,
   setSavingOverviewSuccess,
   setSavingOverviewError,
+  setBalanceOverviewStart,
+  setBalanceOverviewSuccess,
+  setBalanceOverviewError,
 } = analyticSlice.actions;
 
 export default analyticSlice.reducer;
@@ -132,4 +162,8 @@ export const selectYearlyTrends = (state: RootState) => {
 
 export const selectSavingOverview = (state: RootState) => {
   return state.analytic.savingOverview;
+};
+
+export const selectBalanceOverview = (state: RootState) => {
+  return state.analytic.balanceOverview;
 };

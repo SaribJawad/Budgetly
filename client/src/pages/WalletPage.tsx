@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 function WalletPage() {
   useGetUserWallet();
+
   const { data: wallets, status, error } = useAppSelector(selectAllWallets);
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
 

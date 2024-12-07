@@ -56,6 +56,16 @@ export interface Goal {
   updatedAt: string;
 }
 
+export interface Budget {
+  _id: string;
+  name: string;
+  period: string;
+  amount: number;
+  spentAmount: number;
+  category: string;
+  walletName: string;
+}
+
 export interface YearlyTrend {
   month: number;
   totalIncome: number;
@@ -67,4 +77,14 @@ export interface SavingOverview {
   month: number;
   totalIncome: number;
   totalSavings: number;
+}
+
+interface MonthlyBalance {
+  month: number;
+  totalBalance: number;
+}
+
+export interface BalanceOverview {
+  currentYearBalance: MonthlyBalance[];
+  lastYearBalance: MonthlyBalance[];
 }

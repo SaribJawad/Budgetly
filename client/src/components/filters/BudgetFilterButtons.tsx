@@ -10,10 +10,14 @@ import { Button } from "../ui/button";
 import { RotateCcw } from "lucide-react";
 import { period } from "@/constants/constants";
 
-function BudgetFilterButtons() {
+interface BudgetFilterButtonsProps {
+  setPeriod: (arg: "Week" | "Month" | "Year" | "None") => void;
+}
+
+function BudgetFilterButtons({ setPeriod }: BudgetFilterButtonsProps) {
   return (
     <div className="flex gap-2">
-      <Select>
+      <Select onValueChange={(e: "Week" | "Month" | "Year") => setPeriod(e)}>
         <SelectTrigger
           className="w-fit flex gap-3 p-[17px] text-md rounded-full "
           style={{
@@ -34,7 +38,7 @@ function BudgetFilterButtons() {
         </SelectContent>
       </Select>
       <Button
-        // onClick={() => setFilter("All")}
+        onClick={() => setPeriod("None")}
         variant="ghost"
         size="sm"
         className="rounded-full hover:bg-[#8470FF] hover:text-white"

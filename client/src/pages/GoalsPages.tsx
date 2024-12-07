@@ -10,7 +10,7 @@ import CreateGoalPopup from "@/components/popups/CreateGoalPopup";
 import EditGoalPopup from "@/components/popups/EditGoalPopup";
 import useGetAllGoals from "@/custom-hooks/useGetAllGoals";
 import { useAppSelector } from "@/app/hook";
-import { selectUserGoals } from "@/features/goal/GoalSlice";
+import { selectUserGoals } from "@/features/goal/goalSlice";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import useGetSavingOverview from "@/custom-hooks/useGetSavingOverview";
 
@@ -18,7 +18,7 @@ function GoalsPages() {
   useGetAllGoals();
   useGetSavingOverview();
 
-  const { data: goals, status, error } = useAppSelector(selectUserGoals);
+  const { data: goals, status } = useAppSelector(selectUserGoals);
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
   const [toggleEditPopup, setToggleEditPopup] = useState<boolean>(false);

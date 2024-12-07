@@ -13,16 +13,23 @@ import {
 } from "@/features/analytics/analyticSlice";
 import useGetFinanceSummary from "@/custom-hooks/useGetFinanceSummary";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import useGetMonthlyFlow from "@/custom-hooks/useGetMonthlyFlow";
 
 function DashboardPage() {
   const { isLoading } = useGetFinanceSummary();
-  useGetMonthlyFlow();
+
   const user = useAppSelector(selectUser);
   const financeSummary = useAppSelector(selectFinanceSummary);
   const { data, status } = useAppSelector(selectMonthlyFlow);
 
   Chart.register(CategoryScale);
+
+  if (status === "loading") {
+    return (
+      <div className="h-full w-full flex items-center justify-center ">
+        <LoadingSpinner size={40} />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen p-2 flex flex-col  space-y-0 gap-3 sm:gap-9 lg:gap-3">

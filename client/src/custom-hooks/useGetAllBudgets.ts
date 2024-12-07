@@ -1,42 +1,42 @@
 import { ErrorResponse } from "@/@types/Error";
-import { Goal } from "@/@types/Types";
+import { Budget } from "@/@types/Types";
 import { api } from "@/api/axios";
 import { useAppDispatch } from "@/app/hook";
 import {
-  setGetAllGoalsError,
-  setGetAllGoalsStart,
-  setGetAllGoalsSuccess,
-} from "@/features/goal/goalSlice";
+  setAllBudgetsError,
+  setAllBudgetsStart,
+  setAllBudgetsSuccess,
+} from "@/features/budget/budgetSlice";
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 
-interface UseGetAllGoalsResponse {
+interface GetAllBudgetsResponse {
   statusCode: number;
-  data: Goal[];
+  data: Budget[];
   message: string;
-  success: boolean;
+  success: number;
 }
 
-const useGetAllGoals = () => {
+const useGetAllBudgets = () => {
   const dispatch = useAppDispatch();
 
-  return useQuery<UseGetAllGoalsResponse, ErrorResponse>({
-    queryKey: ["goals"],
+  return useQuery<GetAllBudgetsResponse, ErrorResponse>({
+    queryKey: ["allBudgets"],
     queryFn: async () => {
       try {
-        dispatch(setGetAllGoalsStart());
-        const response = await api.get("/goal/get-all-goals");
+        dispatch(setAllBudgetsStart());
+        const response = await api.get("/budget/get-all-budgets");
         const data = response.data.data;
-        dispatch(setGetAllGoalsSuccess(data));
-
+        dispatch(setAllBudgetsSuccess(data));
         return data;
       } catch (error) {
         if (isAxiosError(error) && error.response) {
           const errorMessage =
             error.response.data.message ||
-            "An unexpected error occurred while fetching goals";
-          dispatch(setGetAllGoalsError(errorMessage));
+            "An unexpected error occured while fetching the budgets";
+          dispatch(setAllBudgetsError(errorMessage));
         }
+
         throw error;
       }
     },
@@ -46,4 +46,4 @@ const useGetAllGoals = () => {
   });
 };
 
-export default useGetAllGoals;
+export default useGetAllBudgets;

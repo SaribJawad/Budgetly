@@ -1,13 +1,30 @@
+import { BalanceOverview } from "@/@types/Types";
 import { months } from "@/constants/constants";
 import { Line } from "react-chartjs-2";
 
-function TotalBalanceOverviewCard() {
+interface TotalBalanceOverviewCardProps {
+  balanceOverview: BalanceOverview[] | null;
+}
+
+function TotalBalanceOverviewCard({
+  balanceOverview,
+}: TotalBalanceOverviewCardProps) {
+  const thisYearBalance =
+    balanceOverview &&
+    balanceOverview[0].currentYearBalance.map(
+      (balance) => balance.totalBalance
+    );
+
+  const lastYearBalance =
+    balanceOverview &&
+    balanceOverview[1].lastYearBalance.map((balance) => balance.totalBalance);
+
   const data = {
     labels: months,
     datasets: [
       {
         label: "This Year",
-        data: [65, 59, 80, 81, 56, 55, 0, 213],
+        data: thisYearBalance,
         fill: false,
         backgroundColor: "#917FFF",
         borderColor: "#917FFF",
@@ -15,7 +32,7 @@ function TotalBalanceOverviewCard() {
 
       {
         label: "Same period last year",
-        data: [552, 221, 14, 51, 76, 25],
+        data: lastYearBalance,
         fill: false,
         backgroundColor: "#ffffff",
         borderColor: "#ffffff",

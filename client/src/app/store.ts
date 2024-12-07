@@ -3,7 +3,8 @@ import authReducer from "@/features/auth/authSlice";
 import analyticReducer from "@/features/analytics/analyticSlice";
 import transactionsReducer from "@/features/transactions/transactionsSlice";
 import walletReducer from "@/features/wallet/walletSlice";
-import goalReducer from "@/features/goal/GoalSlice";
+import goalReducer from "@/features/goal/goalSlice";
+import budgetReducer from "@/features/budget/budgetSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     transactions: transactionsReducer,
     wallet: walletReducer,
     goal: goalReducer,
+    budget: budgetReducer,
   },
 });
 

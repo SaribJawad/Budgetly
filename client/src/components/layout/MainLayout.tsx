@@ -7,9 +7,11 @@ import {
   selectWalletCreatedOnce,
 } from "@/features/auth/authSlice";
 import useGetAllTranscations from "@/custom-hooks/useGetAllTransactions";
+import useGetMonthlyFlow from "@/custom-hooks/useGetMonthlyFlow";
 
 function MainLayout() {
   useGetAllTranscations();
+  useGetMonthlyFlow();
   const isAuthenticated = useAppSelector(selectAuthenticationState);
   const createdWalletOnce = useAppSelector(selectWalletCreatedOnce);
 

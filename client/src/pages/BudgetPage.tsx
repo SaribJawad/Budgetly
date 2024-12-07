@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/app/hook";
 import BudgetsDisplaySection from "@/components/data-display/BudgetsDisplaySection";
 import MonthlyBudgetProgressCard from "@/components/data-display/MonthlyBudgetProgressCard";
 import MostExpensesCard from "@/components/data-display/MostExpensesCard";
@@ -5,13 +6,20 @@ import BudgetFilterButtons from "@/components/filters/BudgetFilterButtons";
 import Header from "@/components/navigation/Header";
 import CreateBudgetPopup from "@/components/popups/CreateBudgetPopup";
 import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import useGetAllBudgets from "@/custom-hooks/useGetAllBudgets";
+import { selectAllBudgets } from "@/features/budget/budgetSlice";
 import { useEffect, useState } from "react";
 
-// Todo : Add period in backend
-
 function BudgetPage() {
-  const [togglePopup, setTogglePopup] = useState<boolean>(false);
+  useGetAllBudgets();
+  const { data: budgets, status, error } = useAppSelector(selectAllBudgets);
 
+  const [togglePopup, setTogglePopup] = useState<boolean>(false);
+  const [period, setPeriod] = useState<"Week" | "Month" | "Year" | "None">(
+    "None"
+  );
+  console.log(typeof period);
   const handleClosePopup = (): void => {
     setTogglePopup(false);
   };
@@ -26,13 +34,21 @@ function BudgetPage() {
     return () => document.body.classList.remove("overflow-hidden");
   }, [togglePopup]);
 
+  if (status === "loading") {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <LoadingSpinner size={40} />
+      </div>
+    );
+  }
+
   return (
     <div className="h-full w-full p-2 flex flex-col gap-3">
       <Header heading={"Budget"} note={"Create and track your budgets"} />
       <div className="grid md2:grid-cols-3 grid-cols-1 gap-3 w-full  md2:h-full">
         <div className="md2:col-span-2 col-span-1 flex flex-col gap-3   ">
           <div className="flex items-center justify-between">
-            <BudgetFilterButtons />
+            <BudgetFilterButtons setPeriod={setPeriod} />
             <Button
               onClick={() => setTogglePopup((prev) => !prev)}
               size="sm"
@@ -42,7 +58,8 @@ function BudgetPage() {
               Add new Budget
             </Button>
           </div>
-          <BudgetsDisplaySection />
+
+          <BudgetsDisplaySection budgets={budgets} period={period} />
         </div>
 
         <div className="col-span-1  h-full  flex flex-col gap-3 ">

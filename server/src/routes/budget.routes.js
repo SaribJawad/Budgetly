@@ -11,7 +11,7 @@ import {
 const router = Router();
 
 router.route("/create-budget").post(verifyJWT, createBudget);
-router.route("/get-all-budgets/:walletId").get(verifyJWT, getAllBudgets);
+router.route("/get-all-budgets").get(verifyJWT, getAllBudgets);
 router.route("/get-budget/:budgetId").get(verifyJWT, getBudgetById);
 router.route("/update-budget/:budgetId").patch(verifyJWT, updateBudget);
 router.route("/delete-budget/:budgetId").delete(verifyJWT, deleteBudget);
