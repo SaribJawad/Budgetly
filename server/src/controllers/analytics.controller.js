@@ -3,7 +3,7 @@ import { Transaction } from "../models/transaction.model.js";
 import { Wallet } from "../models/wallet.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-import mongoose from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 
 const getMonthlyFlow = asyncHandler(async (req, res) => {
   const userId = req.user._id;
@@ -762,6 +762,154 @@ const getFinanceSummary = asyncHandler(async (req, res) => {
   }
 });
 
+const getDetailedFinanceSummary = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new ApiError(400, "Invalid user ID");
+  }
+
+  try {
+    const totalWalletBalance = await Wallet.aggregate([
+      {
+        $match: {
+          walletOwner: userId,
+        },
+      },
+      {
+        $lookup: {
+          from: "transactions",
+          localField: "_id",
+          foreignField: "fromWallet",
+          as: "transactions",
+        },
+      },
+      {
+        $unwind: "$transactions",
+      },
+      {
+        $group: {
+          _id: null,
+          totalBalance: { $sum: "$balance" },
+          totalTransactions: { $sum: 1 },
+          uniqueCategories: { $addToSet: "$transactions.category" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalBalance: 1,
+          totalTransactions: 1,
+          totalCategories: { $size: "$uniqueCategories" },
+        },
+      },
+    ]);
+
+    const totalIncomeTransactions = await Wallet.aggregate([
+      {
+        $match: {
+          walletOwner: userId,
+        },
+      },
+      {
+        $lookup: {
+          from: "transactions",
+          localField: "_id",
+          foreignField: "fromWallet",
+          as: "transactions",
+        },
+      },
+      {
+        $unwind: "$transactions",
+      },
+      {
+        $match: {
+          "transactions.transactionType": "Income",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalIncomeTransactions: { $sum: 1 },
+          totalIncomeTranasctionsAmount: { $sum: "$transactions.amount" },
+          uniqueCategories: { $addToSet: "$transactions.category" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalIncomeTransactions: 1,
+          totalIncomeTranasctionsAmount: 1,
+          totalCategories: { $size: "$uniqueCategories" },
+        },
+      },
+    ]);
+
+    const totalExpenseTransactions = await Wallet.aggregate([
+      {
+        $match: {
+          walletOwner: userId,
+        },
+      },
+      {
+        $lookup: {
+          from: "transactions",
+          localField: "_id",
+          foreignField: "fromWallet",
+          as: "transactions",
+        },
+      },
+      {
+        $unwind: "$transactions",
+      },
+      {
+        $match: {
+          "transactions.transactionType": "Expense",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalExpenseTransactions: { $sum: 1 },
+          totalExpenseTransactionsAmount: { $sum: "$transactions.amount" },
+          uniqueCategories: { $addToSet: "$transactions.category" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalExpenseTransactions: 1,
+          totalExpenseTransactionsAmount: 1,
+          totalCategories: { $size: "$uniqueCategories" },
+        },
+      },
+    ]);
+
+    const detailedFinanceSummary = {
+      totalWallet: totalWalletBalance[0],
+      totalIncome: totalIncomeTransactions[0],
+      totalExpense: totalExpenseTransactions[0],
+    };
+
+    console.log(detailedFinanceSummary);
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          detailedFinanceSummary,
+          "Succesfully fetched detailed finance summary"
+        )
+      );
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Something went wrong while fetching detailed finance summary"
+    );
+  }
+});
+
 export {
   getMonthlyFlow,
   getYearlyTrends,
@@ -769,4 +917,5 @@ export {
   getBalanceOverview,
   getFinanceSummary,
   getSavingOverview,
+  getDetailedFinanceSummary,
 };

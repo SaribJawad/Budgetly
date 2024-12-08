@@ -2,18 +2,18 @@ import { RotateCcw } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface GoalFilterButtonsProps {
-  filter: "All" | "In progress" | "Completed";
-  setFilter: (arg: "All" | "In progress" | "Completed") => void;
+  filter: "all" | "inProgress" | "completed";
+  setFilter: (arg: "all" | "inProgress" | "completed") => void;
 }
 
 function GoalFilterButtons({ filter, setFilter }: GoalFilterButtonsProps) {
   return (
     <div className="flex items-center gap-2 ">
       <Button
-        onClick={() => setFilter("In progress")}
+        onClick={() => setFilter("inProgress")}
         size="sm"
         className={`border  bg-black rounded-full  ${
-          filter === "In progress"
+          filter === "inProgress"
             ? "border-[#917FFF] text-[#917FFF]"
             : "border-zinc-800 text-white"
         } `}
@@ -21,10 +21,10 @@ function GoalFilterButtons({ filter, setFilter }: GoalFilterButtonsProps) {
         In Progress
       </Button>
       <Button
-        onClick={() => setFilter("Completed")}
+        onClick={() => setFilter("completed")}
         size="sm"
         className={`border border-zinc-800 bg-black rounded-full  ${
-          filter === "Completed"
+          filter === "completed"
             ? "border-[#917FFF] text-[#917FFF]"
             : "border-zinc-800 text-white"
         } `}
@@ -32,7 +32,7 @@ function GoalFilterButtons({ filter, setFilter }: GoalFilterButtonsProps) {
         Completed
       </Button>
       <Button
-        onClick={() => setFilter("All")}
+        onClick={() => setFilter("all")}
         variant="ghost"
         size="sm"
         className="rounded-full hover:bg-[#8470FF] hover:text-white"

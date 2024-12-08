@@ -47,25 +47,21 @@ const transactionSchema = new Schema(
       type: String,
     },
     fromWallet: {
-      type: Schema.Types.Mixed,
+      type: Schema.Types.ObjectId,
+      ref: "Wallet",
       required: true,
-      validate: {
-        validator: function (value) {
-          return mongoose.isValidObjectId(value) || typeof value === "string";
-        },
-      },
-      message: (props) => `${props.value} is not a valid ObjectId or string`,
     },
     toWallet: {
-      type: Schema.Types.Mixed,
-      required: function () {
-        return this.transactionType === TransactionTypes.TRANSFER;
-      },
+      type: Schema.Types.ObjectId,
+      ref: "Wallet",
       validate: {
         validator: function (value) {
-          return mongoose.isValidObjectId(value) || typeof value === "string";
+          if (this.transactionType === TransactionTypes.TRANSFER) {
+            return value !== null;
+          }
+          return true;
         },
-        message: (props) => `${props.value} is not a valid ObjectId or string`,
+        message: "toWallet is required for transfer transactions",
       },
     },
     paymentType: {
@@ -89,3 +85,7 @@ const transactionSchema = new Schema(
 );
 
 export const Transaction = mongoose.model("Transaction", transactionSchema);
+
+// type: Schema.Types.ObjectId,
+// ref: "Wallet",
+// required: true,

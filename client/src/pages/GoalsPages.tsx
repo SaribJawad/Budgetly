@@ -1,5 +1,4 @@
 import Header from "@/components/navigation/Header";
-import YearSelector from "@/components/filters/YearSelector";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import GoalFilterButtons from "@/components/filters/GoalFilterButtons";
@@ -19,14 +18,13 @@ function GoalsPages() {
   useGetSavingOverview();
 
   const { data: goals, status } = useAppSelector(selectUserGoals);
-  const [year, setYear] = useState<number>(new Date().getFullYear());
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
   const [toggleEditPopup, setToggleEditPopup] = useState<boolean>(false);
 
   const [editGoal, setEditGoal] = useState<string>("");
 
-  const [filter, setFilter] = useState<"All" | "In progress" | "Completed">(
-    "All"
+  const [filter, setFilter] = useState<"all" | "inProgress" | "completed">(
+    "all"
   );
 
   const handleOnClose = (): void => {
@@ -37,6 +35,7 @@ function GoalsPages() {
   const handleEditPopup = (goalId: string): void => {
     setToggleEditPopup((prev) => !prev);
     setEditGoal(goalId);
+    // TODO: clear edit goal state after updating
   };
 
   useEffect(() => {
@@ -64,12 +63,11 @@ function GoalsPages() {
         note={"Create financial goals and manage your savings"}
       />
 
-      <div className="w-full  flex items-center justify-between  ">
-        <YearSelector year={year} setYear={setYear} />
+      <div className="w-full  flex justify-end  ">
         <Button
           onClick={() => setTogglePopup((prev) => !prev)}
           size="lg"
-          className="bg-[#8470FF] hover:bg-[#6C5FBC] hover:text-white rounded-xl  border-zinc-800 w-fit text-md font-medium"
+          className="bg-[#8470FF] hover:bg-[#6C5FBC]  hover:text-white rounded-xl  border-zinc-800 w-fit text-md font-medium"
           variant="outline"
         >
           Add new Goal
@@ -80,6 +78,7 @@ function GoalsPages() {
       <GoalsDisplaySection
         handleToggleEditPopup={handleEditPopup}
         goals={goals}
+        filter={filter}
       />
       <div className="grid lg:grid-cols-4 grid-cols-1 gap-3">
         <TotalGoals goals={goals} />

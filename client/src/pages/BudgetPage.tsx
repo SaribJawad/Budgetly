@@ -19,7 +19,6 @@ function BudgetPage() {
   const [period, setPeriod] = useState<"Week" | "Month" | "Year" | "None">(
     "None"
   );
-  console.log(typeof period);
   const handleClosePopup = (): void => {
     setTogglePopup(false);
   };
@@ -63,7 +62,7 @@ function BudgetPage() {
         </div>
 
         <div className="col-span-1  h-full  flex flex-col gap-3 ">
-          <MonthlyBudgetProgressCard />
+          <MonthlyBudgetProgressCard budgets={budgets} />
           <MostExpensesCard />
         </div>
       </div>

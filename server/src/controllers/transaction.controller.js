@@ -37,7 +37,6 @@ const createTransaction = asyncHandler(async (req, res) => {
     payee,
     payer
   );
-
   const userWallet = mongoose.isValidObjectId(fromWallet)
     ? await Wallet.findById(fromWallet)
     : null;
@@ -46,15 +45,17 @@ const createTransaction = asyncHandler(async (req, res) => {
     ? await Wallet.findById(toWallet)
     : null;
 
+  console.log(amount, typeof amount, transactionType, fromWallet, category);
+
   switch (transactionType) {
     case TransactionTypes.INCOME:
-      await adjustWalletBalance(userWallet, amount, "add");
+      await adjustWalletBalance(userWallet, Number(amount), "add");
       break;
     case TransactionTypes.EXPENSE:
-      await adjustWalletBalance(userWallet, amount, "subtract");
+      await adjustWalletBalance(userWallet, Number(amount), "subtract");
       break;
     case TransactionTypes.TRANSFER:
-      await adjustWalletBalance(userWallet, amount, "subtract");
+      await adjustWalletBalance(userWallet, Number(amount), "subtract");
       if (toWalletEntity) {
         await adjustWalletBalance(toWalletEntity, amount, "add");
       }
@@ -71,29 +72,26 @@ const createTransaction = asyncHandler(async (req, res) => {
   }
 
   if (transactionType === TransactionTypes.EXPENSE) {
-    try {
-      const updateBudget = await Budget.findOne({
-        user: userId,
-        category,
-        wallet: fromWallet,
-      });
+    const updateBudget = await Budget.findOne({
+      user: userId,
+      category,
+      wallet: fromWallet,
+    });
 
-      if (!updateBudget) {
-        return res
-          .status(400)
-          .json(
-            new ApiResponse(
-              400,
-              {},
-              `No budget exists for category ${category}`
-            )
-          );
-      }
-
+    // if (!updateBudget) {
+    //   return res
+    //     .status(400)
+    //     .json(
+    //       new ApiResponse(
+    //         400,
+    //         {},
+    //         `No budget exists for category ${category}`
+    //       )
+    //     );
+    // }
+    if (updateBudget) {
       updateBudget.spentAmount += Number(amount);
       await updateBudget.save({ validateBeforeSave: false });
-    } catch (error) {
-      throw new ApiError(500, "Something went wrong while updating wallet");
     }
   }
 
