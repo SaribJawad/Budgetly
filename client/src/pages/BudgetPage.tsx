@@ -7,7 +7,7 @@ import Header from "@/components/navigation/Header";
 import CreateBudgetPopup from "@/components/popups/CreateBudgetPopup";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import useGetAllBudgets from "@/custom-hooks/useGetAllBudgets";
+import useGetAllBudgets from "@/custom-hooks/budget/useGetAllBudgets";
 import { selectAllBudgets } from "@/features/budget/budgetSlice";
 import { useEffect, useState } from "react";
 

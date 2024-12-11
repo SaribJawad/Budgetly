@@ -6,7 +6,7 @@ import { loginStart, loginSuccess } from "@/features/auth/authSlice";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import useShowToast from "./useShowToast";
+import useShowToast from "../useShowToast";
 
 interface LoginResponse {
   statusCode: number;

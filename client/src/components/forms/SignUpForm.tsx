@@ -12,7 +12,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import useSignUp from "@/custom-hooks/useSignUp";
+import useSignUp from "@/custom-hooks/auth/useSignUp";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const signUpSchema = z.object({

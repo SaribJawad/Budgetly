@@ -37,9 +37,13 @@ function WalletCard({ wallet }: WalletCardProps) {
           <Pencil size={25} />
         </Button>
       </div>
-
-      <h4 className="font-semibold text-2xl">{wallet.walletName}</h4>
-      {togglePopup && <EditWalletPopup onClose={handleClosePopup} />}
+      <div>
+        <span className="text-sm text-zinc-500">{wallet.type}</span>
+        <h4 className="font-semibold text-2xl">{wallet.walletName}</h4>
+      </div>
+      {togglePopup && (
+        <EditWalletPopup onClose={handleClosePopup} wallet={wallet} />
+      )}
     </div>
   );
 }

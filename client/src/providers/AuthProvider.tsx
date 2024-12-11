@@ -1,5 +1,5 @@
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { useGetAuthStatus } from "@/custom-hooks/useGetAuthStatus";
+import { useGetAuthStatus } from "@/custom-hooks/auth/useGetAuthStatus";
 
 interface AuthProviderProps {
   children: React.ReactNode;

@@ -11,7 +11,7 @@ import {
   selectFinanceSummary,
   selectMonthlyFlow,
 } from "@/features/analytics/analyticSlice";
-import useGetFinanceSummary from "@/custom-hooks/useGetFinanceSummary";
+import useGetFinanceSummary from "@/custom-hooks/analytics/useGetFinanceSummary";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 function DashboardPage() {

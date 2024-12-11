@@ -27,7 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useLogout } from "@/custom-hooks/useLogout";
+import { useLogout } from "@/custom-hooks/auth/useLogout";
 
 // Menu items.
 const items = [

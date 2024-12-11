@@ -5,7 +5,7 @@ import { useAppDispatch } from "@/app/hook";
 import { logout } from "@/features/auth/authSlice";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import useShowToast from "./useShowToast";
+import useShowToast from "../useShowToast";
 
 interface LogoutResponse {
   statusCode: number;

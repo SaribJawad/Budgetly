@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetFilteredTransactions from "@/custom-hooks/useGetFilteredTransactions";
+import useGetFilteredTransactions from "@/custom-hooks/transactions/useGetFilteredTransactions";
 import EmptySection from "@/components/ui/EmptySection";
 
 function TransactionsPage() {

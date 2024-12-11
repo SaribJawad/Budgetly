@@ -25,6 +25,10 @@ const walletSchema = new Schema(
       enum: Object.values(WalletTypes),
       default: WalletTypes.GENERAL,
     },
+    initialBalance: {
+      type: Number,
+      default: 0,
+    },
     balance: {
       type: Number,
       default: 0,

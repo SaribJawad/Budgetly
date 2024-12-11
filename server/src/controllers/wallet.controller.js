@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
 import { Wallet } from "../models/wallet.model.js";
+import { Transaction } from "../models/transaction.model.js";
+import { Budget } from "../models/budget.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createWallet = asyncHandler(async (req, res) => {
-  const { walletName, type, balance } = req.body;
+  const { walletName, type, initialBalance } = req.body;
   const userId = req.user?._id;
 
   if (!walletName) {
@@ -16,7 +18,7 @@ const createWallet = asyncHandler(async (req, res) => {
   const wallet = await Wallet.create({
     walletName,
     type: type || undefined,
-    balance: balance || undefined,
+    initialBalance: initialBalance || undefined,
     walletOwner: userId,
   });
 
@@ -77,9 +79,9 @@ const updateWalletInformation = asyncHandler(async (req, res) => {
 
   const updateFields = Object.assign(
     {},
-    req.body.accountName && { accountName: req.body.accountName },
-    req.body.accountNumber && { accountNumber: req.body.accountNumber },
-    req.body.type && { type: req.body.type }
+    req.body.walletName && { walletName: req.body.walletName },
+    req.body.type && { type: req.body.type },
+    req.body.balance && { type: req.body.balance }
   );
 
   if (Object.keys(updateFields).length === 0) {
@@ -96,7 +98,7 @@ const updateWalletInformation = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, updatedWallet, "Wallet updated successfully"));
+    .json(new ApiResponse(200, {}, "Wallet updated successfully"));
 });
 
 const deleteWallet = asyncHandler(async (req, res) => {
@@ -111,6 +113,9 @@ const deleteWallet = asyncHandler(async (req, res) => {
   if (!deletedWallet) {
     throw new ApiError(500, "Something went wrong while deleting wallet");
   }
+
+  await Transaction.deleteMany({ fromWallet: walletId });
+  await Budget.deleteMany({ wallet: walletId });
 
   return res
     .status(200)

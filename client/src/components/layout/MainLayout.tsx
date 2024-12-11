@@ -6,8 +6,8 @@ import {
   selectAuthenticationState,
   selectWalletCreatedOnce,
 } from "@/features/auth/authSlice";
-import useGetAllTranscations from "@/custom-hooks/useGetAllTransactions";
-import useGetMonthlyFlow from "@/custom-hooks/useGetMonthlyFlow";
+import useGetAllTranscations from "@/custom-hooks/transactions/useGetAllTransactions";
+import useGetMonthlyFlow from "@/custom-hooks/analytics/useGetMonthlyFlow";
 
 function MainLayout() {
   useGetAllTranscations();

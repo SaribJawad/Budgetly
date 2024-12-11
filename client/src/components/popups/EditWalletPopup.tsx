@@ -1,11 +1,21 @@
 import { motion } from "framer-motion";
 import EditWalletForm from "../forms/EditWalletForm";
+import { X } from "lucide-react";
+import { Wallet } from "@/@types/Types";
+import useDeleteWallet from "@/custom-hooks/wallet/useDeleteWallet";
+import useEditWallet from "@/custom-hooks/wallet/useEditWallet";
 
 interface EditWalletPopupProps {
   onClose: () => void;
+  wallet: Wallet;
 }
 
-function EditWalletPopup({ onClose }: EditWalletPopupProps) {
+function EditWalletPopup({ onClose, wallet }: EditWalletPopupProps) {
+  const { mutateAsync: deleteWallet, isPending: isDeleteWalletPending } =
+    useDeleteWallet();
+  const { mutateAsync: editWallet, isPending: isEditWalletPending } =
+    useEditWallet();
+
   const fadeInVariants = {
     hidden: { opacity: 0, y: -15 },
     visible: { opacity: 1, y: -20 },
@@ -16,9 +26,15 @@ function EditWalletPopup({ onClose }: EditWalletPopupProps) {
     e.stopPropagation();
   };
 
+  const handleDeleteWallet = async (walletId: string) => {
+    await deleteWallet({ walletId });
+  };
+
   return (
     <motion.div
-      onClick={onClose}
+      onClick={
+        !isDeleteWalletPending || !isEditWalletPending ? onClose : undefined
+      }
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -30,11 +46,29 @@ function EditWalletPopup({ onClose }: EditWalletPopupProps) {
         onClick={handlePopupClick}
         className="w-auto py-5 px-5 flex flex-col gap-8 h-auto bg-black border border-zinc-800 rounded-lg absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2"
       >
-        <div className="flex items-center flex-col ">
-          <h3 className="font-semibold text-2xl">Editing Wallet</h3>
-          <p className="text-sm text-zinc-500">Please fill in the form below</p>
+        <div className=" flex items-center justify-between">
+          <div className="flex  flex-col">
+            <h3 className="font-semibold text-2xl">Editing Wallet</h3>
+            <p className="text-sm text-zinc-500">
+              Please fill in the form below
+            </p>
+          </div>
+          <button
+            disabled={isDeleteWalletPending}
+            onClick={onClose}
+            className=" p-1 rounded-lg hover:bg-zinc-900 transition-all duration-300"
+          >
+            <X />
+          </button>
         </div>
-        <EditWalletForm />
+        <EditWalletForm
+          onClose={onClose}
+          wallet={wallet}
+          handleDeleteWallet={handleDeleteWallet}
+          isDeleteWalletPending={isDeleteWalletPending}
+          isEditWalletPending={isEditWalletPending}
+          editWallet={editWallet}
+        />
       </div>
     </motion.div>
   );

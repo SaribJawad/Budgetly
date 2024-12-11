@@ -19,7 +19,12 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { currencies, walletTypes } from "@/constants/constants";
+import { walletTypes } from "@/constants/constants";
+import {
+  CreateWalletData,
+  CreateWalletResponse,
+} from "@/custom-hooks/useCreateWallet";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 export const createWalletSchema = z.object({
   walletName: z.string().min(4, "Name must be at least 4 letters"),
@@ -27,7 +32,17 @@ export const createWalletSchema = z.object({
   balance: z.number().optional(),
 });
 
-function CreateWalletForm() {
+interface CreateWalletFormProps {
+  onClose: () => void;
+  createWallet: (arg: CreateWalletData) => Promise<CreateWalletResponse>;
+  isCreateWalletPending: boolean;
+}
+
+function CreateWalletForm({
+  onClose,
+  createWallet,
+  isCreateWalletPending,
+}: CreateWalletFormProps) {
   const form = useForm<z.infer<typeof createWalletSchema>>({
     resolver: zodResolver(createWalletSchema),
     defaultValues: {
@@ -37,8 +52,9 @@ function CreateWalletForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof createWalletSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof createWalletSchema>) => {
+    await createWallet(values);
+    onClose();
   };
 
   return (
@@ -126,7 +142,9 @@ function CreateWalletForm() {
                     type="number"
                     {...field}
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={(e) =>
+                      field.onChange(Number(e.currentTarget.value))
+                    }
                   />
                 </FormControl>
                 <FormDescription className="text-sm">
@@ -137,14 +155,15 @@ function CreateWalletForm() {
             )}
           />
         </div>
-        <div className="flex justify-center mt-8 ">
+        <div className="flex items-center justify-center mt-8 ">
           <Button
+            disabled={isCreateWalletPending}
             type="submit"
             variant="default"
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Create
+            {isCreateWalletPending ? <LoadingSpinner /> : "Create"}
           </Button>
         </div>
       </form>

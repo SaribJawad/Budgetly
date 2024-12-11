@@ -12,7 +12,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useToast } from "@/hooks/use-toast";
+import useShowToast from "@/custom-hooks/useShowToast";
 
 const editUserInformationSchema = z.object({
   firstName: z.string().optional(),
@@ -21,7 +21,7 @@ const editUserInformationSchema = z.object({
 });
 
 function EditUserInformationForm() {
-  const { toast } = useToast();
+  const showToast = useShowToast();
 
   const initialValues = {
     firstName: "",
@@ -50,9 +50,8 @@ function EditUserInformationForm() {
     if (isFormUpdated(values)) {
       console.log("updated fields", values);
     } else {
-      toast({
+      showToast({
         variant: "destructive",
-        className: "  border border-red-800 rounded-lg p-5 shadow-xl ",
         description:
           "No changes were made. Please update at least one field to update.",
       });

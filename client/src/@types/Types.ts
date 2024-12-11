@@ -88,3 +88,10 @@ export interface BalanceOverview {
   currentYearBalance: MonthlyBalance[];
   lastYearBalance: MonthlyBalance[];
 }
+
+export interface DetailedFinanceSummary {
+  title: string;
+  totalAmount: number;
+  totalTransactions: number;
+  totalCategories: number;
+}

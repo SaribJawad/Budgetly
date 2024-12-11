@@ -5,7 +5,7 @@ import {
   selectAuthenticationState,
   selectUser,
 } from "@/features/auth/authSlice";
-import useCreateWallet from "@/custom-hooks/useCreateWallet";
+import useCreateWallet from "@/custom-hooks/wallet/useCreateWallet";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Navigate } from "react-router-dom";
 

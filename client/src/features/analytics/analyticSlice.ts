@@ -1,5 +1,6 @@
 import {
   BalanceOverview,
+  DetailedFinanceSummary,
   FinanceSummary,
   MonthlyFlow,
   SavingOverview,
@@ -30,6 +31,11 @@ interface InitialState {
     status: "idle" | "loading" | "success" | "error";
     error: string | null;
   };
+  detailedFinanceSummary: {
+    data: DetailedFinanceSummary[] | null;
+    status: "idle" | "loading" | "success" | "error";
+    error: string | null;
+  };
 }
 
 const initialState: InitialState = {
@@ -50,6 +56,11 @@ const initialState: InitialState = {
     error: null,
   },
   balanceOverview: {
+    data: null,
+    status: "idle",
+    error: null,
+  },
+  detailedFinanceSummary: {
     data: null,
     status: "idle",
     error: null,
@@ -124,6 +135,22 @@ const analyticSlice = createSlice({
       state.balanceOverview.error = action.payload;
       state.balanceOverview.status = "error";
     },
+    setDetailedFinanceSummaryStart: (state) => {
+      state.detailedFinanceSummary.error = null;
+      state.detailedFinanceSummary.status = "loading";
+    },
+    setDetailedFinanceSummarySuccess: (
+      state,
+      action: PayloadAction<DetailedFinanceSummary[]>
+    ) => {
+      state.detailedFinanceSummary.error = null;
+      state.detailedFinanceSummary.status = "success";
+      state.detailedFinanceSummary.data = action.payload;
+    },
+    setDetailedFinanceSummaryError: (state, action: PayloadAction<string>) => {
+      state.detailedFinanceSummary.error = action.payload;
+      state.detailedFinanceSummary.status = "loading";
+    },
   },
 });
 
@@ -142,6 +169,9 @@ export const {
   setBalanceOverviewStart,
   setBalanceOverviewSuccess,
   setBalanceOverviewError,
+  setDetailedFinanceSummaryStart,
+  setDetailedFinanceSummarySuccess,
+  setDetailedFinanceSummaryError,
 } = analyticSlice.actions;
 
 export default analyticSlice.reducer;
@@ -166,4 +196,8 @@ export const selectSavingOverview = (state: RootState) => {
 
 export const selectBalanceOverview = (state: RootState) => {
   return state.analytic.balanceOverview;
+};
+
+export const selectDetailedFinanceSummary = (state: RootState) => {
+  return state.analytic.detailedFinanceSummary;
 };

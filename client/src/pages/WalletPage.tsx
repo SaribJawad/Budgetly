@@ -5,7 +5,7 @@ import TransactionOverviewCard from "@/components/finance/TransactionOverviewCar
 import WalletSummaryCard from "@/components/finance/WalletSummaryCard";
 import Header from "@/components/navigation/Header";
 import CreateWalletPopup from "@/components/popups/CreateWalletPopup";
-import useGetUserWallet from "@/custom-hooks/useGetUserWallet";
+import useGetUserWallet from "@/custom-hooks/wallet/useGetUserWallet";
 import { selectAllWallets } from "@/features/wallet/walletSlice";
 import { useEffect, useState } from "react";
 
@@ -39,7 +39,7 @@ function WalletPage() {
         note={"Overview of your balance and accounts"}
       />
 
-      <div className="h-[40%]   grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3  md:gap-4">
+      <div className="h-full   grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3  md:gap-3">
         <WalletSummaryCard wallets={wallets} walletStatus={status} />
         <WalletDisplaySection
           handlePopup={handlePopup}

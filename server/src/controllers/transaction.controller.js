@@ -45,8 +45,6 @@ const createTransaction = asyncHandler(async (req, res) => {
     ? await Wallet.findById(toWallet)
     : null;
 
-  console.log(amount, typeof amount, transactionType, fromWallet, category);
-
   switch (transactionType) {
     case TransactionTypes.INCOME:
       await adjustWalletBalance(userWallet, Number(amount), "add");
@@ -322,7 +320,6 @@ const deleteTransaction = asyncHandler(async (req, res) => {
   const userWallet = mongoose.isValidObjectId(transactionToDelete.fromWallet)
     ? await Wallet.findById(transactionToDelete.fromWallet)
     : null;
-  console.log("delete balance place", userWallet.balance);
 
   const toWalletEntity = mongoose.isValidObjectId(transactionToDelete.toWallet)
     ? await Wallet.findById(transactionToDelete.fromWallet)

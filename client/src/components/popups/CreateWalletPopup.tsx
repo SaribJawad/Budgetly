@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
 import CreateWalletForm from "../forms/CreateWalletForm";
+import useCreateWallet from "@/custom-hooks/wallet/useCreateWallet";
 
 interface CreateWalletPopupProps {
   onClose: () => void;
 }
 
 function CreateWalletPopup({ onClose }: CreateWalletPopupProps) {
+  const { mutateAsync: createWallet, isPending } = useCreateWallet();
+
   const fadeInVariants = {
     hidden: { opacity: 0, y: -15 },
     visible: { opacity: 1, y: -20 },
@@ -18,7 +21,7 @@ function CreateWalletPopup({ onClose }: CreateWalletPopupProps) {
 
   return (
     <motion.div
-      onClick={onClose}
+      onClick={!isPending ? onClose : undefined}
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -35,7 +38,11 @@ function CreateWalletPopup({ onClose }: CreateWalletPopupProps) {
           <p className="text-sm text-zinc-500">Please fill in the form below</p>
         </div>
 
-        <CreateWalletForm />
+        <CreateWalletForm
+          onClose={onClose}
+          createWallet={createWallet}
+          isCreateWalletPending={isPending}
+        />
       </div>
     </motion.div>
   );

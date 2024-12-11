@@ -52,15 +52,15 @@ export const months: string[] = [
 export const walletTypes: string[] = [
   "General",
   "Cash",
-  "Current account",
-  "Credit card",
-  "Saving account",
+  "Current Account",
+  "Credit Card",
+  "Saving Account",
   "Bonus",
   "Insurance",
   "Investment",
   "Loan",
   "Mortgage",
-  "Account with overdraft",
+  "Account with Overdraft",
 ];
 
 type currencies = { code: string; name: string };

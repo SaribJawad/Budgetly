@@ -1,5 +1,5 @@
-import useShowToast from "./useShowToast";
-import { useMutation } from "@tanstack/react-query";
+import useShowToast from "../useShowToast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Wallet } from "@/@types/Types";
 import { ErrorResponse } from "@/@types/Error";
 import { api } from "@/api/axios";
@@ -12,24 +12,24 @@ export interface CreateWalletResponse {
   success: boolean;
 }
 
-interface CreateWalletData {
+export interface CreateWalletData {
   walletName: string;
-  currency: string;
   type?: string;
   balance?: number;
 }
 
 const useCreateWallet = () => {
   const showToast = useShowToast();
+  const queryClient = useQueryClient();
 
   return useMutation<CreateWalletResponse, ErrorResponse, CreateWalletData>({
-    mutationFn: async ({ balance, currency, type, walletName }) => {
+    mutationFn: async ({ balance, type, walletName }) => {
       try {
         const response = await api.post(
           "/wallet/create-wallet",
           {
             balance,
-            currency,
+
             type,
             walletName,
           },
@@ -54,9 +54,16 @@ const useCreateWallet = () => {
       }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          ["financeSummary", "userWallets"].some((key) => {
+            return query.queryKey.includes(key);
+          }),
+      });
+      queryClient.refetchQueries({ queryKey: ["financeSummary"] });
+
       showToast({
-        description:
-          "Wallet created! You can create more wallets on wallets page.",
+        description: "Wallet created successfully!",
       });
     },
   });

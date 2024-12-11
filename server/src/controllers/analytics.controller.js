@@ -110,12 +110,21 @@ const getMonthlyFlow = asyncHandler(async (req, res) => {
       },
     ]);
 
+    const completedMonthlyFlow =
+      monthlyFlow.length === 0
+        ? Array.from({ length: 12 }, (_, i) => ({
+            month: i + 1,
+            income: 0,
+            expense: 0,
+          }))
+        : monthlyFlow[0].monthlyFlow;
+
     return res
       .status(200)
       .json(
         new ApiResponse(
           200,
-          monthlyFlow[0].monthlyFlow,
+          completedMonthlyFlow,
           "Monthly flow fetched successfully"
         )
       );
@@ -135,118 +144,133 @@ const getYearlyTrends = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid user ID.");
   }
 
-  const yearlyTrends = await Transaction.aggregate([
-    {
-      $match: {
-        user: userId,
-        createdAt: {
-          $gte: new Date(`${currentYear}-01-01`),
-          $lte: new Date(`${currentYear + 1}-01-01`),
-        },
-      },
-    },
-    {
-      $group: {
-        _id: { $month: "$createdAt" },
-        totalIncome: {
-          $sum: {
-            $cond: [{ $eq: ["$transactionType", "Income"] }, "$amount", 0],
-          },
-        },
-        totalExpense: {
-          $sum: {
-            $cond: [{ $eq: ["$transactionType", "Expense"] }, "$amount", 0],
+  try {
+    const yearlyTrends = await Transaction.aggregate([
+      {
+        $match: {
+          user: userId,
+          createdAt: {
+            $gte: new Date(`${currentYear}-01-01`),
+            $lte: new Date(`${currentYear + 1}-01-01`),
           },
         },
       },
-    },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          totalIncome: {
+            $sum: {
+              $cond: [{ $eq: ["$transactionType", "Income"] }, "$amount", 0],
+            },
+          },
+          totalExpense: {
+            $sum: {
+              $cond: [{ $eq: ["$transactionType", "Expense"] }, "$amount", 0],
+            },
+          },
+        },
+      },
 
-    {
-      $sort: { _id: 1 },
-    },
-    {
-      $group: {
-        _id: null,
-        yearlyTrends: {
-          $push: {
-            month: "$_id",
-            totalIncome: "$totalIncome",
-            totalExpense: "$totalExpense",
+      {
+        $sort: { _id: 1 },
+      },
+      {
+        $group: {
+          _id: null,
+          yearlyTrends: {
+            $push: {
+              month: "$_id",
+              totalIncome: "$totalIncome",
+              totalExpense: "$totalExpense",
+            },
           },
         },
       },
-    },
 
-    {
-      $project: {
-        _id: 0,
-        yearlyTrends: {
-          $map: {
-            input: Array.from({ length: 12 }, (_, i) => i + 1),
-            as: "month",
-            in: {
-              month: "$$month",
-              totalIncome: {
-                $let: {
-                  vars: {
-                    match: {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: "$yearlyTrends",
-                            as: "trend",
-                            cond: { $eq: ["$$trend.month", "$$month"] },
+      {
+        $project: {
+          _id: 0,
+          yearlyTrends: {
+            $map: {
+              input: Array.from({ length: 12 }, (_, i) => i + 1),
+              as: "month",
+              in: {
+                month: "$$month",
+                totalIncome: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: "$yearlyTrends",
+                              as: "trend",
+                              cond: { $eq: ["$$trend.month", "$$month"] },
+                            },
                           },
-                        },
-                        0,
-                      ],
+                          0,
+                        ],
+                      },
                     },
+                    in: { $ifNull: ["$$match.totalIncome", 0] },
                   },
-                  in: { $ifNull: ["$$match.totalIncome", 0] },
                 },
-              },
-              totalExpense: {
-                $let: {
-                  vars: {
-                    match: {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: "$yearlyTrends",
-                            as: "trend",
-                            cond: { $eq: ["$$trend.month", "$$month"] },
+                totalExpense: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: "$yearlyTrends",
+                              as: "trend",
+                              cond: { $eq: ["$$trend.month", "$$month"] },
+                            },
                           },
-                        },
-                        0,
-                      ],
+                          0,
+                        ],
+                      },
                     },
+                    in: { $ifNull: ["$$match.totalExpense", 0] },
                   },
-                  in: { $ifNull: ["$$match.totalExpense", 0] },
                 },
               },
             },
           },
         },
       },
-    },
-  ]);
+    ]);
 
-  const trendsWithSaving = yearlyTrends[0].yearlyTrends.map((month) => ({
-    month: month.month,
-    totalIncome: month.totalIncome,
-    totalExpense: month.totalExpense,
-    savings: month.totalIncome - month.totalExpense,
-  }));
+    const trendsWithSaving =
+      yearlyTrends.length >= 1
+        ? yearlyTrends[0].yearlyTrends.map((month) => ({
+            month: month.month,
+            totalIncome: month.totalIncome,
+            totalExpense: month.totalExpense,
+            savings: month.totalIncome - month.totalExpense,
+          }))
+        : Array.from({ length: 12 }, (_, i) => ({
+            month: i + 1,
+            totalIncome: 0,
+            totalExpense: 0,
+            savings: 0,
+          }));
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        trendsWithSaving,
-        "Yearly trends fetched successfully"
-      )
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          trendsWithSaving,
+          "Yearly trends fetched successfully"
+        )
+      );
+  } catch (error) {
+    throw new ApiError(
+      400,
+      "An unexpected error occurred while fetching yearly trends"
     );
+  }
 });
 
 const getSavingOverview = asyncHandler(async (req, res) => {
@@ -363,13 +387,18 @@ const getSavingOverview = asyncHandler(async (req, res) => {
     },
   ]);
 
-  const overviewWithSavings = savingOverview[0].savingOverview.map(
-    (overview) => ({
-      month: overview.month,
-      totalIncome: overview.totalIncome,
-      totalSavings: overview.totalIncome - overview.totalExpense,
-    })
-  );
+  const overviewWithSavings =
+    savingOverview.length >= 1
+      ? savingOverview[0]?.savingOverview.map((overview) => ({
+          month: overview.month,
+          totalIncome: overview.totalIncome,
+          totalSavings: overview.totalIncome - overview.totalExpense,
+        }))
+      : Array.from({ length: 12 }, (_, i) => ({
+          month: i + 1,
+          totalIncome: 0,
+          totalSavings: 0,
+        }));
 
   return res
     .status(200)
@@ -777,22 +806,32 @@ const getDetailedFinanceSummary = asyncHandler(async (req, res) => {
         },
       },
       {
+        $group: {
+          _id: null,
+          totalBalance: { $sum: "$balance" },
+          walletIds: { $push: "$_id" },
+        },
+      },
+      {
         $lookup: {
           from: "transactions",
-          localField: "_id",
+          localField: "walletIds",
           foreignField: "fromWallet",
           as: "transactions",
         },
       },
       {
-        $unwind: "$transactions",
-      },
-      {
-        $group: {
-          _id: null,
-          totalBalance: { $sum: "$balance" },
-          totalTransactions: { $sum: 1 },
-          uniqueCategories: { $addToSet: "$transactions.category" },
+        $addFields: {
+          totalTransactions: {
+            $size: "$transactions",
+          },
+          uniqueCategories: {
+            $reduce: {
+              input: "$transactions.category",
+              initialValue: [],
+              in: { $setUnion: ["$$value", ["$$this"]] },
+            },
+          },
         },
       },
       {
@@ -885,13 +924,30 @@ const getDetailedFinanceSummary = asyncHandler(async (req, res) => {
       },
     ]);
 
-    const detailedFinanceSummary = {
-      totalWallet: totalWalletBalance[0],
-      totalIncome: totalIncomeTransactions[0],
-      totalExpense: totalExpenseTransactions[0],
-    };
-
-    console.log(detailedFinanceSummary);
+    const detailedFinanceSummary = [
+      {
+        title: "Total balance",
+        totalAmount: totalWalletBalance[0]?.totalBalance || 0,
+        totalTransactions: totalWalletBalance[0]?.totalTransactions || 0,
+        totalCategories: totalWalletBalance[0]?.totalCategories || 0,
+      },
+      {
+        title: "Total income",
+        totalAmount:
+          totalIncomeTransactions[0]?.totalIncomeTranasctionsAmount || 0,
+        totalTransactions:
+          totalIncomeTransactions[0]?.totalIncomeTransactions || 0,
+        totalCategories: totalIncomeTransactions[0]?.totalCategories || 0,
+      },
+      {
+        title: "Total expense",
+        totalAmount:
+          totalExpenseTransactions[0]?.totalExpenseTransactionsAmount || 0,
+        totalTransactions:
+          totalExpenseTransactions[0]?.totalExpenseTransactions || 0,
+        totalCategories: totalExpenseTransactions[0]?.totalCategories || 0,
+      },
+    ];
 
     res
       .status(200)
@@ -903,6 +959,7 @@ const getDetailedFinanceSummary = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
+    console.log(error);
     throw new ApiError(
       500,
       "Something went wrong while fetching detailed finance summary"
