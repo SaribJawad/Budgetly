@@ -6,7 +6,6 @@ import GoalsDisplaySection from "@/components/data-display/GoalsDisplaySection";
 import TotalGoals from "@/components/data-display/TotalGoals";
 import SavingsOverviewCard from "@/components/finance/SavingsOverviewCard";
 import CreateGoalPopup from "@/components/popups/CreateGoalPopup";
-import EditGoalPopup from "@/components/popups/EditGoalPopup";
 import useGetAllGoals from "@/custom-hooks/goals/useGetAllGoals";
 import { useAppSelector } from "@/app/hook";
 import { selectUserGoals } from "@/features/goal/goalSlice";
@@ -19,9 +18,6 @@ function GoalsPages() {
 
   const { data: goals, status } = useAppSelector(selectUserGoals);
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
-  const [toggleEditPopup, setToggleEditPopup] = useState<boolean>(false);
-
-  const [editGoal, setEditGoal] = useState<string>("");
 
   const [filter, setFilter] = useState<"all" | "inProgress" | "completed">(
     "all"
@@ -29,13 +25,6 @@ function GoalsPages() {
 
   const handleOnClose = (): void => {
     setTogglePopup(false);
-    setToggleEditPopup(false);
-  };
-
-  const handleEditPopup = (goalId: string): void => {
-    setToggleEditPopup((prev) => !prev);
-    setEditGoal(goalId);
-    // TODO: clear edit goal state after updating
   };
 
   useEffect(() => {
@@ -75,17 +64,12 @@ function GoalsPages() {
       </div>
 
       <GoalFilterButtons filter={filter} setFilter={setFilter} />
-      <GoalsDisplaySection
-        handleToggleEditPopup={handleEditPopup}
-        goals={goals}
-        filter={filter}
-      />
+      <GoalsDisplaySection goals={goals} filter={filter} />
       <div className="grid lg:grid-cols-4 grid-cols-1 gap-3">
         <TotalGoals goals={goals} />
         <SavingsOverviewCard />
       </div>
       {togglePopup && <CreateGoalPopup onClose={handleOnClose} />}
-      {toggleEditPopup && <EditGoalPopup onClose={handleOnClose} />}
     </div>
   );
 }

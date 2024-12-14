@@ -27,14 +27,17 @@ const useEditWallet = () => {
   return useMutation<EditWalletResponse, ErrorResponse, EditWalletData>({
     mutationFn: async ({ formData, walletId }) => {
       try {
-        console.log(formData);
-        console.log(walletId);
-
         const response = await api.patch(
-          `wallet/update-wallet-info/${walletId}`
+          `wallet/update-wallet-info/${walletId}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
 
-        return response.data.data;
+        return response.data.data as EditWalletResponse;
       } catch (error) {
         if (isAxiosError(error) && error.response) {
           const errorMessage =

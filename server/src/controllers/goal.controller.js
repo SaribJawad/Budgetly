@@ -6,7 +6,6 @@ import mongoose, { mongo } from "mongoose";
 
 const createGoal = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
-  console.log(userId);
 
   if (!mongoose.isValidObjectId(userId)) {
     throw new ApiError(400, "Invalid User ID");
@@ -32,8 +31,6 @@ const createGoal = asyncHandler(async (req, res) => {
     req.body.goalColor && { goalColor: req.body.goalColor },
     req.body.note && { note: req.body.note }
   );
-
-  console.log(addFields);
 
   const goal = await Goal.create(addFields);
 
@@ -120,7 +117,7 @@ const updateGoal = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, updatedGoal, "Goal updated successfully"));
+    .json(new ApiResponse(200, {}, "Goal updated successfully"));
 });
 
 const deleteGoal = asyncHandler(async (req, res) => {

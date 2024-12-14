@@ -16,48 +16,101 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { CalendarRange } from "lucide-react";
 import { Calendar } from "../ui/calendar";
+import useShowToast from "@/custom-hooks/useShowToast";
+import { stripTime } from "@/lib/utils";
+import useEditGoal from "@/custom-hooks/goals/useEditGoal";
+import { Goal } from "@/@types/Types";
 
-const editGoalSchema = z
-  .object({
-    name: z.string().min(4, "Name must be at least 4 letters.").optional(),
-    targetAmount: z
-      .number()
-      .min(1, "Invalid amount")
-      .positive("Target amount is required")
-      .optional(),
-    goalDealLine: z
-      .date()
-      .refine(
-        (date) => {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          return date >= today;
-        },
-        { message: "Invalid deadline" }
-      )
-      .optional(),
-    savedAlready: z.number().optional(),
-    note: z.string().optional(),
-  })
-  .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: "At least one field is required",
-  });
+interface EditGoalForm {
+  goal: Goal;
+}
 
-function EditGoalForm() {
+const editGoalSchema = z.object({
+  name: z
+    .string()
+    .optional()
+    .refine((value) => !value || value.length >= 4, {
+      message: "Name must be at least 4 letters.",
+    }),
+  targetAmount: z
+    .number()
+    .optional()
+    .refine((value) => !value || value > 0, {
+      message: "Invalid amount.",
+    }),
+  goalDealLine: z
+    .date()
+    .optional()
+    .refine(
+      (date) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return date && date >= today;
+      },
+      { message: "Invalid deadline" }
+    ),
+  savedAlready: z.number().optional(),
+});
+
+function EditGoalForm({ goal }: EditGoalForm) {
+  const { mutateAsync: editGoal, isPending: isEditGoalPending } = useEditGoal();
+  const showToast = useShowToast();
+
+  const initialValues = {
+    name: goal.name,
+    targetAmount: goal.targetAmount,
+    goalDealLine: new Date(goal.goalDeadline),
+    savedAlready: goal.savedAlready,
+  };
+
   const form = useForm<z.infer<typeof editGoalSchema>>({
     resolver: zodResolver(editGoalSchema),
-    defaultValues: {
-      // TODO: Add values from goal
-      name: "",
-      targetAmount: 0,
-      goalDealLine: new Date(),
-      savedAlready: 0,
-      note: "",
-    },
+    defaultValues: initialValues,
   });
 
-  const onSubmit = (value: z.infer<typeof editGoalSchema>) => {
-    console.log(value);
+  const isFormUpdate = (values: z.infer<typeof editGoalSchema>) => {
+    const intitalGoalDeadline = initialValues.goalDealLine
+      ? stripTime(initialValues.goalDealLine)
+      : null;
+
+    const currentGoalDeadline = values.goalDealLine
+      ? stripTime(values.goalDealLine)
+      : null;
+
+    return (
+      intitalGoalDeadline !== currentGoalDeadline ||
+      (values.name ?? "") !== initialValues.name ||
+      (values.savedAlready ?? 0) !== initialValues.savedAlready ||
+      (values.targetAmount ?? 0) !== initialValues.targetAmount
+    );
+  };
+
+  const onSubmit = async (values: z.infer<typeof editGoalSchema>) => {
+    if (isFormUpdate(values)) {
+      const toEditData = Object.assign(
+        {},
+        values.goalDealLine !== initialValues.goalDealLine && {
+          goalDeadline: values?.goalDealLine?.toISOString().split("T")[0],
+        },
+        values.name !== initialValues.name && {
+          name: values.name,
+        },
+        values.savedAlready !== initialValues.savedAlready && {
+          savedAlready: values.savedAlready,
+        },
+        values.targetAmount !== initialValues.targetAmount && {
+          targetAmount: values.targetAmount,
+        }
+      );
+
+      await editGoal({ formData: toEditData, goalId: goal._id });
+    } else {
+      showToast({
+        variant: "destructive",
+        description:
+          "No changes were made. Please update at least one field to update.",
+      });
+    }
   };
 
   return (
@@ -198,8 +251,9 @@ function EditGoalForm() {
             )}
           />
         </div>
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center gap-3 mt-8">
           <Button
+            disabled={isEditGoalPending}
             type="submit"
             variant="default"
             size="sm"

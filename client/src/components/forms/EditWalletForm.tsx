@@ -42,7 +42,7 @@ const editWalletFormSchema = z.object({
     .string()
     .optional()
     .refine((value) => !value || value.length > 4, {
-      message: "Name must be at least 4 letters",
+      message: "Name must be at least 4 letters.",
     }),
   type: z.string().optional(),
   balance: z.number().optional(),
@@ -214,7 +214,7 @@ function EditWalletForm({
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Edit
+            {isEditWalletPending ? <LoadingSpinner /> : "Edit"}
           </Button>
           <Button
             disabled={isEditWalletPending || isDeleteWalletPending}

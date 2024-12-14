@@ -2,12 +2,18 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
+import useMarkGoalAsReached from "@/custom-hooks/goals/useMarkGoalAsReached";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 interface GoalCardPopupProps {
   handleCloseGoalPopup: () => void;
+  goalId: string;
 }
 
-function GoalCardPopup({ handleCloseGoalPopup }: GoalCardPopupProps) {
+function GoalCardPopup({ handleCloseGoalPopup, goalId }: GoalCardPopupProps) {
+  const { mutateAsync: setGoalAsReached, isPending: isGoalAsReachedPending } =
+    useMarkGoalAsReached();
+
   const [addSaveAmount, setAddSaveAmount] = useState<boolean>(false);
   const [savedAmount, setSavedAmount] = useState<number>(0);
   const fadeInVariants = {
@@ -26,9 +32,13 @@ function GoalCardPopup({ handleCloseGoalPopup }: GoalCardPopupProps) {
     setAddSaveAmount(false);
   };
 
+  const handleGoalReached = async (goalId: string) => {
+    await setGoalAsReached({ goalId });
+  };
+
   return (
     <motion.div
-      onClick={handleCloseGoalPopup}
+      onClick={!isGoalAsReachedPending ? handleCloseGoalPopup : undefined}
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -40,7 +50,7 @@ function GoalCardPopup({ handleCloseGoalPopup }: GoalCardPopupProps) {
         className="w-auto flex flex-col items-center gap-6 p-4  h-auto bg-black border border-zinc-800 rounded-lg absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2"
         onClick={handlePopupClick}
       >
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center justify-between w-[300px]">
           <div>
             <h2 className="text-2xl font-semibold">MacBook Pro</h2>
             <span className=" text-sm text-zinc-500">
@@ -83,17 +93,23 @@ function GoalCardPopup({ handleCloseGoalPopup }: GoalCardPopupProps) {
               className="flex items-center justify-center gap-3"
             >
               <input
+                disabled={isGoalAsReachedPending}
                 value={savedAmount}
                 onChange={(e) => setSavedAmount(Number(e.target.value))}
                 className="border border-zinc-800 bg-black rounded-lg h-10 outline-none p-2"
                 type="number"
               />
-              <Button size="sm" className="bg-[#917FFF]">
+              <Button
+                disabled={isGoalAsReachedPending}
+                size="sm"
+                className="bg-[#917FFF]"
+              >
                 Add
               </Button>
             </form>
           ) : (
             <Button
+              disabled={isGoalAsReachedPending}
               onClick={() => setAddSaveAmount((prev) => !prev)}
               size="lg"
               className="bg-[#917FFF]"
@@ -101,9 +117,19 @@ function GoalCardPopup({ handleCloseGoalPopup }: GoalCardPopupProps) {
               Add saved amount
             </Button>
           )}
-          <div className="flex items-center gap-3">
-            <Button size="lg" variant="ghost">
-              Set goal as reached
+          <div className="flex items-center gap-3 w-[300px]">
+            <Button
+              className="w-full"
+              disabled={isGoalAsReachedPending}
+              onClick={() => handleGoalReached(goalId)}
+              size="lg"
+              variant="ghost"
+            >
+              {isGoalAsReachedPending ? (
+                <LoadingSpinner />
+              ) : (
+                "Set goal as reached"
+              )}
             </Button>
             <Button variant="destructive">Delete</Button>
           </div>

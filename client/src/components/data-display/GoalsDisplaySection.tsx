@@ -1,22 +1,15 @@
 import { useState } from "react";
-
-import GoalCardPopup from "../popups/GoalCardPopup";
 import GoalCard from "./GoalCard";
-
 import { Goal } from "@/@types/Types";
 import EmptySection from "../ui/EmptySection";
 
 interface GoalsDisplaySection {
-  handleToggleEditPopup: (goalId: string) => void;
   goals: Goal[];
   filter: "all" | "inProgress" | "completed";
 }
 
-function GoalsDisplaySection({
-  handleToggleEditPopup,
-  goals,
-  filter,
-}: GoalsDisplaySection) {
+function GoalsDisplaySection({ goals, filter }: GoalsDisplaySection) {
+  const [toggleEditPopup, setToggleEditPopup] = useState<boolean>(false);
   const [toggleGoalPopup, setToggleGoalPopup] = useState<boolean>(false);
 
   const filteredGoals =
@@ -30,8 +23,13 @@ function GoalsDisplaySection({
     setToggleGoalPopup((prev) => !prev);
   };
 
-  const handleCloseGoalPopup = (): void => {
+  const handleToggleEditPopup = (): void => {
+    setToggleEditPopup((prev) => !prev);
+  };
+
+  const handleCloseGoalsPopup = (): void => {
     setToggleGoalPopup(false);
+    setToggleEditPopup(false);
   };
 
   return (
@@ -45,9 +43,12 @@ function GoalsDisplaySection({
           filteredGoals.map((goal) => (
             <GoalCard
               key={goal._id}
-              handleToggleEditPopup={handleToggleEditPopup}
               handleToggleGoalPopup={handleToggleGoalPopup}
               goal={goal}
+              onClose={handleCloseGoalsPopup}
+              isEditGoalPopupOpen={toggleEditPopup}
+              isGoalPopupOpen={toggleGoalPopup}
+              handleEditPopup={handleToggleEditPopup}
             />
           ))
         ) : (
@@ -59,9 +60,6 @@ function GoalsDisplaySection({
           </div>
         )}
       </div>
-      {toggleGoalPopup && (
-        <GoalCardPopup handleCloseGoalPopup={handleCloseGoalPopup} />
-      )}
     </div>
   );
 }
