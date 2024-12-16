@@ -12,7 +12,7 @@ function GoalFilterButtons({ filter, setFilter }: GoalFilterButtonsProps) {
       <Button
         onClick={() => setFilter("inProgress")}
         size="sm"
-        className={`border  bg-black rounded-full  ${
+        className={`border  bg-black rounded-full transition-all duration-300  ${
           filter === "inProgress"
             ? "border-[#917FFF] text-[#917FFF]"
             : "border-zinc-800 text-white"
@@ -23,7 +23,7 @@ function GoalFilterButtons({ filter, setFilter }: GoalFilterButtonsProps) {
       <Button
         onClick={() => setFilter("completed")}
         size="sm"
-        className={`border border-zinc-800 bg-black rounded-full  ${
+        className={`border border-zinc-800 bg-black rounded-full  transition-all duration-300  ${
           filter === "completed"
             ? "border-[#917FFF] text-[#917FFF]"
             : "border-zinc-800 text-white"
@@ -35,7 +35,7 @@ function GoalFilterButtons({ filter, setFilter }: GoalFilterButtonsProps) {
         onClick={() => setFilter("all")}
         variant="ghost"
         size="sm"
-        className="rounded-full hover:bg-[#8470FF] hover:text-white"
+        className="rounded-full hover:bg-[#8470FF] hover:text-white transition-all duration-300"
       >
         <RotateCcw /> Reset
       </Button>

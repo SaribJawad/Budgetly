@@ -20,10 +20,10 @@ import GoalCardPopup from "../popups/GoalCardPopup";
 import useDeleteGoal from "@/custom-hooks/goals/useDeleteGoal";
 
 interface GoalCardProps {
-  handleToggleGoalPopup: () => void;
+  handleToggleGoalPopup: (goalId: string) => void;
   onClose: () => void;
   isEditGoalPopupOpen: boolean;
-  handleEditPopup: () => void;
+  handleEditPopup: (goalId: string) => void;
   isGoalPopupOpen: boolean;
   goal: Goal;
 }
@@ -46,7 +46,7 @@ function GoalCard({
   };
 
   return (
-    <div className=" border w-[300px] border-zinc-800 shrink-0 p-2 rounded-lg flex flex-col gap-8 relative">
+    <div className=" border w-[300px] border-zinc-800 shrink-0 p-2 rounded-lg flex flex-col justify-between gap-8 relative">
       {new Date(goal.goalDeadline) <= new Date() && !goal.goalReached && (
         <TooltipProvider>
           <Tooltip>
@@ -91,14 +91,15 @@ function GoalCard({
           ) : (
             <>
               <Button
-                onClick={handleToggleGoalPopup}
+                onClick={() => handleToggleGoalPopup(goal._id)}
+                aria-label="View Goal Details"
                 size="sm"
                 className="rounded-full  h-10 bg-black w-10 border border-zinc-800 hover:border-white transition-all duration-300"
               >
                 <GoalIcon size={20} />
               </Button>
               <Button
-                onClick={handleEditPopup}
+                onClick={() => handleEditPopup(goal._id)}
                 size="sm"
                 className="rounded-full  h-10 bg-black w-10 border border-zinc-800 hover:border-white transition-all duration-300"
               >
@@ -123,16 +124,14 @@ function GoalCard({
           <span className="text-sm font-semibold">{leftAmount}</span>
         </div>
       </div>
-      {isEditGoalPopupOpen && (
-        <EditGoalPopup
-          onClose={onClose}
-          goal={goal}
-          handleDeleteGoal={handleDeleteGoal}
-          isDeleteGoalPending={isDeleteGoalPending}
-        />
-      )}
+      {isEditGoalPopupOpen && <EditGoalPopup onClose={onClose} goal={goal} />}
       {isGoalPopupOpen && (
-        <GoalCardPopup goalId={goal?._id} handleCloseGoalPopup={onClose} />
+        <GoalCardPopup
+          goal={goal}
+          handleCloseGoalPopup={onClose}
+          isDeleteGoalPending={isDeleteGoalPending}
+          handleDeleteGoal={handleDeleteGoal}
+        />
       )}
     </div>
   );

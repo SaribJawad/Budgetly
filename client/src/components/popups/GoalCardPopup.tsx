@@ -4,13 +4,27 @@ import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import useMarkGoalAsReached from "@/custom-hooks/goals/useMarkGoalAsReached";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
+import { Goal } from "@/@types/Types";
+import useAddSavedAmount from "@/custom-hooks/goals/useAddSavedAmount";
+import useShowToast from "@/custom-hooks/useShowToast";
 
 interface GoalCardPopupProps {
   handleCloseGoalPopup: () => void;
-  goalId: string;
+  isDeleteGoalPending: boolean;
+  handleDeleteGoal: (arg: string) => void;
+  goal: Goal;
 }
 
-function GoalCardPopup({ handleCloseGoalPopup, goalId }: GoalCardPopupProps) {
+function GoalCardPopup({
+  handleCloseGoalPopup,
+  goal,
+  handleDeleteGoal,
+  isDeleteGoalPending,
+}: GoalCardPopupProps) {
+  const showToast = useShowToast();
+
+  const { mutateAsync: addSavedAmount, isPending: isAddSavedAmountPending } =
+    useAddSavedAmount();
   const { mutateAsync: setGoalAsReached, isPending: isGoalAsReachedPending } =
     useMarkGoalAsReached();
 
@@ -26,19 +40,43 @@ function GoalCardPopup({ handleCloseGoalPopup, goalId }: GoalCardPopupProps) {
     e.stopPropagation();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleAddSavedAmount = async (
+    e: React.FormEvent,
+    goalId: string,
+    savedAmount: number
+  ) => {
     e.preventDefault();
-    console.log(savedAmount);
+    const leftAmount = goal.targetAmount - goal.savedAlready;
+    if (savedAmount > leftAmount) {
+      showToast({
+        variant: "destructive",
+        description: `The amount you're trying to save (${savedAmount}) exceeds the remaining goal amount (${leftAmount}). Please adjust the value.`,
+      });
+      return;
+    }
+    await addSavedAmount({ goalId, savedAmount });
     setAddSaveAmount(false);
+    setSavedAmount(0);
+    handleCloseGoalPopup();
   };
 
   const handleGoalReached = async (goalId: string) => {
     await setGoalAsReached({ goalId });
   };
 
+  const goalCompletedPercent = Math.ceil(
+    (goal.savedAlready / goal.targetAmount) * 100
+  );
+
   return (
     <motion.div
-      onClick={!isGoalAsReachedPending ? handleCloseGoalPopup : undefined}
+      onClick={
+        !isGoalAsReachedPending &&
+        !isDeleteGoalPending &&
+        !isAddSavedAmountPending
+          ? handleCloseGoalPopup
+          : undefined
+      }
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -52,12 +90,17 @@ function GoalCardPopup({ handleCloseGoalPopup, goalId }: GoalCardPopupProps) {
       >
         <div className="flex items-center justify-between w-[300px]">
           <div>
-            <h2 className="text-2xl font-semibold">MacBook Pro</h2>
+            <h2 className="text-2xl font-semibold">{goal.name}</h2>
             <span className=" text-sm text-zinc-500">
-              Due date - 7 oct 2024
+              Due date - {goal.goalDeadline}
             </span>
           </div>
           <Button
+            disabled={
+              isDeleteGoalPending ||
+              isAddSavedAmountPending ||
+              isGoalAsReachedPending
+            }
             onClick={handleCloseGoalPopup}
             variant="ghost"
             className="w-1 h-8"
@@ -68,48 +111,64 @@ function GoalCardPopup({ handleCloseGoalPopup, goalId }: GoalCardPopupProps) {
         <div className="flex flex-col gap-7 items-center">
           {/* radial progress */}
           <div
-            className="radial-progress text-[#917FFF] "
+            className="radial-progress text-[#917FFF] bg-zinc-950 "
             style={
               {
-                "--value": 70,
+                "--value": goalCompletedPercent,
                 "--size": "12rem",
                 "--thickness": "1rem",
               } as React.CSSProperties
             }
             role="progressbar"
           >
-            <span className="text-white text-xl font-semibold">$124</span>
+            <span className="text-white text-xl font-semibold">
+              {goal.savedAlready}
+            </span>
           </div>
           <div className="flex flex-col items-center">
             <h3 className="text-md text-zinc-500">Last added amount</h3>
-            <span className="text-lg font-semibold">100</span>
+            <span className="text-lg font-semibold">
+              {goal.lastAddedAmount}
+            </span>
           </div>
         </div>
 
         <div className="flex flex-col gap-3">
           {addSaveAmount ? (
             <form
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleAddSavedAmount(e, goal._id, savedAmount)}
               className="flex items-center justify-center gap-3"
             >
               <input
-                disabled={isGoalAsReachedPending}
+                disabled={
+                  isGoalAsReachedPending ||
+                  isDeleteGoalPending ||
+                  isAddSavedAmountPending
+                }
                 value={savedAmount}
                 onChange={(e) => setSavedAmount(Number(e.target.value))}
                 className="border border-zinc-800 bg-black rounded-lg h-10 outline-none p-2"
                 type="number"
               />
               <Button
-                disabled={isGoalAsReachedPending}
+                disabled={
+                  isGoalAsReachedPending ||
+                  isDeleteGoalPending ||
+                  isAddSavedAmountPending
+                }
                 size="sm"
                 className="bg-[#917FFF]"
               >
-                Add
+                {isAddSavedAmountPending ? <LoadingSpinner /> : "Add"}
               </Button>
             </form>
           ) : (
             <Button
-              disabled={isGoalAsReachedPending}
+              disabled={
+                isGoalAsReachedPending ||
+                isDeleteGoalPending ||
+                isAddSavedAmountPending
+              }
               onClick={() => setAddSaveAmount((prev) => !prev)}
               size="lg"
               className="bg-[#917FFF]"
@@ -120,8 +179,12 @@ function GoalCardPopup({ handleCloseGoalPopup, goalId }: GoalCardPopupProps) {
           <div className="flex items-center gap-3 w-[300px]">
             <Button
               className="w-full"
-              disabled={isGoalAsReachedPending}
-              onClick={() => handleGoalReached(goalId)}
+              disabled={
+                isGoalAsReachedPending ||
+                isDeleteGoalPending ||
+                isAddSavedAmountPending
+              }
+              onClick={() => handleGoalReached(goal._id)}
               size="lg"
               variant="ghost"
             >
@@ -131,7 +194,18 @@ function GoalCardPopup({ handleCloseGoalPopup, goalId }: GoalCardPopupProps) {
                 "Set goal as reached"
               )}
             </Button>
-            <Button variant="destructive">Delete</Button>
+            <Button
+              disabled={
+                isDeleteGoalPending ||
+                isGoalAsReachedPending ||
+                isAddSavedAmountPending
+              }
+              variant="destructive"
+              size="lg"
+              onClick={() => handleDeleteGoal(goal._id)}
+            >
+              {isDeleteGoalPending ? <LoadingSpinner /> : "Delete"}
+            </Button>
           </div>
         </div>
       </div>

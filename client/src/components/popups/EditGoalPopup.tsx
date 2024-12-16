@@ -6,16 +6,9 @@ import { Goal } from "@/@types/Types";
 interface EditGoalPopupProps {
   onClose: () => void;
   goal: Goal;
-  handleDeleteGoal: (goalId: string) => void;
-  isDeleteGoalPending: boolean;
 }
 
-function EditGoalPopup({
-  onClose,
-  goal,
-  isDeleteGoalPending,
-  handleDeleteGoal,
-}: EditGoalPopupProps) {
+function EditGoalPopup({ onClose, goal }: EditGoalPopupProps) {
   const fadeInVariants = {
     hidden: { opacity: 0, y: -15 },
     visible: { opacity: 1, y: -20 },
@@ -28,7 +21,7 @@ function EditGoalPopup({
 
   return (
     <motion.div
-      onClick={!isDeleteGoalPending ? onClose : undefined}
+      onClick={onClose}
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -48,7 +41,6 @@ function EditGoalPopup({
             </p>
           </div>
           <button
-            disabled={isDeleteGoalPending}
             onClick={onClose}
             className=" p-1 rounded-lg hover:bg-zinc-900 transition-all duration-300"
           >

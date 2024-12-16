@@ -20,8 +20,17 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { categories } from "@/constants/constants";
+import { useAppSelector } from "@/app/hook";
+import { selectAllWallets } from "@/features/wallet/walletSlice";
+import { CreateBudgetFormData } from "@/custom-hooks/budget/useCreateBudget";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
-const PeriodEnum = z.enum(["week", "month", "year"]);
+interface CreateBudgetFormProps {
+  handleCreateBudget: (values: CreateBudgetFormData) => void;
+  isCreateBudgetPending: boolean;
+}
+
+const PeriodEnum = z.enum(["Week", "Month", "Year"]);
 
 const createBudgetSchema = z.object({
   name: z.string().min(4, "Name must be at least 4 letters"),
@@ -31,12 +40,17 @@ const createBudgetSchema = z.object({
   wallet: z.string().min(1, "Wallet is required"),
 });
 
-function CreateBudgetForm() {
+function CreateBudgetForm({
+  handleCreateBudget,
+  isCreateBudgetPending,
+}: CreateBudgetFormProps) {
+  const { data: userWallets } = useAppSelector(selectAllWallets);
+
   const form = useForm<z.infer<typeof createBudgetSchema>>({
     resolver: zodResolver(createBudgetSchema),
     defaultValues: {
       name: "",
-      period: "month",
+      period: "Month",
       amount: 0,
       category: "Food & Drinks",
       wallet: "",
@@ -48,7 +62,7 @@ function CreateBudgetForm() {
   );
 
   const onSubmit = (values: z.infer<typeof createBudgetSchema>) => {
-    console.log(values);
+    handleCreateBudget(values);
   };
 
   return (
@@ -62,6 +76,7 @@ function CreateBudgetForm() {
                 <FormLabel className="text-md">Name</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isCreateBudgetPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -87,6 +102,7 @@ function CreateBudgetForm() {
                 <FormLabel className="text-md">Amount</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isCreateBudgetPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -112,6 +128,7 @@ function CreateBudgetForm() {
                 <FormLabel className="text-md">Category</FormLabel>
                 <FormControl>
                   <Select
+                    disabled={isCreateBudgetPending}
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                   >
@@ -152,6 +169,7 @@ function CreateBudgetForm() {
                 <FormLabel className="text-md">Wallet</FormLabel>
                 <FormControl>
                   <Select
+                    disabled={isCreateBudgetPending}
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                   >
@@ -166,18 +184,15 @@ function CreateBudgetForm() {
                       <SelectValue placeholder="For wallet" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem
-                        className="text-start block"
-                        value={"wallet1"}
-                      >
-                        Wallet 1
-                      </SelectItem>
-                      <SelectItem
-                        className="text-start block"
-                        value={"wallet2"}
-                      >
-                        Wallet 2
-                      </SelectItem>
+                      {userWallets.map((wallet) => (
+                        <SelectItem
+                          key={wallet._id}
+                          className="text-start block"
+                          value={wallet._id}
+                        >
+                          {wallet.walletName}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -195,6 +210,7 @@ function CreateBudgetForm() {
                 <FormLabel className="text-md">Period</FormLabel>
                 <FormControl>
                   <Select
+                    disabled={isCreateBudgetPending}
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                   >
@@ -209,13 +225,13 @@ function CreateBudgetForm() {
                       <SelectValue placeholder="Period of budget" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem className="text-start block" value={"week"}>
+                      <SelectItem className="text-start block" value={"Week"}>
                         Week
                       </SelectItem>
-                      <SelectItem className="text-start block" value={"month"}>
+                      <SelectItem className="text-start block" value={"Month"}>
                         Month
                       </SelectItem>
-                      <SelectItem className="text-start block" value={"year"}>
+                      <SelectItem className="text-start block" value={"Year"}>
                         Year
                       </SelectItem>
                     </SelectContent>
@@ -231,12 +247,13 @@ function CreateBudgetForm() {
         </div>
         <div className="flex justify-center mt-8">
           <Button
+            disabled={isCreateBudgetPending}
             type="submit"
             variant="default"
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Create
+            {isCreateBudgetPending ? <LoadingSpinner /> : "Create"}
           </Button>
         </div>
       </form>

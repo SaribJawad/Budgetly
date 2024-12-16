@@ -41,7 +41,7 @@ function BudgetFilterButtons({ setPeriod }: BudgetFilterButtonsProps) {
         onClick={() => setPeriod("None")}
         variant="ghost"
         size="sm"
-        className="rounded-full hover:bg-[#8470FF] hover:text-white"
+        className="rounded-full hover:bg-[#8470FF] hover:text-white transition-all duration-300"
       >
         <RotateCcw /> Reset
       </Button>

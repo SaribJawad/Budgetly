@@ -11,9 +11,9 @@ const createGoal = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid User ID");
   }
 
-  const { name, targetAmount, goalDeadline, goalColor } = req.body;
+  const { name, targetAmount, goalDeadline } = req.body;
 
-  const requiredFields = { name, targetAmount, goalDeadline, goalColor };
+  const requiredFields = { name, targetAmount, goalDeadline };
 
   for (const [key, values] of Object.entries(requiredFields)) {
     if (!values) {
@@ -27,9 +27,7 @@ const createGoal = asyncHandler(async (req, res) => {
     req.body.name && { name: req.body.name },
     req.body.targetAmount && { targetAmount: req.body.targetAmount },
     req.body.savedAlready && { savedAlready: req.body.savedAlready },
-    req.body.goalDeadline && { goalDeadline: req.body.goalDeadline },
-    req.body.goalColor && { goalColor: req.body.goalColor },
-    req.body.note && { note: req.body.note }
+    req.body.goalDeadline && { goalDeadline: req.body.goalDeadline }
   );
 
   const goal = await Goal.create(addFields);
@@ -93,7 +91,7 @@ const updateGoal = asyncHandler(async (req, res) => {
       savedAlready: req.body.targetAmount,
       lastAddedAmount: req.body.targetAmount,
     },
-    req.body.note && { note: req.body.note },
+
     req.body.name && { name: req.body.name },
     req.body.goalDeadline && { goalDeadline: req.body.goalDeadline }
   );
@@ -227,6 +225,41 @@ const getUncompletedGoals = asyncHandler(async (req, res) => {
   }
 });
 
+const addSavedAmount = asyncHandler(async (req, res) => {
+  const { goalId } = req.params;
+  const { savedAmount } = req.body;
+
+  if (!mongoose.isValidObjectId(goalId)) {
+    throw new ApiError(400, "Invalid goal ID");
+  }
+
+  if (typeof savedAmount !== "number" || savedAmount <= 0) {
+    throw new ApiError(400, "Invalid saved amount");
+  }
+
+  const updatedGoal = await Goal.findByIdAndUpdate(
+    goalId,
+    {
+      $inc: { savedAlready: savedAmount },
+      lastAddedAmount: savedAmount,
+    },
+    { new: true }
+  );
+
+  if (updatedGoal.savedAlready >= updatedGoal.targetAmount) {
+    updatedGoal.goalReached = true;
+    await updatedGoal.save();
+  }
+
+  if (!updatedGoal) {
+    throw new ApiError(404, "Goal not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedGoal, "Saved amount added successfully"));
+});
+
 export {
   createGoal,
   getAllGoals,
@@ -236,4 +269,5 @@ export {
   markGoalAsReached,
   getReachedGoals,
   getUncompletedGoals,
+  addSavedAmount,
 };

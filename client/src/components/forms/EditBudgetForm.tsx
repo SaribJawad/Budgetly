@@ -1,6 +1,5 @@
 import { categories } from "@/constants/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Form,
@@ -21,36 +20,86 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
+import { Budget } from "@/@types/Types";
+import useShowToast from "@/custom-hooks/useShowToast";
+import { EditBudgetData } from "@/custom-hooks/budget/useEditBudget";
+import { useForm } from "react-hook-form";
 
-const PeriodEnum = z.enum(["week", "month", "year"]);
+interface EditBudgetFormProps {
+  isDeleteBudgetPending: boolean;
+  handleDeleteBudget: (budgetId: string) => void;
+  budget: Budget;
+  isEditBudgetPending: boolean;
+  handleEditBudget: (values: EditBudgetData) => void;
+}
+
+const PeriodEnum = z.enum(["Week", "Month", "Year"]);
 
 const editBudgetSchema = z.object({
   name: z.string().min(4, "Name must be at least 4 letters"),
   period: PeriodEnum,
   amount: z.number().min(1, "Invalid amount").positive("Amount is required"),
   category: z.string().min(1, "Category is required"),
-  wallet: z.string().min(1, "Wallet is required"),
 });
 
-function EditBudgetForm() {
+function EditBudgetForm({
+  isDeleteBudgetPending,
+  handleDeleteBudget,
+  budget,
+  isEditBudgetPending,
+  handleEditBudget,
+}: EditBudgetFormProps) {
+  const showToast = useShowToast();
+  const initialValues = {
+    name: budget.name,
+    period: budget.period as "Week" | "Month" | "Year",
+    amount: budget.amount,
+    category: budget.category,
+  };
+
   const form = useForm<z.infer<typeof editBudgetSchema>>({
     resolver: zodResolver(editBudgetSchema),
-    defaultValues: {
-      // Add budget values TODO
-      name: "",
-      period: "month",
-      amount: 0,
-      category: "Food & Drinks",
-      wallet: "",
-    },
+    defaultValues: initialValues,
   });
 
   const filteredCategories = categories.filter(
     (category) => category !== "Others" && category !== "Income"
   );
 
+  const isFormUpdated = (values: z.infer<typeof editBudgetSchema>) => {
+    return (
+      values.amount !== initialValues.amount ||
+      values.category !== initialValues.category ||
+      values.name !== initialValues.name ||
+      values.period !== initialValues.period
+    );
+  };
+
   const onSubmit = (values: z.infer<typeof editBudgetSchema>) => {
-    console.log(values);
+    if (isFormUpdated(values)) {
+      const editBudgetData = Object.assign(
+        {},
+        values.amount !== initialValues.amount && { amount: values.amount },
+        values.category !== initialValues.category && {
+          category: values.category,
+        },
+        values.name !== initialValues.name && {
+          name: values.name,
+        },
+        values.period !== initialValues.period && {
+          period: values.period,
+        }
+      );
+
+      handleEditBudget({ formData: editBudgetData, budgetId: budget._id });
+    } else {
+      showToast({
+        variant: "destructive",
+        description:
+          "No changes were made. Please update at least one field to update.",
+      });
+    }
   };
 
   return (
@@ -68,6 +117,7 @@ function EditBudgetForm() {
                 <FormLabel className="text-md">Name</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isDeleteBudgetPending || isEditBudgetPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -93,6 +143,7 @@ function EditBudgetForm() {
                 <FormLabel className="text-md">Amount</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isDeleteBudgetPending || isEditBudgetPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -118,6 +169,7 @@ function EditBudgetForm() {
                 <FormLabel className="text-md">Category</FormLabel>
                 <FormControl>
                   <Select
+                    disabled={isDeleteBudgetPending || isEditBudgetPending}
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                   >
@@ -151,49 +203,7 @@ function EditBudgetForm() {
               </FormItem>
             )}
           />
-          <FormField
-            name="wallet"
-            render={({ field }) => (
-              <FormItem className="col-span-1">
-                <FormLabel className="text-md">Wallet</FormLabel>
-                <FormControl>
-                  <Select
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      {...field}
-                      className="flex h-10 items-center gap-2"
-                      style={{
-                        boxShadow: "none",
-                        outline: "none",
-                      }}
-                    >
-                      <SelectValue placeholder="For wallet" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem
-                        className="text-start block"
-                        value={"wallet1"}
-                      >
-                        Wallet 1
-                      </SelectItem>
-                      <SelectItem
-                        className="text-start block"
-                        value={"wallet2"}
-                      >
-                        Wallet 2
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription className="text-sm">
-                  Choose wallet.
-                </FormDescription>
-                <FormMessage className=" text-sm" />
-              </FormItem>
-            )}
-          />
+
           <FormField
             name="period"
             render={({ field }) => (
@@ -201,6 +211,7 @@ function EditBudgetForm() {
                 <FormLabel className="text-md">Period</FormLabel>
                 <FormControl>
                   <Select
+                    disabled={isDeleteBudgetPending || isEditBudgetPending}
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                   >
@@ -215,13 +226,13 @@ function EditBudgetForm() {
                       <SelectValue placeholder="Period of budget" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem className="text-start block" value={"week"}>
+                      <SelectItem className="text-start block" value={"Week"}>
                         Week
                       </SelectItem>
-                      <SelectItem className="text-start block" value={"month"}>
+                      <SelectItem className="text-start block" value={"Month"}>
                         Month
                       </SelectItem>
-                      <SelectItem className="text-start block" value={"year"}>
+                      <SelectItem className="text-start block" value={"Year"}>
                         Year
                       </SelectItem>
                     </SelectContent>
@@ -237,21 +248,24 @@ function EditBudgetForm() {
         </div>
         <div className="flex justify-center gap-3 mt-8">
           <Button
+            disabled={isDeleteBudgetPending || isEditBudgetPending}
             type="submit"
             variant="default"
             size="sm"
             className="h-9 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Create
+            {isEditBudgetPending ? <LoadingSpinner /> : "Edit"}
           </Button>
         </div>
         <Button
+          disabled={isDeleteBudgetPending || isEditBudgetPending}
+          onClick={() => handleDeleteBudget(budget._id)}
           type="button"
           variant="destructive"
           size="sm"
           className=" self-end h-9 w-fit text-md"
         >
-          <Trash2 />
+          {isDeleteBudgetPending ? <LoadingSpinner /> : <Trash2 />}
         </Button>
       </form>
     </Form>

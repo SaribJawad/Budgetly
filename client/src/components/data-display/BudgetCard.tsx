@@ -9,10 +9,13 @@ interface BudgetCardProps {
 }
 
 function BudgetCard({ budget }: BudgetCardProps) {
-  const [togglePopup, setTogglePopup] = useState<boolean>(false);
+  const [togglePopup, setTogglePopup] = useState<string | null>(null);
+  const handleTogglePopup = (budgetId: string) => {
+    setTogglePopup(togglePopup === budgetId ? null : budgetId);
+  };
 
   const handleClosePopup = (): void => {
-    setTogglePopup(false);
+    setTogglePopup(null);
   };
 
   const leftAmount = budget.amount - budget.spentAmount;
@@ -33,7 +36,7 @@ function BudgetCard({ budget }: BudgetCardProps) {
           </p>
         </div>
         <button
-          onClick={() => setTogglePopup((prev) => !prev)}
+          onClick={() => handleTogglePopup(budget._id)}
           className="rounded-full p-2 border border-zinc-800 hover:border-white"
         >
           <Pencil size={18} />
@@ -70,7 +73,9 @@ function BudgetCard({ budget }: BudgetCardProps) {
           />
         </div>
       </div>
-      {togglePopup && <EditBudgetPopup onClose={handleClosePopup} />}
+      {togglePopup && (
+        <EditBudgetPopup onClose={handleClosePopup} budget={budget} />
+      )}
     </div>
   );
 }

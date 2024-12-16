@@ -32,9 +32,7 @@ const modelSchema = new Schema(
         message: "Goal deadline date cannot be in the past.",
       },
     },
-    note: {
-      type: String,
-    },
+
     goalReached: {
       type: Boolean,
       default: false,

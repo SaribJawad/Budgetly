@@ -52,6 +52,7 @@ export interface Goal {
   savedAlready: number;
   goalDeadline: string;
   goalReached: boolean;
+  lastAddedAmount: number;
   createdAt: string;
   updatedAt: string;
 }

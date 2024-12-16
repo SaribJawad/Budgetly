@@ -21,42 +21,43 @@ const createBudget = asyncHandler(async (req, res) => {
     }
   }
 
-  const existingBudget = await Budget.findOne({
-    user: userId,
-    category: category || "All",
-    wallet,
-  });
+  try {
+    const existingBudget = await Budget.findOne({
+      user: userId,
+      category: category || "All",
+      wallet,
+    });
 
-  if (existingBudget) {
+    if (existingBudget) {
+      return res
+        .status(400)
+        .json(
+          new ApiResponse(
+            400,
+            existingBudget,
+            `You already have a budget for category - ${
+              category ? category : "All"
+            }`
+          )
+        );
+    }
+
+    const budget = await Budget.create({
+      user: userId,
+      name,
+      period: period || undefined,
+      amount,
+      category: category || undefined,
+      wallet,
+    });
+
     return res
-      .status(400)
-      .json(
-        new ApiResponse(
-          400,
-          existingBudget,
-          `You already have a budget for category - ${
-            category ? category : "All"
-          }`
-        )
-      );
+      .status(200)
+      .json(new ApiResponse(200, budget, "Budget created successfully"));
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(400, "Something went wrong while creating the budget ");
   }
-
-  const budget = await Budget.create({
-    user: userId,
-    name,
-    period: period || undefined,
-    amount,
-    category: category || undefined,
-    wallet,
-  });
-
-  if (!budget) {
-    throw new ApiError(500, "Something went wrong while creating the budget");
-  }
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, budget, "Budget created successfully"));
 });
 
 const getAllBudgets = asyncHandler(async (req, res) => {
@@ -136,8 +137,7 @@ const updateBudget = asyncHandler(async (req, res) => {
     req.body.name && { name: req.body.name },
     req.body.amount && { amount: req.body.amount },
     req.body.period && { period: req.body.period },
-    req.body.notifyOnExceed && { notifyOnExceed: req.body.notifyOnExceed },
-    req.body.notifyOnTrending && { notifyOnTrending: req.body.notifyOnTrending }
+    req.body.category && { category: req.body.category }
   );
 
   if (Object.keys(updateFields).length === 0) {

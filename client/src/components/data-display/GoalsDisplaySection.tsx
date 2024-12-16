@@ -9,8 +9,8 @@ interface GoalsDisplaySection {
 }
 
 function GoalsDisplaySection({ goals, filter }: GoalsDisplaySection) {
-  const [toggleEditPopup, setToggleEditPopup] = useState<boolean>(false);
-  const [toggleGoalPopup, setToggleGoalPopup] = useState<boolean>(false);
+  const [toggleEditPopup, setToggleEditPopup] = useState<string | null>(null);
+  const [toggleGoalPopup, setToggleGoalPopup] = useState<string | null>(null);
 
   const filteredGoals =
     filter === "completed"
@@ -19,17 +19,17 @@ function GoalsDisplaySection({ goals, filter }: GoalsDisplaySection) {
       ? goals.filter((goal) => !goal.goalReached)
       : goals;
 
-  const handleToggleGoalPopup = (): void => {
-    setToggleGoalPopup((prev) => !prev);
+  const handleToggleGoalPopup = (goalId: string): void => {
+    setToggleGoalPopup(toggleEditPopup === goalId ? null : goalId);
   };
 
-  const handleToggleEditPopup = (): void => {
-    setToggleEditPopup((prev) => !prev);
+  const handleToggleEditPopup = (goalId: string): void => {
+    setToggleEditPopup(toggleEditPopup === goalId ? null : goalId);
   };
 
   const handleCloseGoalsPopup = (): void => {
-    setToggleGoalPopup(false);
-    setToggleEditPopup(false);
+    setToggleGoalPopup(null);
+    setToggleEditPopup(null);
   };
 
   return (
@@ -46,8 +46,8 @@ function GoalsDisplaySection({ goals, filter }: GoalsDisplaySection) {
               handleToggleGoalPopup={handleToggleGoalPopup}
               goal={goal}
               onClose={handleCloseGoalsPopup}
-              isEditGoalPopupOpen={toggleEditPopup}
-              isGoalPopupOpen={toggleGoalPopup}
+              isEditGoalPopupOpen={toggleEditPopup === goal._id}
+              isGoalPopupOpen={toggleGoalPopup === goal._id}
               handleEditPopup={handleToggleEditPopup}
             />
           ))
