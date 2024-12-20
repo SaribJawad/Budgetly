@@ -25,7 +25,7 @@ const createTransaction = asyncHandler(async (req, res) => {
     fromWallet,
     toWallet,
     paymentType,
-    time,
+    date,
   } = req.body;
 
   validateTransactionField(
@@ -62,13 +62,6 @@ const createTransaction = asyncHandler(async (req, res) => {
   }
   userWallet.save({ validateBeforeSave: false });
 
-  const attachmentLocalPath = req.file?.path;
-
-  let attachmentFromCloudinary;
-  if (attachmentLocalPath) {
-    attachmentFromCloudinary = await uploadOnCloudinary(attachmentLocalPath);
-  }
-
   if (transactionType === TransactionTypes.EXPENSE) {
     const updateBudget = await Budget.findOne({
       user: userId,
@@ -104,13 +97,7 @@ const createTransaction = asyncHandler(async (req, res) => {
     fromWallet,
     toWallet: toWallet || undefined,
     paymentType,
-    attachment: attachmentFromCloudinary
-      ? {
-          url: attachmentFromCloudinary.url,
-          public_id: attachmentFromCloudinary.public_id,
-        }
-      : undefined,
-    time: time || undefined,
+    date: date || undefined,
   });
 
   if (!transaction) {
@@ -359,7 +346,7 @@ const getFilteredTransactions = asyncHandler(async (req, res) => {
   }
 
   if (fromDate && toDate) {
-    filterCriteria.time = {
+    filterCriteria.date = {
       $gte: new Date(fromDate),
       $lte: new Date(toDate),
     };

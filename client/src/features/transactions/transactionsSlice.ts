@@ -30,6 +30,11 @@ interface InitialState {
     data: Transaction[];
     status: "idle" | "loading" | "error" | "success";
   };
+  mostExpenses: {
+    data: Transaction[];
+    status: "idle" | "loading" | "error" | "success";
+    error: string | null;
+  };
 }
 
 const initialState: InitialState = {
@@ -54,6 +59,11 @@ const initialState: InitialState = {
   recentTransactions: {
     data: [],
     status: "idle",
+  },
+  mostExpenses: {
+    data: [],
+    status: "idle",
+    error: null,
   },
 };
 
@@ -136,6 +146,19 @@ const transactionSlice = createSlice({
       state.filteredTransactions.status = "error";
       state.filteredTransactions.error = action.payload;
     },
+    setGetMostExpenseStart: (state) => {
+      state.mostExpenses.error = null;
+      state.mostExpenses.status = "loading";
+    },
+    setGetMostExpenseSuccess: (state, action: PayloadAction<Transaction[]>) => {
+      state.mostExpenses.data = action.payload;
+      state.mostExpenses.error = null;
+      state.mostExpenses.status = "success";
+    },
+    setGetMostExpenseError: (state, action: PayloadAction<string>) => {
+      state.mostExpenses.error = action.payload;
+      state.mostExpenses.status = "error";
+    },
   },
 });
 
@@ -146,6 +169,9 @@ export const {
   setGetFilteredTransactionsStart,
   setGetFilteredTransactionsSuccess,
   setGetFilteredTransactionsError,
+  setGetMostExpenseStart,
+  setGetMostExpenseSuccess,
+  setGetMostExpenseError,
 } = transactionSlice.actions;
 
 export default transactionSlice.reducer;
@@ -161,4 +187,8 @@ export const selectFilteredTransactions = (state: RootState) => {
 
 export const selectRecentTransaction = (state: RootState) => {
   return state.transactions.recentTransactions;
+};
+
+export const selectExpenseTransactions = (state: RootState) => {
+  return state.transactions.mostExpenses;
 };

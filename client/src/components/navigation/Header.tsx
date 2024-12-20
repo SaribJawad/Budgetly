@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/app/hook";
+import { selectUser } from "@/features/auth/authSlice";
 import { Link } from "react-router-dom";
 
 interface HeaderProps {
@@ -6,6 +8,8 @@ interface HeaderProps {
 }
 
 function Header({ heading, note }: HeaderProps) {
+  const user = useAppSelector(selectUser);
+
   return (
     <header className="flex w-full items-start justify-between pl-8">
       <div>
@@ -19,7 +23,10 @@ function Header({ heading, note }: HeaderProps) {
         <Link to={"/"}>
           <img
             className="sm:w-14 w-11 rounded-full"
-            src="https://s3.amazonaws.com/37assets/svn/765-default-avatar.png"
+            src={
+              user?.avatar ||
+              "https://s3.amazonaws.com/37assets/svn/765-default-avatar.png"
+            }
             alt=""
           />
         </Link>

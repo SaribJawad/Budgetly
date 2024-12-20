@@ -8,12 +8,10 @@ import CreateBudgetPopup from "@/components/popups/CreateBudgetPopup";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import useGetAllBudgets from "@/custom-hooks/budget/useGetAllBudgets";
-import useGetUserWallet from "@/custom-hooks/wallet/useGetUserWallet";
 import { selectAllBudgets } from "@/features/budget/budgetSlice";
 import { useEffect, useState } from "react";
 
 function BudgetPage() {
-  useGetUserWallet();
   useGetAllBudgets();
   const { data: budgets, status, error } = useAppSelector(selectAllBudgets);
 

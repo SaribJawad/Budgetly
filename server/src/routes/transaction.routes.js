@@ -9,6 +9,7 @@ import {
   getTransactionById,
   updateTransaction,
 } from "../controllers/transaction.controller.js";
+import { getExpenseTransactions } from "../controllers/analytics.controller.js";
 
 const router = Router();
 
@@ -17,6 +18,9 @@ router
   .post(verifyJWT, upload.single("attachment"), createTransaction);
 
 router.route("/get-all-transactions").get(verifyJWT, getAllTransactions);
+router
+  .route("/get-expense-transactions")
+  .get(verifyJWT, getExpenseTransactions);
 
 router.route("/filtered-transactions").post(verifyJWT, getFilteredTransactions);
 

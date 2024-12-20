@@ -12,23 +12,48 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import useShowToast from "@/custom-hooks/useShowToast";
+import useUpdateUserPassword from "@/custom-hooks/user/useUpdateUserPassword";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 const changeUserPasswordSchema = z.object({
-  oldPassword: z.string().min(1, "Add an old password to update."),
-  newPassword: z.string().min(1, "Add a new password to update."),
+  oldPassword: z.string().optional(),
+  newPassword: z.string().optional(),
 });
 
 function ChangeUserPasswordForm() {
+  const {
+    mutateAsync: updateUserPassword,
+    isPending: isUpdateUserPasswordPending,
+  } = useUpdateUserPassword();
+  const showToast = useShowToast();
+  const intialValues = {
+    oldPassword: "",
+    newPassword: "",
+  };
+
   const form = useForm<z.infer<typeof changeUserPasswordSchema>>({
     resolver: zodResolver(changeUserPasswordSchema),
-    defaultValues: {
-      oldPassword: "",
-      newPassword: "",
-    },
+    defaultValues: intialValues,
   });
 
-  const onSubmit = (values: z.infer<typeof changeUserPasswordSchema>) => {
-    console.log(values);
+  const isFormUpdated = (values: z.infer<typeof changeUserPasswordSchema>) => {
+    return (
+      (values.newPassword ?? "" !== intialValues.newPassword) ||
+      (values.oldPassword ?? "" !== intialValues.oldPassword)
+    );
+  };
+
+  const onSubmit = async (values: z.infer<typeof changeUserPasswordSchema>) => {
+    if (isFormUpdated(values)) {
+      await updateUserPassword({ formData: values });
+    } else {
+      showToast({
+        variant: "destructive",
+        description:
+          "  No changes were made. Please provide both old and new password.",
+      });
+    }
   };
 
   return (
@@ -42,6 +67,7 @@ function ChangeUserPasswordForm() {
                 <FormLabel className="text-md">Old password</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isUpdateUserPasswordPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -67,6 +93,7 @@ function ChangeUserPasswordForm() {
                 <FormLabel className="text-md">New password</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isUpdateUserPasswordPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -88,12 +115,13 @@ function ChangeUserPasswordForm() {
         </div>
         <div className="flex justify-center mt-8">
           <Button
+            disabled={isUpdateUserPasswordPending}
             type="submit"
             variant="default"
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Update
+            {isUpdateUserPasswordPending ? <LoadingSpinner /> : "Change"}
           </Button>
         </div>
       </form>

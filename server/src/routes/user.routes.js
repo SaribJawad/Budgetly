@@ -22,7 +22,7 @@ router.route("/login").post(loginUser);
 router.route("/logout").get(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
 router.route("/update-information").patch(verifyJWT, updateUserInformation);
-router.route("/change-password").post(verifyJWT, updatePassword);
+router.route("/change-password").patch(verifyJWT, updatePassword);
 router.route("/auth-verify").get(verifyJWT, verifyAuth);
 router
   .route("/change-avatar")

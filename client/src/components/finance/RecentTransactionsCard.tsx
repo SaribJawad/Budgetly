@@ -22,9 +22,10 @@ function RecentTransactionsCard() {
     <div className="border w-full  min-h-[285px] h-fit  p-2 rounded-2xl  border-zinc-800  flex flex-col  gap-3   lg:col-span-2">
       <div className="flex items-start justify-between">
         <h1 className="font-normal text-xl">Recent transactions</h1>
+
         <Link
-          to=""
-          className="flex text-sm items-center justify-around  border border-zinc-800 py-2 px-3 rounded-full gap-1 hover:border-white"
+          to="transactions/1/10"
+          className="flex text-sm items-center justify-around  border border-zinc-800 py-2 px-3 rounded-full gap-1 hover:border-white transition-all duration-300"
         >
           See all{" "}
           <p>

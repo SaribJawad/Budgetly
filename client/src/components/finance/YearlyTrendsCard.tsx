@@ -18,20 +18,20 @@ function YearlyTrendsCard({ yearlyTrends }: YearlyTrendsCardProps) {
   const datasets = [
     {
       label: "Saving",
-      data: totalIncome,
+      data: totalSavings,
       backgroundColor: "#ffffff",
       hoverBackgroundColor: "#ffffff",
     },
     {
       label: "Income",
-      data: totalExpense,
+      data: totalIncome,
       backgroundColor: "#6df285",
 
       hoverBackgroundColor: "#57bc6a",
     },
     {
       label: "Expense",
-      data: totalSavings,
+      data: totalExpense,
       backgroundColor: "#dd6868",
 
       hoverBackgroundColor: "#c34d4d",

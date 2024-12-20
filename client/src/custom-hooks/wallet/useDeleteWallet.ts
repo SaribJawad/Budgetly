@@ -63,7 +63,8 @@ const useDeleteWallet = () => {
       });
 
       showToast({
-        description: "Wallet deleted successfully",
+        description:
+          "Wallet deleted successfully! 🗑️ It has been removed from your account.",
       });
     },
   });

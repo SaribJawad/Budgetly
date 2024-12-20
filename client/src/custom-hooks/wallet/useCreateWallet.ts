@@ -63,7 +63,8 @@ const useCreateWallet = () => {
       queryClient.refetchQueries({ queryKey: ["financeSummary"] });
 
       showToast({
-        description: "Wallet created successfully!",
+        description:
+          "Wallet created successfully! 🎉 You can now start using it.",
       });
     },
   });

@@ -25,7 +25,8 @@ import useGetFilteredTransactions from "@/custom-hooks/transactions/useGetFilter
 import EmptySection from "@/components/ui/EmptySection";
 
 function TransactionsPage() {
-  const { mutateAsync } = useGetFilteredTransactions();
+  const { mutateAsync: fetchFilterTransactions } = useGetFilteredTransactions();
+
   const {
     data,
     status: allTransactionStatus,
@@ -64,12 +65,8 @@ function TransactionsPage() {
     }
 
     if (Object.keys(filterParams).length > 0) {
-      await mutateAsync(filterParams);
+      await fetchFilterTransactions(filterParams);
     }
-  };
-
-  const createTransaction = async () => {
-    console.log("asd");
   };
 
   useEffect(() => {

@@ -162,7 +162,6 @@ const verifyAuth = asyncHandler(async (req, res) => {
     const updatedUser = user.toObject();
 
     if (updatedUser && updatedUser.avatar) {
-      console.log("update");
       updatedUser.avatar = updatedUser.avatar.url;
     }
 
@@ -248,17 +247,24 @@ const updateUserInformation = asyncHandler(async (req, res) => {
     updateFields.email = email;
   }
 
-  const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
-    new: true,
-  });
+  try {
+    const user = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
+    }).select("-password -refreshToken");
 
-  if (!updatedUser) {
-    throw new ApiError(500, "Something went wrong while updating the user");
+    const updatedUser = user.toObject();
+
+    if (updatedUser && updatedUser.avatar) {
+      updatedUser.avatar = updatedUser.avatar.url;
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, updatedUser, "User updated successfully"));
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(400, "Something went wrong while updating the user");
   }
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, updatedUser, "User updated successfully"));
 });
 
 const updatePassword = asyncHandler(async (req, res) => {
@@ -269,22 +275,27 @@ const updatePassword = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Old password and new password are required");
   }
 
-  const user = await User.findById(userId);
+  try {
+    const user = await User.findById(userId);
 
-  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
-  if (!isPasswordCorrect) {
-    throw new ApiError(401, "Old password is incorrect");
+    if (!isPasswordCorrect) {
+      throw new ApiError(401, "Old password is incorrect");
+    }
+
+    user.password = newPassword;
+
+    user.save({
+      validateBeforeSave: false,
+    });
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Password changed successfully"));
+  } catch (error) {
+    throw new ApiError(400, error.message);
   }
-
-  user.password = newPassword;
-  user.save({
-    validateBeforeSave: false,
-  });
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, {}, "Password changed successfully"));
 });
 
 const updateAvatar = asyncHandler(async (req, res) => {
@@ -295,22 +306,26 @@ const updateAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Avatar file is missing");
   }
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  try {
+    const avatar = await uploadOnCloudinary(avatarLocalPath);
 
-  const user = await User.findById(userId);
+    const user = await User.findById(userId);
 
-  if (user.avatar) {
-    await deleteFromCloudinary(user.avatar.publicId);
+    if (user.avatar) {
+      await deleteFromCloudinary(user.avatar.publicId);
+    }
+
+    user.avatar = { url: avatar.url, publicId: avatar.public_id };
+    user.save({
+      validateBeforeSave: false,
+    });
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Avatar updated successfully"));
+  } catch (error) {
+    throw new ApiError(400, error.message);
   }
-
-  user.avatar = { url: avatar.url, publicId: avatar.public_id };
-  user.save({
-    validateBeforeSave: true,
-  });
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "Avatar updated successfully"));
 });
 
 export {

@@ -29,6 +29,14 @@ import { Calendar } from "../ui/calendar";
 import { CalendarRange } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
+import { AddTransactionFormData } from "@/custom-hooks/transactions/useAddTranscations";
+import { useAppSelector } from "@/app/hook";
+import { selectAllWallets } from "@/features/wallet/walletSlice";
+
+interface CreateTransactionFormProps {
+  handleCreateTranscations: (arg: AddTransactionFormData) => void;
+  isAddTransactionPending: boolean;
+}
 
 const createTransactionSchema = z
   .object({
@@ -51,6 +59,26 @@ const createTransactionSchema = z
     ]),
     date: z.date().optional(),
   })
+  .refine(
+    (data) =>
+      data.transactionType === "Income" || data.transactionType === "Expense"
+        ? !!data.fromWallet
+        : true,
+    {
+      message: "FromWallet is required",
+      path: ["fromWallet"],
+    }
+  )
+  .refine(
+    (data) =>
+      data.transactionType === "Transfer"
+        ? !!data.fromWallet && !!data.toWallet
+        : true,
+    {
+      message: "Both fromWallet and toWallet are required",
+      path: ["fromWallet", "toWallet"],
+    }
+  )
   .superRefine((data, ctx) => {
     if (!data.amount) {
       ctx.addIssue({
@@ -111,21 +139,27 @@ const createTransactionSchema = z
     }
   });
 
-function CreateTransactionForm() {
+function CreateTransactionForm({
+  handleCreateTranscations,
+  isAddTransactionPending,
+}: CreateTransactionFormProps) {
+  const { data, status } = useAppSelector(selectAllWallets);
+  // console.log(data);
+
   const [selectedTransactionType, setSelectedTransactionType] =
     useState<string>("Income");
   const form = useForm<z.infer<typeof createTransactionSchema>>({
     resolver: zodResolver(createTransactionSchema),
     defaultValues: {
       transactionType: "Income",
-      category: "Others",
+      category: "",
       paymentType: "Cash",
       amount: 0,
       note: "",
       payee: "",
       payer: "",
-      fromWallet: "temp",
-      toWallet: "temp",
+      fromWallet: "",
+      toWallet: "",
       date: new Date(),
     },
   });
@@ -141,6 +175,17 @@ function CreateTransactionForm() {
 
   const onSubmit = (values: z.infer<typeof createTransactionSchema>) => {
     console.log(values);
+
+    // handleCreateTranscations({ formData: values });
+    if (values.transactionType === "Income") {
+      console.log("Income transaction submitted", values);
+    } else if (values.transactionType === "Expense") {
+      console.log("Expense transaction submitted", values);
+    } else if (values.transactionType === "Transfer") {
+      console.log("Transfer transaction submitted", values);
+    } else {
+      console.error("Unknown transaction type");
+    }
   };
 
   return (
@@ -154,13 +199,13 @@ function CreateTransactionForm() {
                 <FormLabel className="text-md">Amount</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isAddTransactionPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
                       outline: "none",
                     }}
                     type="number"
-                    min={1}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -179,6 +224,7 @@ function CreateTransactionForm() {
                 <FormLabel className="text-md">Transaction type</FormLabel>
                 <FormControl>
                   <Select
+                    disabled={isAddTransactionPending}
                     defaultValue={field.value}
                     onValueChange={(value) => {
                       field.onChange(value);
@@ -222,7 +268,11 @@ function CreateTransactionForm() {
                 <FormItem className="col-span-1">
                   <FormLabel className="text-md">Category</FormLabel>
                   <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      disabled={isAddTransactionPending}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger
                         {...field}
                         className="flex h-10 items-center gap-2"
@@ -261,6 +311,7 @@ function CreateTransactionForm() {
                 <FormLabel className="text-md">Payment type</FormLabel>
                 <FormControl>
                   <Select
+                    disabled={isAddTransactionPending}
                     value={field.value || "Cash"}
                     onValueChange={field.onChange}
                   >
@@ -302,6 +353,7 @@ function CreateTransactionForm() {
                   <FormLabel className="text-md">Payer</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isAddTransactionPending}
                       className="border text-md border-zinc-800 bg-black h-10"
                       style={{
                         boxShadow: "none",
@@ -333,6 +385,7 @@ function CreateTransactionForm() {
                   <FormLabel className="text-md">Payee</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isAddTransactionPending}
                       className="border text-md border-zinc-800 bg-black h-10"
                       style={{
                         boxShadow: "none",
@@ -358,7 +411,11 @@ function CreateTransactionForm() {
               <FormItem className="col-span-1">
                 <FormLabel className="text-md">From wallet</FormLabel>
                 <FormControl>
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select
+                    disabled={isAddTransactionPending}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger
                       {...field}
                       className="flex h-10 items-center gap-2"
@@ -396,7 +453,11 @@ function CreateTransactionForm() {
                 <FormItem className="col-span-1">
                   <FormLabel className="text-md">To wallet</FormLabel>
                   <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      disabled={isAddTransactionPending}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger
                         {...field}
                         className="flex h-10 items-center gap-2"
@@ -405,7 +466,7 @@ function CreateTransactionForm() {
                           outline: "none",
                         }}
                       >
-                        <SelectValue placeholder="From wallet" />
+                        <SelectValue placeholder="To wallet" />
                       </SelectTrigger>
                       <SelectContent>
                         {paymentTypes.map((category) => (
@@ -437,6 +498,7 @@ function CreateTransactionForm() {
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
+                        disabled={isAddTransactionPending}
                         variant={"outline"}
                         className="h-10 w-full col-span-1 text-sm font-normal  bg-black border-zinc-800"
                       >
@@ -477,6 +539,7 @@ function CreateTransactionForm() {
                 <FormLabel className="text-md">Note</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isAddTransactionPending}
                     className="border text-md border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -497,6 +560,7 @@ function CreateTransactionForm() {
         </div>
         <div className="flex justify-center mt-8">
           <Button
+            disabled={isAddTransactionPending}
             type="submit"
             variant="default"
             size="sm"

@@ -12,7 +12,7 @@ function AuthLayout() {
   }
 
   return !isAuthenticated ? (
-    <div className="h-screen w-full bg-black flex   text-white  p-5">
+    <div className="h-screen w-full bg-black flex items-center justify-center   text-white  p-5">
       <Outlet />
       <AuthDetailsPanel />
     </div>

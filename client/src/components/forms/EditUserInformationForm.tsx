@@ -13,20 +13,34 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import useShowToast from "@/custom-hooks/useShowToast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { currencies } from "@/constants/constants";
+import useUpdateUserInfo from "@/custom-hooks/user/useUpdateUserInfo";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 const editUserInformationSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().optional(),
+  currency: z.string().optional(),
 });
 
 function EditUserInformationForm() {
   const showToast = useShowToast();
+  const { mutateAsync: updateUserInfo, isPending: isUpdateUserInfoPending } =
+    useUpdateUserInfo();
 
   const initialValues = {
     firstName: "",
     lastName: "",
     email: "",
+    currency: "",
   };
 
   const form = useForm<z.infer<typeof editUserInformationSchema>>({
@@ -34,21 +48,20 @@ function EditUserInformationForm() {
     defaultValues: initialValues,
   });
 
-  const isFormUpdated = (values: {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-  }) => {
+  const isFormUpdated = (values: z.infer<typeof editUserInformationSchema>) => {
     return (
       (values.email ?? "") !== initialValues.email ||
       (values.firstName ?? "") !== initialValues.firstName ||
-      (values.lastName ?? "") !== initialValues.lastName
+      (values.lastName ?? "") !== initialValues.lastName ||
+      (values.currency ?? "") !== initialValues.currency
     );
   };
 
-  const onSubmit = (values: z.infer<typeof editUserInformationSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof editUserInformationSchema>
+  ) => {
     if (isFormUpdated(values)) {
-      console.log("updated fields", values);
+      await updateUserInfo({ formData: values });
     } else {
       showToast({
         variant: "destructive",
@@ -61,7 +74,7 @@ function EditUserInformationForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} action="">
-        <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 xl:w-[800px] lg:w-[600px] ">
+        <div className="grid sm:grid-cols-2 grid-cols-2 gap-3 xl:w-[800px] lg:w-[600px] ">
           <FormField
             name="firstName"
             render={({ field }) => (
@@ -69,6 +82,7 @@ function EditUserInformationForm() {
                 <FormLabel className="text-md">First name</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isUpdateUserInfoPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -94,6 +108,7 @@ function EditUserInformationForm() {
                 <FormLabel className="text-md">Last name</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isUpdateUserInfoPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -119,6 +134,7 @@ function EditUserInformationForm() {
                 <FormLabel className="text-md">Email</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isUpdateUserInfoPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -137,15 +153,57 @@ function EditUserInformationForm() {
               </FormItem>
             )}
           />
+          <FormField
+            name="currency"
+            render={({ field }) => (
+              <FormItem className="col-span-1">
+                <FormLabel className="text-md">Currency</FormLabel>
+                <FormControl>
+                  <Select
+                    disabled={isUpdateUserInfoPending}
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      {...field}
+                      className="flex h-10 items-center gap-2"
+                      style={{
+                        boxShadow: "none",
+                        outline: "none",
+                      }}
+                    >
+                      <SelectValue placeholder="Currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencies.map((currency) => (
+                        <SelectItem
+                          key={currency.code}
+                          className="text-start block"
+                          value={currency.code}
+                        >
+                          {currency.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormDescription className="text-sm">
+                  Change your currency.
+                </FormDescription>
+                <FormMessage className=" text-sm" />
+              </FormItem>
+            )}
+          />
         </div>
         <div className="flex justify-center mt-8">
           <Button
+            disabled={isUpdateUserInfoPending}
             type="submit"
             variant="default"
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Update
+            {isUpdateUserInfoPending ? <LoadingSpinner /> : "Update"}
           </Button>
         </div>
       </form>

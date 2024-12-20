@@ -8,10 +8,14 @@ import {
 } from "@/features/auth/authSlice";
 import useGetAllTranscations from "@/custom-hooks/transactions/useGetAllTransactions";
 import useGetMonthlyFlow from "@/custom-hooks/analytics/useGetMonthlyFlow";
+import useGetExpenseTransactions from "@/custom-hooks/transactions/useGetExpenseTransactions";
+import useGetUserWallet from "@/custom-hooks/wallet/useGetUserWallet";
 
 function MainLayout() {
   useGetAllTranscations();
   useGetMonthlyFlow();
+  useGetExpenseTransactions();
+  useGetUserWallet();
   const isAuthenticated = useAppSelector(selectAuthenticationState);
   const createdWalletOnce = useAppSelector(selectWalletCreatedOnce);
 

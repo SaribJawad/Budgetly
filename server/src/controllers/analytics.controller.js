@@ -247,7 +247,10 @@ const getYearlyTrends = asyncHandler(async (req, res) => {
             month: month.month,
             totalIncome: month.totalIncome,
             totalExpense: month.totalExpense,
-            savings: month.totalIncome - month.totalExpense,
+            savings:
+              month.totalIncome - month.totalExpense >= 1
+                ? month.totalIncome - month.totalExpense
+                : 0,
           }))
         : Array.from({ length: 12 }, (_, i) => ({
             month: i + 1,
@@ -392,7 +395,10 @@ const getSavingOverview = asyncHandler(async (req, res) => {
       ? savingOverview[0]?.savingOverview.map((overview) => ({
           month: overview.month,
           totalIncome: overview.totalIncome,
-          totalSavings: overview.totalIncome - overview.totalExpense,
+          totalSavings:
+            overview.totalIncome - overview.totalExpense >= 1
+              ? overview.totalIncome - overview.totalExpense
+              : 0,
         }))
       : Array.from({ length: 12 }, (_, i) => ({
           month: i + 1,
@@ -698,7 +704,8 @@ const getFinanceSummary = asyncHandler(async (req, res) => {
 
     const currentIncome = totalIncomeCurrentMonth[0]?.totalIncome || 0;
     const currentExpense = totalExpenseCurrentMonth[0]?.totalExpense || 0;
-    const currentSavings = currentIncome - currentExpense;
+    const currentSavings =
+      currentIncome - currentExpense >= 1 ? currentIncome - currentExpense : 0;
 
     // previous month
 
@@ -967,6 +974,47 @@ const getDetailedFinanceSummary = asyncHandler(async (req, res) => {
   }
 });
 
+const getExpenseTransactions = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(400, "Invalid userID");
+  }
+
+  try {
+    const expenseTransactions = await Transaction.find({
+      user: userId,
+      transactionType: "Expense",
+    });
+
+    if (!expenseTransactions) {
+      res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            expenseTransactions,
+            "No expense transcations found"
+          )
+        );
+    }
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          expenseTransactions,
+          "Expense transactions fetched successfully"
+        )
+      );
+  } catch (error) {
+    throw new ApiError(
+      400,
+      "Something went wrong while fetching expense transactions"
+    );
+  }
+});
+
 export {
   getMonthlyFlow,
   getYearlyTrends,
@@ -975,4 +1023,5 @@ export {
   getFinanceSummary,
   getSavingOverview,
   getDetailedFinanceSummary,
+  getExpenseTransactions,
 };

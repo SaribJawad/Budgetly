@@ -16,13 +16,14 @@ interface SignUpData {
   lastName: string;
   email: string;
   password: string;
+  currency: string;
 }
 
 const useSignUp = () => {
   const showToast = useShowToast();
 
   return useMutation<SignUpResponse, ErrorResponse, SignUpData>({
-    mutationFn: async ({ email, firstName, password, lastName }) => {
+    mutationFn: async ({ email, firstName, password, lastName, currency }) => {
       try {
         const response = await api.post(
           "/users/register",
@@ -31,6 +32,7 @@ const useSignUp = () => {
             firstName,
             lastName,
             password,
+            currency,
           },
           {
             headers: {

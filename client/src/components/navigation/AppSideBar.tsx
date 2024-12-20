@@ -28,6 +28,9 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useLogout } from "@/custom-hooks/auth/useLogout";
+import { useAppSelector } from "@/app/hook";
+import { selectUser } from "@/features/auth/authSlice";
+import { useSidebar } from "@/components/ui/sidebar";
 
 // Menu items.
 const items = [
@@ -42,6 +45,8 @@ const items = [
 
 export function AppSidebar() {
   const { mutateAsync: logout } = useLogout();
+  const user = useAppSelector(selectUser);
+  const { toggleSidebar } = useSidebar();
 
   const handleLogout = async () => {
     await logout();
@@ -68,6 +73,7 @@ export function AppSidebar() {
                     }  `}
                   >
                     <Link
+                      onClick={toggleSidebar}
                       to={item.url}
                       className={`${
                         location.pathname === item.url
@@ -104,8 +110,8 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="hover:bg-[#27272A] hover:text-white text-sm">
-                  <User2 /> Username
+                <SidebarMenuButton className="hover:bg-[#27272A] hover:text-white text-sm capitalize">
+                  <User2 /> {`${user?.firstName} ${user?.lastName}`}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
