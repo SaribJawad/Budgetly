@@ -7,7 +7,8 @@ function TopSpendingCategoriesCard() {
   const {
     data: expenseTransactions,
     status: expenseTransactionsStatus,
-    error: expenseTransactionsError,
+
+    // error: expenseTransactionsError,
   } = useAppSelector(selectExpenseTransactions);
 
   const currentMonth = new Date().getMonth();

@@ -119,7 +119,7 @@ function CreateTransactionForm({
   handleCreateTranscations,
   isAddTransactionPending,
 }: CreateTransactionFormProps) {
-  const { data: userWallets, status } = useAppSelector(selectAllWallets);
+  const { data: userWallets } = useAppSelector(selectAllWallets);
 
   const [selectedTransactionType, setSelectedTransactionType] =
     useState<string>("Income");

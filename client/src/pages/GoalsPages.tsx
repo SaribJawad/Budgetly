@@ -8,9 +8,10 @@ import SavingsOverviewCard from "@/components/finance/SavingsOverviewCard";
 import CreateGoalPopup from "@/components/popups/CreateGoalPopup";
 import useGetAllGoals from "@/custom-hooks/goals/useGetAllGoals";
 import { useAppSelector } from "@/app/hook";
-import { selectUserGoals } from "@/features/goal/goalSlice";
+
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import useGetSavingOverview from "@/custom-hooks/analytics/useGetSavingOverview";
+import { selectUserGoals } from "@/features/goal/goalSlice";
 
 function GoalsPages() {
   useGetAllGoals();

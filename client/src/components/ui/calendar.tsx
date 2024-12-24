@@ -54,12 +54,8 @@ const Calendar = React.forwardRef(
           ...classNames,
         }}
         components={{
-          IconLeft: ({ ...props }) => (
-            <ChevronLeft className="h-4 w-4 text-zinc-400" />
-          ),
-          IconRight: ({ ...props }) => (
-            <ChevronRight className="h-4 w-4 text-zinc-400" />
-          ),
+          IconLeft: () => <ChevronLeft className="h-4 w-4 text-zinc-400" />,
+          IconRight: () => <ChevronRight className="h-4 w-4 text-zinc-400" />,
         }}
         {...props}
       />

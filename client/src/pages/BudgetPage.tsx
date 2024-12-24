@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 
 function BudgetPage() {
   useGetAllBudgets();
-  const { data: budgets, status, error } = useAppSelector(selectAllBudgets);
+  const { data: budgets, status } = useAppSelector(selectAllBudgets);
 
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
   const [period, setPeriod] = useState<"Week" | "Month" | "Year" | "All">(

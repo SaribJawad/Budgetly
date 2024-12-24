@@ -1,5 +1,4 @@
 import { Line } from "react-chartjs-2";
-import ChartJS from "@/ChartConfig";
 import { months } from "@/constants/constants";
 import { useAppSelector } from "@/app/hook";
 import { selectMonthlyFlow } from "@/features/analytics/analyticSlice";

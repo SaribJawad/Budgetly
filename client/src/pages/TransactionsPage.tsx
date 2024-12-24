@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/select";
 import useGetFilteredTransactions from "@/custom-hooks/transactions/useGetFilteredTransactions";
 import EmptySection from "@/components/ui/EmptySection";
-import { formatCurrency } from "@/lib/utils";
 
 function TransactionsPage() {
   const { mutateAsync: fetchFilterTransactions } = useGetFilteredTransactions();
@@ -31,17 +30,21 @@ function TransactionsPage() {
   const {
     data,
     status: allTransactionStatus,
-    totalTransactions,
-    error,
-    pagination: { currentPage, pageSize, totalPages },
-    loadedPages,
+    // totalTransactions,
+    // error,
+    pagination: {
+      currentPage,
+      //  pageSize, totalPages
+    },
+    // loadedPages,
   } = useAppSelector(selectAllTransactions);
 
   const {
     data: filteredTransactions,
     status: filteredTransactionsStatus,
-    error: filteredTransactionsError,
-    filterCriteria,
+    // error:
+    // filteredTransactionsError,
+    // filterCriteria,
   } = useAppSelector(selectFilteredTransactions);
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>();

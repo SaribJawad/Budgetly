@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import GoalProgressCard from "./GoalProgressCard";
 import { useAppSelector } from "@/app/hook";
-import { selectUserGoals } from "@/features/goal/goalSlice";
 import useGetAllGoals from "@/custom-hooks/goals/useGetAllGoals";
 import {
   Tooltip,
@@ -10,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { selectUserGoals } from "@/features/goal/goalSlice";
 
 function SavingGoalsCard() {
   useGetAllGoals();

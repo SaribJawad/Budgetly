@@ -22,19 +22,19 @@ function AnalyticsPage() {
   const {
     data: yearlyTrends,
     status: yearlyTrendsStatus,
-    error: yearlyTrendsError,
+    // error: yearlyTrendsError,
   } = useAppSelector(selectYearlyTrends);
 
   const {
     data: balanceOverview,
     status: balanceOverviewStatus,
-    error: balanceOverviewError,
+    // error: balanceOverviewError,
   } = useAppSelector(selectBalanceOverview);
 
   const {
     data: detailedFinanceSummary,
     status: detailedFinanceSummaryStatus,
-    error: detailedFinanceSummaryError,
+    // error: detailedFinanceSummaryError,
   } = useAppSelector(selectDetailedFinanceSummary);
 
   if (

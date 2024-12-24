@@ -1,5 +1,4 @@
 import { useAppSelector } from "@/app/hook";
-import ChartJS from "@/ChartConfig";
 import { months } from "@/constants/constants";
 import { selectSavingOverview } from "@/features/analytics/analyticSlice";
 
@@ -8,8 +7,8 @@ import { Line } from "react-chartjs-2";
 function SavingsOverviewCard() {
   const {
     data: savingsOverview,
-    status,
-    error,
+    // status,
+    // error,
   } = useAppSelector(selectSavingOverview);
 
   const totalIncome = savingsOverview?.map(
