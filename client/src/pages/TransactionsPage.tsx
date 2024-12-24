@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import useGetFilteredTransactions from "@/custom-hooks/transactions/useGetFilteredTransactions";
 import EmptySection from "@/components/ui/EmptySection";
+import { formatCurrency } from "@/lib/utils";
 
 function TransactionsPage() {
   const { mutateAsync: fetchFilterTransactions } = useGetFilteredTransactions();

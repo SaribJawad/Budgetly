@@ -56,7 +56,7 @@ const useCreateWallet = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) =>
-          ["financeSummary", "userWallets"].some((key) => {
+          ["financeSummary", "userWallets", "Auth"].some((key) => {
             return query.queryKey.includes(key);
           }),
       });

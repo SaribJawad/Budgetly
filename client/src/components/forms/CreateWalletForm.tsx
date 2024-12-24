@@ -23,7 +23,7 @@ import { walletTypes } from "@/constants/constants";
 import {
   CreateWalletData,
   CreateWalletResponse,
-} from "@/custom-hooks/useCreateWallet";
+} from "@/custom-hooks/wallet/useCreateWallet";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 export const createWalletSchema = z.object({

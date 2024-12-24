@@ -26,10 +26,12 @@ const useUpdateUserAvatar = () => {
             "Content-Type": "multipart/form-data",
           },
         });
+        console.log(response);
         const data = response.data.data;
         return data;
       } catch (error) {
         if (isAxiosError(error) && error.response) {
+          console.log(error);
           const errorMessage =
             error.response.data.message ||
             "Unexpected error while updating avatar! Try again";

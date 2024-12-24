@@ -31,6 +31,7 @@ import { useLogout } from "@/custom-hooks/auth/useLogout";
 import { useAppSelector } from "@/app/hook";
 import { selectUser } from "@/features/auth/authSlice";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useEffect, useState } from "react";
 
 // Menu items.
 const items = [
@@ -46,11 +47,22 @@ const items = [
 export function AppSidebar() {
   const { mutateAsync: logout } = useLogout();
   const user = useAppSelector(selectUser);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { toggleSidebar } = useSidebar();
 
   const handleLogout = async () => {
     await logout();
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const location = useLocation();
   return (
@@ -73,7 +85,7 @@ export function AppSidebar() {
                     }  `}
                   >
                     <Link
-                      onClick={toggleSidebar}
+                      onClick={isSmallScreen ? toggleSidebar : undefined}
                       to={item.url}
                       className={`${
                         location.pathname === item.url

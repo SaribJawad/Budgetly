@@ -29,8 +29,8 @@ const transactionSchema = new Schema(
       required: true,
     },
     category: {
-      type: String, // handle from frontend
-      required: true,
+      type: String,
+      default: "Others",
     },
     transactionType: {
       type: String,

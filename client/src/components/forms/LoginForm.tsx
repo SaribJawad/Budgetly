@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
 import useLogin from "@/custom-hooks/auth/useLogin";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -23,7 +24,7 @@ const loginSchema = z.object({
 });
 
 export function LoginForm() {
-  const { mutateAsync: login } = useLogin();
+  const { mutateAsync: login, isPending: isLoginPending } = useLogin();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -57,6 +58,7 @@ export function LoginForm() {
               <FormLabel className="text-white">Email</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isLoginPending}
                   className="bg-black border-2 border-zinc-800 px-1  py-1 text-sm no-outline"
                   type="email"
                   {...field}
@@ -78,6 +80,7 @@ export function LoginForm() {
               <FormLabel className="text-white">Password</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isLoginPending}
                   className="bg-black border-2 border-zinc-800 px-1  py-1  text-sm no-outline"
                   type="password"
                   {...field}
@@ -92,11 +95,12 @@ export function LoginForm() {
         />
 
         <Button
+          disabled={isLoginPending}
           size="sm"
           className="text-sm bg-[#917FFF] hover:bg-[#8471ff]"
           type="submit"
         >
-          Login
+          {isLoginPending ? <LoadingSpinner /> : "Login"}
         </Button>
       </form>
     </Form>

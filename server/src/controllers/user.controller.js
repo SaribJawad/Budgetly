@@ -37,37 +37,33 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    throw new ApiError(409, "User with this email already exist.");
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      throw new ApiError(409, "User with this email already exist.");
+    }
+
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      currency,
+      password,
+    });
+
+    if (!user) {
+      throw new ApiError(
+        500,
+        "Something went wrong while registering the user"
+      );
+    }
+
+    return res
+      .status(201)
+      .json(new ApiResponse(200, {}, "User registered successfully"));
+  } catch (error) {
+    throw new ApiError(400, error.message);
   }
-
-  const avatarLocalPath = req.file?.path;
-  let avatar;
-  if (avatarLocalPath) {
-    avatar = await uploadOnCloudinary(avatarLocalPath);
-  }
-
-  const user = await User.create({
-    firstName,
-    lastName,
-    avatar: { url: avatar?.url, publicId: avatar?.public_id } || "",
-    email,
-    currency,
-    password,
-  });
-
-  // const createdUser = await User.findById(user?._id).select(
-  //   "-password -refreshToken"
-  // );
-
-  if (!user) {
-    throw new ApiError(500, "Something went wrong while registering the user");
-  }
-
-  return res
-    .status(201)
-    .json(new ApiResponse(200, {}, "User registered successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res, next) => {
@@ -299,15 +295,15 @@ const updatePassword = asyncHandler(async (req, res) => {
 });
 
 const updateAvatar = asyncHandler(async (req, res) => {
-  const avatarLocalPath = req.file?.path;
+  const avatarBuffer = req.file?.buffer;
   const userId = req.user?._id;
 
-  if (!avatarLocalPath) {
+  if (!avatarBuffer) {
     throw new ApiError(400, "Avatar file is missing");
   }
 
   try {
-    const avatar = await uploadOnCloudinary(avatarLocalPath);
+    const avatar = await uploadOnCloudinary(avatarBuffer);
 
     const user = await User.findById(userId);
 

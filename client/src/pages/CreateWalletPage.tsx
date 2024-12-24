@@ -12,7 +12,8 @@ import { Navigate } from "react-router-dom";
 function CreateWalletPage() {
   const user = useAppSelector(selectUser);
   const isAuthenticated = useAppSelector(selectAuthenticationState);
-  const { mutateAsync: createWallet, isPending } = useCreateWallet();
+  const { mutateAsync: createWallet, isPending: isCreateWalletPending } =
+    useCreateWallet();
 
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" />;
@@ -22,7 +23,7 @@ function CreateWalletPage() {
     return <Navigate to="/" />;
   }
 
-  if (isPending) {
+  if (isCreateWalletPending) {
     return (
       <div className="h-screen w-screen bg-black flex items-center justify-center ">
         <LoadingSpinner className="text-white" size={50} />
@@ -45,7 +46,10 @@ function CreateWalletPage() {
       <img src={walletPng} alt="Wallet Illustration" className="w-52 h-52 " />
 
       <div className="flex flex-col items-center  gap-5 ">
-        <CreateWalletPageForm createWallet={createWallet} />
+        <CreateWalletPageForm
+          createWallet={createWallet}
+          isCreateWalletPending={isCreateWalletPending}
+        />
       </div>
     </div>
   );

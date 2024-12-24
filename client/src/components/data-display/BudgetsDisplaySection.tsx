@@ -4,7 +4,7 @@ import EmptySection from "../ui/EmptySection";
 
 interface BudgetsDisplaySectionProps {
   budgets: Budget[] | null;
-  period: "Week" | "Month" | "Year" | "None";
+  period: "Week" | "Month" | "Year" | "All";
 }
 
 function BudgetsDisplaySection({
@@ -12,7 +12,7 @@ function BudgetsDisplaySection({
   period,
 }: BudgetsDisplaySectionProps) {
   const filteredBudgets =
-    period === "None"
+    period === "All"
       ? budgets
       : budgets?.filter((budget) => budget.period === period);
 

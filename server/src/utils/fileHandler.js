@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import { Readable } from "stream";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -7,19 +8,37 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY,
 });
 
-const uploadOnCloudinary = async (localFilePath) => {
+const uploadOnCloudinary = async (fileBuffer) => {
   try {
-    if (!localFilePath) {
+    if (!fileBuffer) {
       return null;
     }
-    const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto",
-    });
 
-    fs.unlinkSync(localFilePath);
-    return response;
+    // Create a promise to handle the streaming upload
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "auto",
+        },
+        (error, result) => {
+          if (error) reject(error);
+          resolve(result);
+        }
+      );
+
+      // Create a readable stream from the buffer
+      const readStream = new Readable({
+        read() {
+          this.push(fileBuffer);
+          this.push(null);
+        },
+      });
+
+      // Pipe the readable stream to the upload stream
+      readStream.pipe(uploadStream);
+    });
   } catch (error) {
-    fs.unlinkSync(localFilePath);
+    console.error("Error uploading to Cloudinary:", error);
     return null;
   }
 };

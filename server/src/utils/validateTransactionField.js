@@ -18,10 +18,10 @@ const validateTransactionField = (
     transactionType === TransactionTypes.INCOME ||
     transactionType === TransactionTypes.EXPENSE
   ) {
-    if (!fromWallet || !category) {
+    if (!fromWallet) {
       throw new ApiError(
         400,
-        "fromWallet and category are required for income/expense transactions"
+        "fromWallet is required for income/expense transactions"
       );
     }
     if (toWallet) {

@@ -1,3 +1,5 @@
+import { formatCurrency } from "@/lib/utils";
+
 interface SpendingCategoryCardProps {
   category: string;
   amount: number;
@@ -8,7 +10,7 @@ function SpendingCategoryCard({ category, amount }: SpendingCategoryCardProps) {
     <div className="w-full  border-b border-zinc-800 ">
       <div className="flex items-center justify-between gap-2 p-3">
         <h1 className="font-semibold">{category}</h1>
-        <span>{amount}</span>
+        <span>{formatCurrency(amount)}</span>
       </div>
     </div>
   );

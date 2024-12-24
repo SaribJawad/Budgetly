@@ -45,6 +45,7 @@ const useAddTransactions = () => {
   >({
     mutationFn: async ({ formData }) => {
       try {
+        console.log(formData);
         const response = await api.post(
           "/transaction/create-transaction",
           formData,
@@ -56,6 +57,7 @@ const useAddTransactions = () => {
         );
 
         const data = response.data.data;
+        console.log(data);
         return data;
       } catch (error) {
         if (isAxiosError(error) && error.response) {
@@ -66,6 +68,8 @@ const useAddTransactions = () => {
           showToast({
             description: errorMessage,
           });
+
+          throw new Error(errorMessage);
         }
       }
     },
@@ -76,6 +80,7 @@ const useAddTransactions = () => {
             "allTransactions",
             "monthlyFlow",
             "savingOverview",
+            "expenseTransactions",
             "financeSummary",
             "detailedFinanceSummary",
             "yearlyTrends",
@@ -91,6 +96,7 @@ const useAddTransactions = () => {
             "financeSummary",
             "detailedFinanceSummary",
             "yearlyTrends",
+            "expenseTransactions",
           ].includes(query.queryKey[0] as string),
       });
 

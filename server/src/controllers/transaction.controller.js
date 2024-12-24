@@ -33,7 +33,7 @@ const createTransaction = asyncHandler(async (req, res) => {
     transactionType,
     fromWallet,
     toWallet,
-    category,
+
     payee,
     payer
   );
@@ -69,17 +69,6 @@ const createTransaction = asyncHandler(async (req, res) => {
       wallet: fromWallet,
     });
 
-    // if (!updateBudget) {
-    //   return res
-    //     .status(400)
-    //     .json(
-    //       new ApiResponse(
-    //         400,
-    //         {},
-    //         `No budget exists for category ${category}`
-    //       )
-    //     );
-    // }
     if (updateBudget) {
       updateBudget.spentAmount += Number(amount);
       await updateBudget.save({ validateBeforeSave: false });
@@ -90,7 +79,7 @@ const createTransaction = asyncHandler(async (req, res) => {
     user: userId,
     amount,
     transactionType,
-    category,
+    category: category || undefined,
     note: note || undefined,
     payee: payee || undefined,
     payer: payer || undefined,
@@ -346,12 +335,12 @@ const getFilteredTransactions = asyncHandler(async (req, res) => {
   }
 
   if (fromDate && toDate) {
-    filterCriteria.date = {
+    filterCriteria.createdAt = {
       $gte: new Date(fromDate),
       $lte: new Date(toDate),
     };
   }
-
+  console.log(filterCriteria);
   const filteredTransactions = await Transaction.find(filterCriteria);
 
   if (!filteredTransactions || filteredTransactions.length === 0) {

@@ -1,4 +1,5 @@
 import { DetailedFinanceSummary } from "@/@types/Types";
+import { formatCurrency } from "@/lib/utils";
 import { ArrowLeftRight, LayoutGrid } from "lucide-react";
 
 interface FinanceSummaryAnalyticsCardProps extends DetailedFinanceSummary {}
@@ -14,7 +15,9 @@ function FinanceSummaryAnalyticsCard({
       <h3 className="text-xl font-semibold">{title}</h3>
 
       <div className="flex flex-col justify-between items-start gap-4">
-        <span className="text-6xl font-semibold">{totalAmount}</span>
+        <span className="xl:text-6xl lg:text-5xl text-4xl  font-semibold">
+          {formatCurrency(totalAmount)}
+        </span>
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
             <ArrowLeftRight

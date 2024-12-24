@@ -55,3 +55,7 @@ export const selectAuthenticationState = (state: RootState) => {
 export const selectWalletCreatedOnce = (state: RootState) => {
   return state.auth.user?.walletCreatedOnce;
 };
+
+export const selectUserCurrency = (state: RootState) => {
+  return state.auth.user?.currency;
+};

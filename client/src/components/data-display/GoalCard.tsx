@@ -18,6 +18,7 @@ import {
 } from "../ui/tooltip";
 import GoalCardPopup from "../popups/GoalCardPopup";
 import useDeleteGoal from "@/custom-hooks/goals/useDeleteGoal";
+import { formatCurrency } from "@/lib/utils";
 
 interface GoalCardProps {
   handleToggleGoalPopup: (goalId: string) => void;
@@ -111,9 +112,12 @@ function GoalCard({
       </div>
 
       <div className="flex items-end gap-1">
-        <h2 className="text-4xl font-semibold">{goal.savedAlready}</h2>/
+        <h2 className="text-4xl font-semibold">
+          {formatCurrency(goal?.savedAlready)}
+        </h2>
+        /
         <span className="text-sm font-normal text-[#917FFF]">
-          {goal.targetAmount}
+          {formatCurrency(goal.targetAmount)}
         </span>
       </div>
 
@@ -121,7 +125,9 @@ function GoalCard({
         <Progress value={progress} className="h-3" />
         <div className="flex justify-between items-center">
           <h4 className="text-sm text-zinc-500">Left to complete the goal</h4>
-          <span className="text-sm font-semibold">{leftAmount}</span>
+          <span className="text-sm font-semibold">
+            {formatCurrency(leftAmount)}
+          </span>
         </div>
       </div>
       {isEditGoalPopupOpen && <EditGoalPopup onClose={onClose} goal={goal} />}

@@ -19,18 +19,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { currencies, walletTypes } from "@/constants/constants";
+import { walletTypes } from "@/constants/constants";
 import { Button } from "../ui/button";
-import { CreateWalletResponse } from "@/custom-hooks/useCreateWallet";
 import { useNavigate } from "react-router-dom";
+import { CreateWalletResponse } from "@/custom-hooks/wallet/useCreateWallet";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 interface CreateWalletPageFormProps {
   createWallet: (
     values: z.infer<typeof createWalletSchema>
   ) => Promise<CreateWalletResponse>;
+  isCreateWalletPending: boolean;
 }
 
-function CreateWalletPageForm({ createWallet }: CreateWalletPageFormProps) {
+function CreateWalletPageForm({
+  createWallet,
+  isCreateWalletPending,
+}: CreateWalletPageFormProps) {
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof createWalletSchema>>({
     resolver: zodResolver(createWalletSchema),
@@ -56,6 +61,7 @@ function CreateWalletPageForm({ createWallet }: CreateWalletPageFormProps) {
                 <FormLabel className="text-md">Wallet name</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isCreateWalletPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -81,6 +87,7 @@ function CreateWalletPageForm({ createWallet }: CreateWalletPageFormProps) {
                 <FormLabel className="text-md">Type</FormLabel>
                 <FormControl>
                   <Select
+                    disabled={isCreateWalletPending}
                     value={field.value || "Cash"}
                     onValueChange={field.onChange}
                   >
@@ -122,6 +129,7 @@ function CreateWalletPageForm({ createWallet }: CreateWalletPageFormProps) {
                 <FormLabel className="text-md">Balance</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isCreateWalletPending}
                     className="border text-sm border-zinc-800 bg-black h-10"
                     style={{
                       boxShadow: "none",
@@ -130,7 +138,9 @@ function CreateWalletPageForm({ createWallet }: CreateWalletPageFormProps) {
                     type="number"
                     {...field}
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={(e) =>
+                      field.onChange(Number(e.currentTarget.value))
+                    }
                   />
                 </FormControl>
                 <FormDescription className="text-sm">
@@ -140,55 +150,16 @@ function CreateWalletPageForm({ createWallet }: CreateWalletPageFormProps) {
               </FormItem>
             )}
           />
-          <FormField
-            name="currency"
-            render={({ field }) => (
-              <FormItem className="col-span-1">
-                <FormLabel className="text-md">Currency</FormLabel>
-                <FormControl>
-                  <Select
-                    value={field.value || ""}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      {...field}
-                      className="flex h-10 items-center gap-2"
-                      style={{
-                        boxShadow: "none",
-                        outline: "none",
-                      }}
-                    >
-                      <SelectValue placeholder="Currency type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {currencies.map((currency) => (
-                        <SelectItem
-                          className=" text-start block  "
-                          key={currency.code}
-                          value={currency.code}
-                        >
-                          {currency.name} ({currency.code})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription className="text-sm">
-                  Type of currency.
-                </FormDescription>
-                <FormMessage className=" text-sm" />
-              </FormItem>
-            )}
-          />
         </div>
         <div className="flex justify-center mt-8">
           <Button
+            disabled={isCreateWalletPending}
             type="submit"
             variant="default"
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Set wallet
+            {isCreateWalletPending ? <LoadingSpinner /> : "Set Wallet"}
           </Button>
         </div>
       </form>

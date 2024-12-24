@@ -1,64 +1,73 @@
 import axios from "axios";
+import { store } from "@/app/store";
+import { logout } from "@/features/auth/authSlice";
 
 export const api = axios.create({
   baseURL: "/api/v1/",
   withCredentials: true,
 });
 
-// // Handle unauthorized responses
-// api.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     // REMOVE LATER
-//     console.log("Interceptor caught error:", {
-//       status: error.response?.status,
-//       data: error.response?.data,
-//       headers: error.response?.headers,
-//     });
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (error: any) => void;
+}> = [];
 
-//     // Check if it's an actual axios error with a response
-//     if (!error.response) {
-//       console.error("No response received", error);
-//       return Promise.reject(error);
-//     }
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((promise) => {
+    if (error) {
+      promise.reject(error);
+    } else {
+      promise.resolve(token!);
+    }
+  });
+  failedQueue = [];
+};
 
-//     const originalRequest = error.config;
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-//     // Prevent infinite loops by checking retry flag
-//     if (error.response.status === 400) {
-//       if (originalRequest._retry) {
-//         console.log("Already tried to refresh token, redirecting to login");
-//         window.location.href = "/auth/login";
-//         return Promise.reject(error);
-//       }
+    // If error is not 401 or request has already been retried, reject
+    if (error.response?.status !== 401 || originalRequest._retry) {
+      return Promise.reject(error);
+    }
 
-//       originalRequest._retry = true;
+    if (isRefreshing) {
+      // If refresh is in progress, add request to queue
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      })
+        .then(() => {
+          return api(originalRequest);
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    }
 
-//       try {
-//         console.log("Attempting to refresh token");
-//         const refreshResponse = await axios.post(
-//           "/api/v1/users/refresh-token",
-//           {},
-//           {
-//             baseURL: "/api/v1",
-//             withCredentials: true,
-//           }
-//         );
+    originalRequest._retry = true;
+    isRefreshing = true;
 
-//         console.log("Token refresh successful", refreshResponse.data);
+    try {
+      // Call your refresh token endpoint
+      await api.post("/auth/refresh");
 
-//         // Retry the original request
-//         return api(originalRequest);
-//       } catch (refreshError) {
-//         console.error("Token refresh failed", refreshError);
+      isRefreshing = false;
+      processQueue(null, "refreshed");
 
-//         // Ensure we redirect to login on refresh failure
-//         window.location.href = "/auth/login";
-//         return Promise.reject(refreshError);
-//       }
-//     }
+      // Retry the original request
+      return api(originalRequest);
+    } catch (refreshError) {
+      isRefreshing = false;
+      processQueue(refreshError, null);
 
-//     // For other types of errors, just reject
-//     return Promise.reject(error);
-//   }
-// );
+      // If refresh fails, logout user
+      store.dispatch(logout());
+      return Promise.reject(refreshError);
+    }
+  }
+);
+
+export default api;

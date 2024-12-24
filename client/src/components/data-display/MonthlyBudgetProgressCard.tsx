@@ -1,5 +1,6 @@
 import { Budget } from "@/@types/Types";
 import BudgetStatusCard from "../status/BudgetStatusCard";
+import { formatCurrency } from "@/lib/utils";
 
 interface MonthlyBudgetProgressCardProps {
   budgets: Budget[] | null;
@@ -34,7 +35,9 @@ function MonthlyBudgetProgressCard({
 
       <div>
         <div className="flex flex-col gap-2 ">
-          <span className="text-3xl font-semibold">{totalBudgetAmount}</span>
+          <span className="text-3xl font-semibold">
+            {formatCurrency(totalBudgetAmount)}
+          </span>
           <BudgetStatusCard
             totalBudget={totalBudgetAmount}
             spentAmount={totalSpentAmount}
@@ -56,14 +59,14 @@ function MonthlyBudgetProgressCard({
       >
         <h5 className="text-sm text-zinc-500">Total spent</h5>
         <span className="text-white text-3xl font-semibold">
-          {totalSpentAmount}
+          {formatCurrency(totalSpentAmount)}
         </span>
       </div>
 
       <div className="self-end text-center">
         <h5 className="text-zinc-500">{amountLeftPercentage}% left</h5>
         <span className="text-lg font-semibold">
-          {totalBudgetAmount - totalSpentAmount}
+          {formatCurrency(totalBudgetAmount - totalSpentAmount)}
         </span>
       </div>
     </div>

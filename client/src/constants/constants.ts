@@ -76,4 +76,4 @@ export const currencies: currencies[] = [
   { code: "PKR", name: "Pakistani Rupee" },
 ];
 
-export const period: string[] = ["Week", "Month", "Year"];
+export const period: string[] = ["All", "Week", "Month", "Year"];

@@ -16,8 +16,8 @@ function BudgetPage() {
   const { data: budgets, status, error } = useAppSelector(selectAllBudgets);
 
   const [togglePopup, setTogglePopup] = useState<boolean>(false);
-  const [period, setPeriod] = useState<"Week" | "Month" | "Year" | "None">(
-    "None"
+  const [period, setPeriod] = useState<"Week" | "Month" | "Year" | "All">(
+    "All"
   );
   const handleClosePopup = (): void => {
     setTogglePopup(false);
@@ -47,7 +47,7 @@ function BudgetPage() {
       <div className="grid md2:grid-cols-3 grid-cols-1 gap-3 w-full  md2:h-full">
         <div className="md2:col-span-2 col-span-1 flex flex-col gap-3   ">
           <div className="flex items-center justify-between">
-            <BudgetFilterButtons setPeriod={setPeriod} />
+            <BudgetFilterButtons setPeriod={setPeriod} period={period} />
             <Button
               onClick={() => setTogglePopup((prev) => !prev)}
               size="sm"

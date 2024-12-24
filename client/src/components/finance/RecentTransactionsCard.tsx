@@ -12,6 +12,7 @@ import { useAppSelector } from "@/app/hook";
 import { selectRecentTransaction } from "@/features/transactions/transactionsSlice";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
 import EmptySection from "../ui/EmptySection";
+import { formatCurrency } from "@/lib/utils";
 
 function RecentTransactionsCard() {
   const { data: recentTransations, status } = useAppSelector(
@@ -60,7 +61,7 @@ function RecentTransactionsCard() {
                   {transaction.date}
                 </TableCell>
                 <TableCell className="text-right">
-                  {transaction.amount}
+                  {formatCurrency(transaction?.amount)}
                 </TableCell>
                 <TableCell>{transaction.paymentType}</TableCell>
                 <TableCell className="text-left">

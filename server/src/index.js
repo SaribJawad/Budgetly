@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { app } from "./app.js";
 import connectDB from "./db/index.js";
 import "./utils/budgetCleaner.js";
+import serverless from "serverless-http";
 
 dotenv.config({
   path: "./env",
@@ -20,3 +21,5 @@ connectDB()
   .catch((error) => {
     console.log("MONGODB connection failed!", error);
   });
+
+export const handler = serverless(app);

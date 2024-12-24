@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Payments } from "../../pages/TransactionsPage";
 import { Checkbox } from "../ui/checkbox";
 import {
   DropdownMenu,
@@ -12,8 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { Ellipsis } from "lucide-react";
+import { Transaction } from "@/@types/Types";
+import useDeleteTransactions from "@/custom-hooks/transactions/useDeleteTransaction";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
+import { formatCurrency } from "@/lib/utils";
 
-export const columns: ColumnDef<Payments>[] = [
+export const columns: ColumnDef<Transaction>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -43,6 +46,11 @@ export const columns: ColumnDef<Payments>[] = [
   {
     accessorKey: "amount",
     header: "Amount",
+    cell: ({ row }) => {
+      const amount = row.original.amount;
+
+      return <span>{formatCurrency(amount)}</span>;
+    },
   },
   {
     accessorKey: "paymentType",
@@ -50,7 +58,17 @@ export const columns: ColumnDef<Payments>[] = [
   },
   {
     accessorKey: "transactionType",
-    header: "Transcation type",
+    header: "type",
+    cell: ({ row }) => {
+      const type = row.original.transactionType;
+      const bgColor =
+        type === "Income"
+          ? "text-green-400 "
+          : type === "Expense"
+          ? "text-red-400"
+          : "text-purple-400";
+      return <span className={`px-2 py-1 rounded-md ${bgColor}`}>{type}</span>;
+    },
   },
   {
     accessorKey: "category",
@@ -59,11 +77,21 @@ export const columns: ColumnDef<Payments>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
+      const {
+        mutateAsync: deleteTransaction,
+        isPending: isDeleteTransactionPending,
+      } = useDeleteTransactions();
+
+      const handleDelete = async () => {
+        const paymentId = row.original._id;
+        await deleteTransaction(paymentId);
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
+              disabled={isDeleteTransactionPending}
               variant="ghost"
               className="h-8 w-8 p-0 hover:bg-[#27272A] hover:text-white outline-none border-none"
             >
@@ -75,8 +103,12 @@ export const columns: ColumnDef<Payments>[] = [
             className="bg-black text-white border-zinc-800 "
             align="center"
           >
-            <DropdownMenuItem className="text-xs focus:bg-black focus:text-white cursor-pointer">
-              Delete
+            <DropdownMenuItem
+              disabled={isDeleteTransactionPending}
+              onClick={handleDelete}
+              className="text-xs focus:bg-black focus:text-white cursor-pointer"
+            >
+              {isDeleteTransactionPending ? <LoadingSpinner /> : "Delete"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -7,6 +7,7 @@ import { LoadingSpinner } from "../ui/LoadingSpinner";
 import { Goal } from "@/@types/Types";
 import useAddSavedAmount from "@/custom-hooks/goals/useAddSavedAmount";
 import useShowToast from "@/custom-hooks/useShowToast";
+import { formatCurrency } from "@/lib/utils";
 
 interface GoalCardPopupProps {
   handleCloseGoalPopup: () => void;
@@ -122,13 +123,13 @@ function GoalCardPopup({
             role="progressbar"
           >
             <span className="text-white text-xl font-semibold">
-              {goal.savedAlready}
+              {formatCurrency(goal.savedAlready)}
             </span>
           </div>
           <div className="flex flex-col items-center">
             <h3 className="text-md text-zinc-500">Last added amount</h3>
             <span className="text-lg font-semibold">
-              {goal.lastAddedAmount}
+              {formatCurrency(goal.lastAddedAmount)}
             </span>
           </div>
         </div>

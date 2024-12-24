@@ -32,6 +32,7 @@ import { useState } from "react";
 import { AddTransactionFormData } from "@/custom-hooks/transactions/useAddTranscations";
 import { useAppSelector } from "@/app/hook";
 import { selectAllWallets } from "@/features/wallet/walletSlice";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 interface CreateTransactionFormProps {
   handleCreateTranscations: (arg: AddTransactionFormData) => void;
@@ -59,81 +60,56 @@ const createTransactionSchema = z
     ]),
     date: z.date().optional(),
   })
-  .refine(
-    (data) =>
-      data.transactionType === "Income" || data.transactionType === "Expense"
-        ? !!data.fromWallet
-        : true,
-    {
-      message: "FromWallet is required",
-      path: ["fromWallet"],
-    }
-  )
-  .refine(
-    (data) =>
-      data.transactionType === "Transfer"
-        ? !!data.fromWallet && !!data.toWallet
-        : true,
-    {
-      message: "Both fromWallet and toWallet are required",
-      path: ["fromWallet", "toWallet"],
-    }
-  )
-  .superRefine((data, ctx) => {
-    if (!data.amount) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["amount"],
-        message: "Amount is required",
-      });
-    }
 
+  .superRefine((data, ctx) => {
     if (
-      data.transactionType === transactionsType.INCOME ||
-      data.transactionType === transactionsType.EXPENSE
+      data.transactionType === "Income" ||
+      data.transactionType === "Expense"
     ) {
-      if (!data.fromWallet || !data.category) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["fromWallet", "category"],
-          message: "From wallet and category is required",
-        });
-      }
-      if (data.transactionType === transactionsType.INCOME && data.payee) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["payee"],
-          message: "Payee is not allowed for income",
-        });
-      }
-      if (data.transactionType === transactionsType.EXPENSE && data.payer) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["payer"],
-          message: "Payer is not allowed for expense",
-        });
-      }
-    } else if (data.transactionType === transactionsType.TRANSFER) {
       if (!data.fromWallet) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["fromWallet"],
           message: "From wallet is required ",
         });
+      }
+      if (data.transactionType === "Income" && data.payee) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["payee"],
+          message: "Payee is not allowed for Income",
+        });
+      }
+      if (data.transactionType === "Expense" && data.payer) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["payer"],
+          message: "Payer is not allowed for Expense",
+        });
+      }
+    }
 
-        if (!data.toWallet) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["toWallet"],
-            message: "To Wallet is required",
-          });
-        }
+    // Validate Transfer
+    if (data.transactionType === "Transfer") {
+      if (!data.fromWallet) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["fromWallet"],
+          message: "From wallet is required ",
+        });
+      }
+      if (!data.toWallet) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["toWallet"],
+          message: "To wallet is required ",
+        });
       }
       if (data.category) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["category"],
-          message: "Category is not allowed for transfer transaction",
+          message: "Category is not allowed for Transfer transactions",
         });
       }
     }
@@ -143,8 +119,7 @@ function CreateTransactionForm({
   handleCreateTranscations,
   isAddTransactionPending,
 }: CreateTransactionFormProps) {
-  const { data, status } = useAppSelector(selectAllWallets);
-  // console.log(data);
+  const { data: userWallets, status } = useAppSelector(selectAllWallets);
 
   const [selectedTransactionType, setSelectedTransactionType] =
     useState<string>("Income");
@@ -174,18 +149,7 @@ function CreateTransactionForm({
   };
 
   const onSubmit = (values: z.infer<typeof createTransactionSchema>) => {
-    console.log(values);
-
-    // handleCreateTranscations({ formData: values });
-    if (values.transactionType === "Income") {
-      console.log("Income transaction submitted", values);
-    } else if (values.transactionType === "Expense") {
-      console.log("Expense transaction submitted", values);
-    } else if (values.transactionType === "Transfer") {
-      console.log("Transfer transaction submitted", values);
-    } else {
-      console.error("Unknown transaction type");
-    }
+    handleCreateTranscations({ formData: values });
   };
 
   return (
@@ -427,13 +391,13 @@ function CreateTransactionForm({
                       <SelectValue placeholder="From wallet" />
                     </SelectTrigger>
                     <SelectContent>
-                      {paymentTypes.map((category) => (
+                      {userWallets.map((wallet) => (
                         <SelectItem
                           className=" text-start block  "
-                          key={category}
-                          value={category}
+                          key={wallet._id}
+                          value={wallet._id}
                         >
-                          {category}
+                          {wallet.walletName}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -469,13 +433,13 @@ function CreateTransactionForm({
                         <SelectValue placeholder="To wallet" />
                       </SelectTrigger>
                       <SelectContent>
-                        {paymentTypes.map((category) => (
+                        {userWallets.map((wallet) => (
                           <SelectItem
                             className=" text-start block  "
-                            key={category}
-                            value={category}
+                            key={wallet._id}
+                            value={wallet._id}
                           >
-                            {category}
+                            {wallet.walletName}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -566,7 +530,7 @@ function CreateTransactionForm({
             size="sm"
             className="h-10 w-32 bg-[#8470FF] hover:bg-[#6C5FBC] text-md"
           >
-            Create
+            {isAddTransactionPending ? <LoadingSpinner /> : "Create"}
           </Button>
         </div>
       </form>

@@ -6,7 +6,12 @@ import path from "path";
 export default defineConfig({
   server: {
     proxy: {
-      "/api": "http://localhost:3000/",
+      "/api": {
+        // target: "https://n5cm79p6wa.execute-api.ap-south-1.amazonaws.com/dev",
+        target: "http://localhost:3000/",
+        changeOrigin: true,
+        secure: true,
+      },
     },
   },
   plugins: [react()],

@@ -137,7 +137,18 @@ const transactionSlice = createSlice({
         };
       }>
     ) => {
-      state.filteredTransactions.data = action.payload.filteredTransactions;
+      const formatedTransactions = action.payload.filteredTransactions.map(
+        (transaction) => ({
+          ...transaction,
+          date: dayjs(transaction.createdAt).format("YYYY-MM-DD"),
+        })
+      );
+
+      formatedTransactions.forEach(
+        (transaction) => delete transaction.createdAt
+      );
+
+      state.filteredTransactions.data = formatedTransactions;
       state.filteredTransactions.filterCriteria = action.payload.filterCriteria;
       state.filteredTransactions.error = null;
       state.filteredTransactions.status = "success";
