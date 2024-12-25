@@ -22,6 +22,8 @@ const authSlice = createSlice({
       state.loading = true;
     },
     loginSuccess: (state, action: PayloadAction<User>) => {
+      localStorage.setItem("currency", action.payload.currency);
+
       state.user = action.payload;
       state.loading = false;
       state.isAuthenticated = !!action.payload;

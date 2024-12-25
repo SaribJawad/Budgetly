@@ -1,5 +1,3 @@
-import { useAppSelector } from "@/app/hook";
-import { selectUserCurrency } from "@/features/auth/authSlice";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -14,7 +12,7 @@ export const stripTime = (date: Date | string) => {
 };
 
 export function formatCurrency(amount: number) {
-  const currency = useAppSelector(selectUserCurrency);
+  const currency = localStorage.getItem("currency") || "";
 
   return new Intl.NumberFormat(undefined, {
     style: "currency",
