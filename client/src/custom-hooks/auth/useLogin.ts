@@ -4,7 +4,7 @@ import { api } from "@/api/axios";
 import { useAppDispatch } from "@/app/hook";
 import { loginStart, loginSuccess } from "@/features/auth/authSlice";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { isAxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import useShowToast from "../useShowToast";
 
@@ -50,15 +50,14 @@ const useLogin = () => {
 
         return data;
       } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-          const errorMessage =
-            error.response.data?.message || "An unexpected error occurred.";
-          showToast({
-            variant: "destructive",
-            description: errorMessage,
-          });
+        console.error(error);
+        if (isAxiosError<ErrorResponse>(error) && error.response) {
+          const errorResponse =
+            error.response.data.message ||
+            "Unexpected error occurred try again";
+          throw new Error(errorResponse);
         }
-        throw error;
+        throw new Error("An unexpected error occurred");
       }
     },
     onSuccess: (data) => {
@@ -66,6 +65,12 @@ const useLogin = () => {
       dispatch(loginSuccess(data.data.user));
       showToast({
         description: "Logged in.",
+      });
+    },
+    onError: (error) => {
+      showToast({
+        variant: "destructive",
+        description: error.message,
       });
     },
   });

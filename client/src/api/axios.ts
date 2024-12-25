@@ -3,7 +3,7 @@ import { store } from "@/app/store";
 import { logout } from "@/features/auth/authSlice";
 
 export const api = axios.create({
-  baseURL: "/api/v1/",
+  baseURL: "/api/v1",
   withCredentials: true,
 });
 
@@ -28,6 +28,14 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    if (
+      error.response?.status === 401 &&
+      (originalRequest.url === "/users/login" ||
+        originalRequest.url === "/users/register")
+    ) {
+      return Promise.reject(error);
+    }
 
     // If error is not 401 or request has already been retried, reject
     if (error.response?.status !== 401 || originalRequest._retry) {
