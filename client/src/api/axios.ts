@@ -2,8 +2,10 @@ import axios from "axios";
 import { store } from "@/app/store";
 import { logout } from "@/features/auth/authSlice";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const api = axios.create({
-  baseURL: "/api/v1",
+  baseURL: API_BASE_URL,
   withCredentials: true,
 });
 

@@ -5,15 +5,18 @@ import path from "path";
 // https://vitejs.dev/config/
 const API_BASE_URL = process.env.VITE_API_BASE_URL;
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   server: {
-    proxy: {
-      "/api/v1": {
-        target: API_BASE_URL,
-        changeOrigin: true,
-        secure: true,
-      },
-    },
+    proxy:
+      mode === "development"
+        ? {
+            "/api/v1": {
+              target: API_BASE_URL,
+              changeOrigin: true,
+              secure: true,
+            },
+          }
+        : undefined,
   },
   plugins: [react()],
   resolve: {
@@ -21,4 +24,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-});
+}));
