@@ -1,13 +1,11 @@
 import axios from "axios";
 import { store } from "@/app/store";
 import { logout } from "@/features/auth/authSlice";
+import { config } from "./config";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-console.log("API Base URL:", API_BASE_URL);
-
+console.log(config.apiUrl);
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: config.apiUrl,
   withCredentials: true,
 });
 

@@ -10,7 +10,7 @@ provider:
     binaryMediaTypes:
       - "*/*"
   environment:
-    CORS_ORIGIN: ${env:CORS_ORIGIN}
+    ALLOWED_ORIGINS: ${env:ALLOWED_ORIGINS}
     MONGODB_URI: ${env:MONGODB_URI}
     DB_NAME: ${env:DB_NAME}
     ACCESS_TOKEN_SECRET: ${env:ACCESS_TOKEN_SECRET}
@@ -28,12 +28,7 @@ functions:
       - http:
           path: /{proxy+}
           method: ANY
-          cors:
-            origin: "https://budgetly-nu.vercel.app"
-            credentials: true
-            allowHeaders:
-              - Content-Type
-              - Authorization
+          cors: true
 
 plugins:
   - serverless-offline
