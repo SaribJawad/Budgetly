@@ -4,15 +4,35 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+// app.use(
+//   cors({
+//     origin: process.env.ALLOWED_ORIGINS?.split(","),
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     exposedHeaders: ["set-cookie"],
+//   })
+// );
+
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS?.split(","),
+    origin: (origin, callback) => {
+      // During development, origin might be undefined for same-origin requests
+      if (!origin || origin === "https://budgetly-nu.vercel.app") {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["set-cookie"],
   })
 );
+
+// Add a preflight handler for OPTIONS requests
+app.options("*", cors());
 
 app.use(
   express.json({
