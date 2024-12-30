@@ -3,7 +3,6 @@ import { store } from "@/app/store";
 import { logout } from "@/features/auth/authSlice";
 import { config } from "./config";
 
-console.log(config.apiUrl);
 export const api = axios.create({
   baseURL: config.apiUrl,
   withCredentials: true,
