@@ -8,7 +8,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/v1": {
-        target: "http://localhost:3000",
+        target:
+          "https://6xszmurh3c.execute-api.ap-south-1.amazonaws.com/dev/api/v1",
         changeOrigin: true,
       },
     },

@@ -22,30 +22,31 @@ connectDB()
     console.log("MONGODB connection failed!", error);
   });
 
-// export const handler = serverless(app);
+export const handler = serverless(app);
 
-// Handler for AWS Lambda
-export const handler = async (event, context) => {
-  // Keep the database connection alive between Lambda invocations
-  context.callbackWaitsForEmptyEventLoop = false;
+// let isDBConnected = false;
 
-  // Connect to database if not already connected
-  if (!global.mongooseConnection) {
-    await connectToDatabase();
-  }
+// // Connect to DB and set up handler
+// const startServer = async () => {
+//   try {
+//     await connectDB();
+//     isDBConnected = true;
+//     console.log("MongoDB connected!");
+//   } catch (error) {
+//     console.log("MONGODB connection failed!", error);
+//     process.exit(1); // Exit if DB connection fails
+//   }
+// };
 
-  // Create the proxy handler
-  const handler = serverless(app);
+// // Initialize server
+// startServer();
 
-  // Handle the request
-  return await handler(event, context);
-};
-
-// Only start the express server if we're running locally
-if (process.env.NODE_ENV === "development") {
-  connectToDatabase().then(() => {
-    app.listen(process.env.PORT || 3000, () => {
-      console.log(`Server is running at port: ${process.env.PORT}`);
-    });
-  });
-}
+// // Export handler with DB connection check
+// export const handler = serverless(app, {
+//   request: (request, event, context) => {
+//     if (!isDBConnected) {
+//       throw new Error("Database not connected!");
+//     }
+//     return request;
+//   },
+// });

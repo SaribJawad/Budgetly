@@ -34,14 +34,16 @@ function MonthlyBudgetProgressCard({
       <h2 className="text-lg font-semibold">Total budget</h2>
 
       <div>
-        <div className="flex flex-col gap-2 ">
+        <div className="flex  justify-between gap-2 ">
           <span className="text-3xl font-semibold">
             {formatCurrency(totalBudgetAmount)}
           </span>
+          {/* {totalBudgetAmount && ( */}
           <BudgetStatusCard
             totalBudget={totalBudgetAmount}
             spentAmount={totalSpentAmount}
           />
+          {/* )} */}
         </div>
       </div>
 

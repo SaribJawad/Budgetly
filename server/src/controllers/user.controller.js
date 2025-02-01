@@ -105,13 +105,17 @@ const loginUser = asyncHandler(async (req, res, next) => {
   const options = {
     // httpOnly: true,
     // secure: true,
-    httpOnly: true, // Prevents JavaScript access
-    secure: process.env.NODE_ENV === "production", // HTTPS only in production
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Cross-origin cookie behavior
-    domain:
-      process.env.NODE_ENV === "production" ? ".your-domain.com" : "localhost", // Cookie domain
-    path: "/", // Cookie available for all paths
-    maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiry: 7 days
+    // httpOnly: true, // Prevents JavaScript access
+    // secure: process.env.NODE_ENV === "production", // HTTPS only in production
+    // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Cross-origin cookie behavior
+    // domain:
+    //   process.env.NODE_ENV === "production" ? ".your-domain.com" : "localhost", // Cookie domain
+    // path: "/", // Cookie available for all paths
+    // maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiry: 7 days
+    httpOnly: true,
+    secure: true, // Ensure this is true in production
+    sameSite: "none", // Required for cross-origin requests
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   };
 
   return res

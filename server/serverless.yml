@@ -23,12 +23,22 @@ provider:
 
 functions:
   api:
-    handler: handler.handler
+    handler: src/index.handler
     events:
       - http:
           path: /{proxy+}
-          method: any
-          cors: true
+          method: ANY
+          cors:
+            origin: "'http://localhost:5173'" # Note the single quotes inside double quotes
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Amz-Date
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Requested-With
+            allowCredentials: true
+            maxAge: 86400
 
 plugins:
   - serverless-offline
