@@ -10,7 +10,8 @@ provider:
     binaryMediaTypes:
       - "*/*"
   environment:
-    ALLOWED_ORIGINS: ${env:ALLOWED_ORIGINS}
+    ALLOWED_ORIGINS_PROD: ${env:ALLOWED_ORIGINS_PROD}
+    ALLOWED_ORIGINS_LOCAL: ${env:ALLOWED_ORIGINS_LOCAL}
     MONGODB_URI: ${env:MONGODB_URI}
     DB_NAME: ${env:DB_NAME}
     ACCESS_TOKEN_SECRET: ${env:ACCESS_TOKEN_SECRET}
@@ -29,7 +30,7 @@ functions:
           path: /{proxy+}
           method: ANY
           cors:
-            origin: "'http://localhost:5173'" # Note the single quotes inside double quotes
+            origin: "https://budgetly-two.vercel.app" # Note the single quotes inside double quotes
             headers:
               - Content-Type
               - Authorization

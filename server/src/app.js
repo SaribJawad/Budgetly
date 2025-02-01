@@ -6,7 +6,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS, // Keep explicit origin even in dev
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.ALLOWED_ORIGINS_PROD
+        : process.env.ALLOWED_ORIGINS_LOCAL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

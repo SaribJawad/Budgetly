@@ -42,6 +42,7 @@ function CreateWalletPageForm({
   });
 
   const onSubmit = async (values: z.infer<typeof createWalletSchema>) => {
+    console.log(values);
     await createWallet(values);
     navigate("/");
   };
