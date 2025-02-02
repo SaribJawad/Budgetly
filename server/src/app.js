@@ -11,7 +11,7 @@ app.use(
         ? process.env.ALLOWED_ORIGINS_PROD
         : process.env.ALLOWED_ORIGINS_LOCAL,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );

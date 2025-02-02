@@ -60,7 +60,9 @@ const useCreateWallet = () => {
             return query.queryKey.includes(key);
           }),
       });
-      queryClient.refetchQueries({ queryKey: ["financeSummary"] });
+      queryClient.refetchQueries({
+        queryKey: ["financeSummary", "userWallets"],
+      });
 
       showToast({
         description:

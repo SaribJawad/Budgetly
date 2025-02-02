@@ -40,39 +40,45 @@ function BudgetPieCard() {
     : [];
 
   return (
-    <div className="border p-2 rounded-2xl    h-full  border-zinc-800  ">
+    <div className="border p-2 rounded-2xl    h-full  border-zinc-800    ">
       <div className="flex flex-col justify-between items-start w-full">
         <h1 className="font-normal text-xl">Budget</h1>
         <p className="text-sm text-zinc-500 overflow-hidden whitespace-nowrap text-ellipsis max-w-xs ">
           Total budget for this month - {totalBudgetAmount}
         </p>
       </div>
-      <div className="relative  h-52  w-full">
-        <Pie
-          data={{
-            labels: budgets && budgets.map((budget) => budget.name),
-            datasets: datasets,
-          }}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false,
+      {userBudgets && userBudgets?.length <= 0 ? (
+        <div className="w-full text-center pt-5 text-sm text-zinc-600">
+          <p>You haven't added any budgets yet. Start by creating one</p>
+        </div>
+      ) : (
+        <div className="relative  h-52  w-full">
+          <Pie
+            data={{
+              labels: budgets && budgets.map((budget) => budget.name),
+              datasets: datasets,
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false,
+                },
               },
-            },
-            aspectRatio: 4,
-            layout: {
-              padding: {
-                left: 0,
-                right: -500,
-                top: 30,
-                bottom: 20,
+              aspectRatio: 4,
+              layout: {
+                padding: {
+                  left: 0,
+                  right: -500,
+                  top: 30,
+                  bottom: 20,
+                },
               },
-            },
-          }}
-        />
-      </div>
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

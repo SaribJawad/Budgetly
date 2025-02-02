@@ -37,12 +37,17 @@ function CreateWalletPageForm({
   isCreateWalletPending,
 }: CreateWalletPageFormProps) {
   const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof createWalletSchema>>({
     resolver: zodResolver(createWalletSchema),
+    defaultValues: {
+      walletName: "",
+      type: "General",
+      balance: 0,
+    },
   });
 
   const onSubmit = async (values: z.infer<typeof createWalletSchema>) => {
-    console.log(values);
     await createWallet(values);
     navigate("/");
   };

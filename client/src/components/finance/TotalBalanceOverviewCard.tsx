@@ -31,7 +31,7 @@ function TotalBalanceOverviewCard({
       },
 
       {
-        label: "L ast year",
+        label: "Last year",
         data: lastYearBalance,
         fill: false,
         backgroundColor: "#ffffff",

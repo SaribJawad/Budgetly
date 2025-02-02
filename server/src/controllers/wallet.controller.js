@@ -8,7 +8,7 @@ import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createWallet = asyncHandler(async (req, res) => {
-  const { walletName, type, initialBalance } = req.body;
+  const { walletName, type, balance } = req.body;
   const userId = req.user?._id;
 
   if (!walletName) {
@@ -18,7 +18,7 @@ const createWallet = asyncHandler(async (req, res) => {
   const wallet = await Wallet.create({
     walletName,
     type: type || undefined,
-    initialBalance: initialBalance || undefined,
+    balance: balance || undefined,
     walletOwner: userId,
   });
 

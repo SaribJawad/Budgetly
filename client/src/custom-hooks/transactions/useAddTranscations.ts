@@ -84,6 +84,7 @@ const useAddTransactions = () => {
             "financeSummary",
             "detailedFinanceSummary",
             "yearlyTrends",
+            "userWallets",
           ].some((key) => query.queryKey.includes(key)),
         exact: false,
       });
@@ -97,6 +98,7 @@ const useAddTransactions = () => {
             "detailedFinanceSummary",
             "yearlyTrends",
             "expenseTransactions",
+            "userWallets",
           ].includes(query.queryKey[0] as string),
       });
 

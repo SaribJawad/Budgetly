@@ -30,7 +30,7 @@ functions:
           path: /{proxy+}
           method: ANY
           cors:
-            origin: "https://budgetly-two.vercel.app" # Note the single quotes inside double quotes
+            origin: "https://budgetly-two.vercel.app"
             headers:
               - Content-Type
               - Authorization

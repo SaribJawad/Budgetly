@@ -35,7 +35,7 @@ function FinanceSummaryCard({ summary }: FinanceSummaryCardProps) {
     : "text-red-700";
 
   return (
-    <div className="border border-zinc-800 h-full flex justify-between flex-col  py-2 px-3 rounded-2xl">
+    <div className="border border-zinc-800 h-full flex justify-between flex-col  py-2 px-3 lg:gap-24 gap-12 rounded-2xl">
       <h3 className="font-semibold sm:text-2xl text-sm flex flex-col">
         {title}{" "}
         {title !== "Total balance" && (
@@ -44,11 +44,13 @@ function FinanceSummaryCard({ summary }: FinanceSummaryCardProps) {
       </h3>
 
       <div className="flex flex-col gap-2">
-        {/* {TODO formate currecncy} */}
-        <h1 className="xl:text-5xl lg:text-4xl text-3xl  font-normal">
+        <h1
+          className={` ${
+            title === "Total balance" ? "text-4xl" : "text-3xl "
+          } font-medium break-words whitespace-normal`}
+        >
           {formatCurrency(amount)}
-        </h1>{" "}
-        {}
+        </h1>
         {!title.toLowerCase().includes("balance") && (
           <p className="sm:text-sm text-xs flex items-center gap-2 text-zinc-500">
             <span

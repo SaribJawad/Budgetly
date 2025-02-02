@@ -11,13 +11,15 @@ function FinanceSummaryAnalyticsCard({
   totalTransactions,
 }: FinanceSummaryAnalyticsCardProps) {
   return (
-    <div className="border border-zinc-800 p-4 rounded-2xl flex flex-col gap-16">
+    <div className="border border-zinc-800 p-4 rounded-2xl flex flex-col gap-16 w-full">
       <h3 className="text-xl font-semibold">{title}</h3>
 
       <div className="flex flex-col justify-between items-start gap-4">
-        <span className="xl:text-6xl lg:text-5xl text-4xl  font-semibold">
-          {formatCurrency(totalAmount)}
-        </span>
+        <div className="w-full">
+          <h1 className="text-4xl font-medium break-words whitespace-normal">
+            {formatCurrency(totalAmount)}
+          </h1>
+        </div>
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
             <ArrowLeftRight

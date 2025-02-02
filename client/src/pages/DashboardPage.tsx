@@ -32,42 +32,35 @@ function DashboardPage() {
   }
 
   return (
-    <div className="w-full min-h-screen p-2 flex flex-col  space-y-0 gap-3 sm:gap-9 lg:gap-3">
+    <div className="w-full min-h-screen p-2 flex flex-col gap-3">
       <Header
         heading={`Welcome, ${user?.firstName}`}
         note={"It is the best time to manage your finance"}
       />
+
       {isLoading ? (
         <div className="h-[240px] w-full flex items-center justify-center">
           <LoadingSpinner className="text-white" size={50} />
         </div>
       ) : (
-        <div className=" h-[240px] grid grid-cols-2 lg:grid-cols-4 gap-3  ">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {financeSummary?.map((summary, index) => (
             <FinanceSummaryCard key={index} summary={summary} />
           ))}
         </div>
       )}
-      <div className="h-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 ">
-        <div className="lg:col-span-2 md:col-span-2  ">
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="col-span-1 md:col-span-2 lg:col-span-2">
           <MoneyFlowCard monthlyFlow={data} />
         </div>
-        <div className="lg:col-span-1 md:col-span-1 ">
+        <div className="lg:col-span-1 md:col-span-2">
           <BudgetPieCard />
         </div>
-
-        <div className="lg:hidden md:col-span-1 ">
-          <SavingGoalsCard />
-        </div>
-
-        <div className="lg:col-span-2 md:col-span-2 lg:hidden ">
+        <div className="col-span-1 md:col-span-2 lg:col-span-2">
           <RecentTransactionsCard />
         </div>
-
-        <div className="lg:col-span-2 lg:row-span-1 lg:block hidden  ">
-          <RecentTransactionsCard />
-        </div>
-        <div className="lg:col-span-1 lg:row-span-1 lg:block hidden  ">
+        <div className="lg:col-span-1 md:col-span-2">
           <SavingGoalsCard />
         </div>
       </div>

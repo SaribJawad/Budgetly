@@ -20,7 +20,7 @@ function RecentTransactionsCard() {
   );
 
   return (
-    <div className="border w-full  min-h-[285px] h-fit  p-2 rounded-2xl  border-zinc-800  flex flex-col  gap-3   lg:col-span-2">
+    <div className="border w-full  min-h-[285px] h-fit  p-2 rounded-2xl  border-zinc-800  flex flex-col  gap-3 lg:col-span-2 md:col-span-2   ">
       <div className="flex items-start justify-between">
         <h1 className="font-normal text-xl">Recent transactions</h1>
 

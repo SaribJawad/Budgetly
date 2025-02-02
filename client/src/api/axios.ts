@@ -4,8 +4,8 @@ import { logout } from "@/features/auth/authSlice";
 import { config } from "./config";
 
 export const api = axios.create({
-  baseURL: config.apiUrl,
-  // baseURL: "",
+  // baseURL: config.apiUrl,
+  baseURL: "http://localhost:3000/api/v1",
   withCredentials: true,
 });
 

@@ -38,12 +38,14 @@ function MonthlyBudgetProgressCard({
           <span className="text-3xl font-semibold">
             {formatCurrency(totalBudgetAmount)}
           </span>
-          {/* {totalBudgetAmount && ( */}
-          <BudgetStatusCard
-            totalBudget={totalBudgetAmount}
-            spentAmount={totalSpentAmount}
-          />
-          {/* )} */}
+          {totalBudgetAmount ? (
+            <BudgetStatusCard
+              totalBudget={totalBudgetAmount}
+              spentAmount={totalSpentAmount}
+            />
+          ) : (
+            ""
+          )}
         </div>
       </div>
 

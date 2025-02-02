@@ -16,7 +16,7 @@ function SavingGoalsCard() {
   const { data: goals } = useAppSelector(selectUserGoals);
 
   return (
-    <div className="border h-full p-2 rounded-2xl  border-zinc-800 lg:col-span-2 flex flex-col  gap-3">
+    <div className="border h-full p-2 rounded-2xl  border-zinc-800 flex flex-col  gap-3 lg:col-span-1 md:col-span-2">
       <div className="w-full flex items-start justify-between">
         <h1 className="font-normal text-xl">Saving goals</h1>
         <TooltipProvider>
@@ -34,22 +34,28 @@ function SavingGoalsCard() {
           </Tooltip>
         </TooltipProvider>
       </div>
-      <div className="w-full flex flex-col gap-2">
-        {goals.map((goal) => {
-          const progres = Math.ceil(
-            (goal.savedAlready / goal.targetAmount) * 100
-          );
+      {goals.length <= 0 ? (
+        <div className="w-full text-center pt-5 text-sm text-zinc-600">
+          <p>You haven't created any goals yet. Start by creating one</p>
+        </div>
+      ) : (
+        <div className="w-full flex flex-col gap-2">
+          {goals.map((goal) => {
+            const progres = Math.ceil(
+              (goal.savedAlready / goal.targetAmount) * 100
+            );
 
-          return (
-            <GoalProgressCard
-              key={goal._id}
-              goalName={goal.name}
-              progress={progres}
-              targetAmount={goal.targetAmount}
-            />
-          );
-        })}
-      </div>
+            return (
+              <GoalProgressCard
+                key={goal._id}
+                goalName={goal.name}
+                progress={progres}
+                targetAmount={goal.targetAmount}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -23,30 +23,3 @@ connectDB()
   });
 
 export const handler = serverless(app);
-
-// let isDBConnected = false;
-
-// // Connect to DB and set up handler
-// const startServer = async () => {
-//   try {
-//     await connectDB();
-//     isDBConnected = true;
-//     console.log("MongoDB connected!");
-//   } catch (error) {
-//     console.log("MONGODB connection failed!", error);
-//     process.exit(1); // Exit if DB connection fails
-//   }
-// };
-
-// // Initialize server
-// startServer();
-
-// // Export handler with DB connection check
-// export const handler = serverless(app, {
-//   request: (request, event, context) => {
-//     if (!isDBConnected) {
-//       throw new Error("Database not connected!");
-//     }
-//     return request;
-//   },
-// });
