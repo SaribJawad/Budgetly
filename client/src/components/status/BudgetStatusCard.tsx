@@ -41,7 +41,7 @@ function BudgetStatusCard({ totalBudget, spentAmount }: BudgetStatusCardProps) {
 
   return (
     <div
-      className={`w-fit flex items-center gap-2 ${status.bgColorClass} px-2 rounded-full`}
+      className={`w-fit flex items-center gap-2 ${status.bgColorClass} px-2 py-1 rounded-full`}
     >
       {status.icon}
       <p className={`text-xs ${status.colorClass}`}>{status.text}</p>
