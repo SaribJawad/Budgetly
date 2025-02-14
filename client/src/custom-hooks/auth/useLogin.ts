@@ -3,7 +3,7 @@ import { User } from "@/@types/Types";
 import { api } from "@/api/axios";
 import { useAppDispatch } from "@/app/hook";
 import { loginStart, loginSuccess } from "@/features/auth/authSlice";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import useShowToast from "../useShowToast";
@@ -27,6 +27,7 @@ const useLogin = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const showToast = useShowToast();
+  const queryClient = useQueryClient();
 
   return useMutation<LoginResponse, ErrorResponse, LoginData>({
     mutationFn: async ({ email, password }) => {
@@ -50,7 +51,6 @@ const useLogin = () => {
 
         return data;
       } catch (error) {
-        console.error(error);
         if (isAxiosError<ErrorResponse>(error) && error.response) {
           const errorResponse =
             error.response.data.message ||
@@ -61,6 +61,7 @@ const useLogin = () => {
       }
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries();
       navigate("/", { replace: true });
       dispatch(loginSuccess(data.data.user));
       showToast({
