@@ -46,8 +46,10 @@ function FinanceSummaryCard({ summary }: FinanceSummaryCardProps) {
       <div className="flex flex-col gap-2">
         <h1
           className={` ${
-            title === "Total balance" ? "text-4xl" : "text-3xl "
-          } font-medium break-words whitespace-normal`}
+            title === "Total balance"
+              ? "sm:text-3xl text-sm"
+              : "sm:text-2xl text-sm "
+          } font-light break-words whitespace-normal`}
         >
           {formatCurrency(amount)}
         </h1>

@@ -11,7 +11,7 @@ function WalletSummaryCard({ wallets, walletStatus }: WalletSummaryCardProps) {
   const totalBalance = wallets.reduce((acc, wallet) => acc + wallet.balance, 0);
 
   return (
-    <div className="border border-zinc-800 h-full py-2 px-3 flex flex-col justify-between rounded-2xl md:col-span-1 col-span-2   ">
+    <div className="border lg:gap-0 gap-10 border-zinc-800 h-full py-2 px-3 flex flex-col justify-between rounded-2xl md:col-span-1 col-span-2 flex-wrap  ">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold sm:text-3xl text-xl">Total balance</h3>
       </div>
@@ -27,7 +27,7 @@ function WalletSummaryCard({ wallets, walletStatus }: WalletSummaryCardProps) {
           </div>
         ) : (
           <>
-            <h1 className=" text-5xl font-semibold">
+            <h1 className=" text-sm sm:text-2xl font-light">
               {formatCurrency(totalBalance)}
             </h1>
             <p className="sm:text-sm text-xs text-zinc-500">

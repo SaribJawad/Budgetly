@@ -49,7 +49,7 @@ function SettingPage() {
     <div className="p-2 w-full h-full flex flex-col">
       <div className="w-full h-full flex border-b border-zinc-800 flex-col items-center justify-center p-3 gap-4 ">
         <img
-          className="sm:w-36 w-24 rounded-full "
+          className=" rounded-full aspect-square sm:w-28 w-20 object-cover"
           src={
             user?.avatar ||
             "https://s3.amazonaws.com/37assets/svn/765-default-avatar.png"

@@ -111,8 +111,8 @@ function GoalCard({
         </div>
       </div>
 
-      <div className="flex items-end gap-1">
-        <h2 className="text-4xl font-semibold">
+      <div className="flex items-end gap-1  flex-wrap">
+        <h2 className="text-2xl font-semibold">
           {formatCurrency(goal?.savedAlready)}
         </h2>
         /

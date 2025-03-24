@@ -10,7 +10,7 @@ function MoneyFlowCard({ monthlyFlow }: MoneyFlowCardProps) {
   const expense = monthlyFlow?.map((flow) => flow.expense);
 
   return (
-    <div className="border p-2 pb-9 rounded-2xl  border-zinc-800 h-72 lg:col-span-2 md:col-span-2    ">
+    <div className="    border p-2 pb-9 rounded-2xl  border-zinc-800 h-72 lg:col-span-2 md:col-span-2    ">
       <h1 className="font-normal text-xl">Money flow</h1>
       <Bar
         data={{

@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../navigation/AppSideBar";
 import { useAppSelector } from "@/app/hook";
@@ -10,8 +10,10 @@ import useGetAllTranscations from "@/custom-hooks/transactions/useGetAllTransact
 import useGetMonthlyFlow from "@/custom-hooks/analytics/useGetMonthlyFlow";
 import useGetExpenseTransactions from "@/custom-hooks/transactions/useGetExpenseTransactions";
 import useGetUserWallet from "@/custom-hooks/wallet/useGetUserWallet";
+import { useEffect } from "react";
 
 function MainLayout() {
+  const navigate = useNavigate();
   useGetAllTranscations();
   useGetMonthlyFlow();
   useGetExpenseTransactions();
@@ -19,11 +21,16 @@ function MainLayout() {
   const isAuthenticated = useAppSelector(selectAuthenticationState);
   const createdWalletOnce = useAppSelector(selectWalletCreatedOnce);
 
-  if (!createdWalletOnce && isAuthenticated) {
-    return <Navigate to="create-wallet" />;
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/auth/login");
+    }
+    if (!createdWalletOnce && isAuthenticated) {
+      return navigate("create-wallet");
+    }
+  }, [isAuthenticated]);
 
-  return isAuthenticated ? (
+  return (
     <SidebarProvider>
       <AppSidebar />
       <div className="w-full h-auto bg-black flex   text-white ">
@@ -33,8 +40,6 @@ function MainLayout() {
         <Outlet />
       </div>
     </SidebarProvider>
-  ) : (
-    <Navigate to="/auth/login" />
   );
 }
 

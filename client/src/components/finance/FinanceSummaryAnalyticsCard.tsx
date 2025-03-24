@@ -16,7 +16,7 @@ function FinanceSummaryAnalyticsCard({
 
       <div className="flex flex-col justify-between items-start gap-4">
         <div className="w-full">
-          <h1 className="text-4xl font-medium break-words whitespace-normal">
+          <h1 className="text-2xl font-light break-words whitespace-normal">
             {formatCurrency(totalAmount)}
           </h1>
         </div>

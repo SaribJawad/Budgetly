@@ -22,7 +22,7 @@ function Header({ heading, note }: HeaderProps) {
       <div className=" flex items-center  ">
         <Link to={"/"}>
           <img
-            className="sm:w-14 w-11 rounded-full"
+            className="aspect-square object-cover sm:w-12 w-10 rounded-full"
             src={
               user?.avatar ||
               "https://s3.amazonaws.com/37assets/svn/765-default-avatar.png"

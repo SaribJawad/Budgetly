@@ -61,6 +61,7 @@ function EditUserInformationForm() {
     values: z.infer<typeof editUserInformationSchema>
   ) => {
     if (isFormUpdated(values)) {
+      console.log(values);
       await updateUserInfo({ formData: values });
     } else {
       showToast({
