@@ -230,14 +230,11 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const updateUserInformation = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email } = req.body;
+  const { firstName, lastName, email, currency } = req.body;
   const userId = req.user._id;
 
-  if (!firstName && !lastName && !email) {
-    throw new ApiError(
-      400,
-      "At least one of firstName/lastName/email is required"
-    );
+  if (!firstName && !lastName && !email && !currency) {
+    throw new ApiError(400, "No fields updated");
   }
 
   const updateFields = {};
@@ -252,6 +249,10 @@ const updateUserInformation = asyncHandler(async (req, res) => {
 
   if (email) {
     updateFields.email = email;
+  }
+
+  if (currency) {
+    updateFields.currency = currency;
   }
 
   try {
