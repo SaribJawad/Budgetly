@@ -45,7 +45,7 @@ function BudgetPage() {
     <div className="h-full w-full p-2 flex flex-col gap-3">
       <Header heading={"Budget"} note={"Create and track your budgets"} />
       <div className="grid md2:grid-cols-3 grid-cols-1 gap-3 w-full  md2:h-full">
-        <div className="md2:col-span-2 col-span-1 flex flex-col gap-3   ">
+        <div className="md2:col-span-2  flex flex-col gap-3   ">
           <div className="flex items-center justify-between">
             <BudgetFilterButtons setPeriod={setPeriod} period={period} />
             <Button
@@ -61,7 +61,7 @@ function BudgetPage() {
           <BudgetsDisplaySection budgets={budgets} period={period} />
         </div>
 
-        <div className="col-span-1  h-full  flex flex-col gap-3 ">
+        <div className="md2:col-span-1  h-full  flex flex-col gap-3  ">
           <MonthlyBudgetProgressCard budgets={budgets} />
           <MostExpensesCard />
         </div>

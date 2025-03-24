@@ -85,6 +85,8 @@ const useAddTransactions = () => {
             "detailedFinanceSummary",
             "yearlyTrends",
             "userWallets",
+
+            "allBudgets",
           ].some((key) => query.queryKey.includes(key)),
         exact: false,
       });

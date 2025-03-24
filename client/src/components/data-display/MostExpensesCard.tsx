@@ -10,7 +10,7 @@ function MostExpensesCard() {
     error: expenseTransactionsError,
   } = useAppSelector(selectExpenseTransactions);
   return (
-    <div className="h-1/2 w-full border border-zinc-800 p-2 rounded-2xl flex flex-col gap-3">
+    <div className="flex-1 w-full border border-zinc-800 p-2 rounded-2xl flex flex-col gap-3">
       <div className="flex items-start justify-between">
         <h2 className="text-lg font-semibold">Most expenses</h2>
       </div>

@@ -25,17 +25,16 @@ function MonthlyBudgetProgressCard({
       )
     : 0;
 
-  const totalSpentPercetage = totalBudgetAmount
+  const totalSpentPercentage = totalBudgetAmount
     ? Math.ceil((totalSpentAmount / totalBudgetAmount) * 100)
     : 0;
 
   return (
-    <div className="border h-1/2 border-zinc-800 rounded-2xl p-2 flex flex-col gap-3 pb-4">
-      <h2 className="text-lg font-semibold">Total budget</h2>
-
+    <div className="border h-fit border-zinc-800 rounded-2xl p-2 flex flex-col  gap-3 pb-4">
       <div>
+        <h2 className="text-lg font-semibold">Total budget</h2>
         <div className="flex  justify-between gap-2 ">
-          <span className="text-3xl font-semibold">
+          <span className="text-md sm:text-xl font-normal">
             {formatCurrency(totalBudgetAmount)}
           </span>
           {totalBudgetAmount ? (
@@ -50,26 +49,30 @@ function MonthlyBudgetProgressCard({
       </div>
 
       {/* radial */}
-      <div
-        className="radial-progress text-center self-center bg-zinc-950  text-[#917FFF]  "
-        style={
-          {
-            "--value": totalSpentPercetage,
-            "--size": "13rem",
-            "--thickness": "1rem",
-          } as React.CSSProperties
-        }
-        role="progressbar"
-      >
-        <h5 className="text-sm text-zinc-500">Total spent</h5>
-        <span className="text-white text-3xl font-semibold">
-          {formatCurrency(totalSpentAmount)}
-        </span>
+      <div className="flex justify-center items-center w-full">
+        <div
+          className="radial-progress text-center bg-zinc-950 text-[#917FFF]"
+          style={
+            {
+              "--value": totalSpentPercentage,
+              "--size": "clamp(8rem, 50vw, 13rem)",
+              "--thickness": "calc(clamp(8rem, 50vw, 13rem) * 0.077)",
+            } as React.CSSProperties
+          }
+          role="progressbar"
+        >
+          <div className="flex flex-col items-center justify-center">
+            <h5 className="text-xs sm:text-sm text-zinc-500">Total spent</h5>
+            <span className="text-white text-sm sm:text-md font-normal">
+              {formatCurrency(totalSpentAmount)}
+            </span>
+          </div>
+        </div>
       </div>
 
       <div className="self-end text-center">
         <h5 className="text-zinc-500">{amountLeftPercentage}% left</h5>
-        <span className="text-lg font-semibold">
+        <span className="text-sm sm:text-lg font-normal">
           {formatCurrency(totalBudgetAmount - totalSpentAmount)}
         </span>
       </div>
